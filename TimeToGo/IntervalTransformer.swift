@@ -5,6 +5,7 @@
 //  Created by Matteo Manzi on 7/1/15.
 //  Copyright (c) 2015 VMM Softwares. All rights reserved.
 //
+//	Class used by CoreData to save the array of Intervals in the Trip class
 
 import UIKit
 

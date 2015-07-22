@@ -12,18 +12,20 @@ import CoreData
 
 class EntriesViewController: UITableViewController {
 	
+	// CoreData variables
 	var moc: NSManagedObjectContext?
 	var currentTripName: String!
 	var currentTrip: Trip!
 	var entries = [Interval]()
-
 	var flightDate: NSDate!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		// Use auto-implemented 'Edit' button on right side of navigation bar
 		self.navigationItem.leftBarButtonItem = self.editButtonItem()
 		
+		// Assign the moc CoreData variable by referencing the AppDelegate's
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		
     }
@@ -34,6 +36,7 @@ class EntriesViewController: UITableViewController {
 	
 	override func viewWillAppear(animated: Bool) {
 		
+		// Fetch the current trip from the persistent store and assign the CoreData variables
 		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
 		let fetchRequest = NSFetchRequest(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
@@ -131,9 +134,9 @@ class EntriesViewController: UITableViewController {
 	
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
+		// Prepare a selection's view to have all of the information of the current selection's row and associated data
 		let indexPath: NSIndexPath! = tableView.indexPathForSelectedRow()
 		
 		if let destVC = segue.destinationViewController as? SelectedEntryTableViewController {

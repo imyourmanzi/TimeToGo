@@ -11,6 +11,7 @@ import UIKit
 
 class Interval: NSObject, NSCoding {
 	
+	// Public variables
 	var mainLabel: String!
 	var scheduleLabel: String!
 	var timeValueHours: Int!
@@ -18,8 +19,12 @@ class Interval: NSObject, NSCoding {
 	var timeValueStr: String!
 	var startDate: NSDate!
 	
+	// Private label variables for schedule
 	private let entryLabel = UILabel()
 	private let dateLabel = UILabel()
+	
+	
+	// MARK: - Initializers
 	
 	init(mainLabel: String, timeValueHours: Int, timeValueMins: Int) {
 		
@@ -59,6 +64,7 @@ class Interval: NSObject, NSCoding {
 		
 	}
 	
+	// Gets a custom built time interval string from a combination of hours and minutes
 	func stringFromTimeValue() -> String {
 		
 		var timeString: String!
@@ -78,6 +84,7 @@ class Interval: NSObject, NSCoding {
 		
 	}
 	
+	// Class level function for getting custom built time interval string from a combination of hours and minutes
 	static func stringFromTimeValue(timeValueHours: Int, timeValueMins: Int) -> String {
 		
 		var timeString: String!
@@ -96,6 +103,7 @@ class Interval: NSObject, NSCoding {
 		
 	}
 	
+	// Creates and adds label for scheduleLabel to a view
 	func createScheduleLabelFromTopSpace(topSpace: CGFloat, onView view: UIView) {
 		
 		if scheduleLabel == nil {
@@ -153,12 +161,14 @@ class Interval: NSObject, NSCoding {
 		
 	}
 	
+	// Updates text on above scheduleLabel
 	func updateScheduleText() {
 		
 		entryLabel.text = scheduleLabel
 		
 	}
 	
+	// Returns an NSTimeInterval by converting timeValueHours and timeValueMins
 	func timeIntervalByConvertingTimeValue() -> NSTimeInterval {
 		
 		let timeIntervalHours = Double(timeValueHours) * 60.0 * 60.0
@@ -169,6 +179,7 @@ class Interval: NSObject, NSCoding {
 		
 	}
 	
+	// Creates and adds label for timeValueHours and timeValueMins to a view
 	func createDateLabelOnView(view: UIView) {
 		
 		dateLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
@@ -204,12 +215,14 @@ class Interval: NSObject, NSCoding {
 		
 	}
 
+	// Updates text on above dateLabel
 	func updateDateTextWithString(dateString: String) {
 		
 		dateLabel.text = dateString
 		
 	}
 	
+	// Remove an interval's labels from their superview
 	func removeViewsFromSuperview() {
 		
 		entryLabel.removeFromSuperview()

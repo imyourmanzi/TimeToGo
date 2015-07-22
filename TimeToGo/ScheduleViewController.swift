@@ -15,11 +15,13 @@ import CoreData
 
 class ScheduleViewController: UIViewController {
 	
+	// CoreData variables
 	var moc: NSManagedObjectContext?
 	var currentTripName: String!
 	var currentTrip: Trip!
 	var entries = [Interval]()
 	
+	// Current VC variables
 	var scheduleScroll: UIScrollView!
 	let scrollSubview = UIView()
 	
@@ -52,6 +54,7 @@ class ScheduleViewController: UIViewController {
 	
 	override func viewWillAppear(animated: Bool) {
 		
+		// Fetch the current trip from the persistent store and assign the CoreData variables
 		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
 		let fetchRequest = NSFetchRequest(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
@@ -61,16 +64,20 @@ class ScheduleViewController: UIViewController {
 		self.entries = currentTrip.entries as! [Interval]
 		self.flightDate = currentTrip.flightDate
 		
+		// Set up the dateFormatter for the flightDate title display
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
 		self.navigationItem.title = "Flight: \(dateFormatter.stringFromDate(flightDate))"
 		
+		// Set up labels
 		setupLabels()
 		
+		// Reset dateFormatter for setting interval times
 		dateFormatter.dateFormat = "h:mm a"
 		intervalDate = flightDate.copy() as! NSDate
 		
 		for entry in entries.reverse() {
 			
+			// Set up the times for each interval
 			entry.updateScheduleText()
 			intervalDate = NSDate(timeInterval: -(entry.timeIntervalByConvertingTimeValue()), sinceDate: intervalDate)
 			entry.startDate = intervalDate
@@ -80,7 +87,8 @@ class ScheduleViewController: UIViewController {
 		
 	}
 	
-	func setupLabels() {
+	// Set up and add the flight labels and the interval labels
+	private func setupLabels() {
 		
 		// Intervals
 		var i: CGFloat = 0.0
@@ -164,6 +172,7 @@ class ScheduleViewController: UIViewController {
 	
 	override func viewDidDisappear(animated: Bool) {
 		
+		// Remove all views from the scrollSubview
 		for entry in entries {
 			
 			entry.removeViewsFromSuperview()

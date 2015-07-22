@@ -11,6 +11,7 @@ import CoreData
 
 class AllTripsTableViewController: UITableViewController {
 
+	// CoreData variables
 	var moc: NSManagedObjectContext?
 	var allTrips = [Trip]()
 	var currentTripName: String!
@@ -18,19 +19,21 @@ class AllTripsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		// Use auto-implemented 'Edit' button on right side of navigation bar
         self.navigationItem.rightBarButtonItem = self.editButtonItem()
 		
+		// Assign the moc CoreData variable by referencing the AppDelegate's
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		
 	}
 	
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
 	override func viewWillAppear(animated: Bool) {
 		
+		// Fetch all of the managed objects from the persistent store and update the table view
 		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
 		let fetchAll = NSFetchRequest()
 		fetchAll.entity = NSEntityDescription.entityForName("Trip", inManagedObjectContext: moc!)
@@ -49,7 +52,6 @@ class AllTripsTableViewController: UITableViewController {
 	
     // MARK: - Table view data source
 
-	
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
 		return allTrips.count
@@ -71,22 +73,11 @@ class AllTripsTableViewController: UITableViewController {
 		
     }
 
-	
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-		
-        // Return NO if you do not want the specified item to be editable.
-        return true
-		
-    }
-	
-
-	
-    // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
 		
         if editingStyle == .Delete {
 			
+			// Update the current trip if the current one has been deleted
 			if allTrips[indexPath.row].tripName == currentTripName && allTrips.count > 1 {
 				
 				currentTripName = allTrips[allTrips.count - 2].tripName
@@ -94,13 +85,13 @@ class AllTripsTableViewController: UITableViewController {
 				
 			}
 			
-            // Delete the row from the data source
+            // Delete the row from the data sources and the table view
 			moc!.deleteObject(allTrips.removeAtIndex(indexPath.row))
-			
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
 			
         }
 		
+		// Save the state of the persistent store
 		var savingError: NSError?
 		if moc!.save(&savingError) == false {
 			
@@ -112,6 +103,7 @@ class AllTripsTableViewController: UITableViewController {
 			
 		}
 		
+		// Check for more existing trips, if there are not, redirect the user back to the new trip screen
 		if allTrips.count <= 0 {
 			
 			let semiDestVC = self.storyboard?.instantiateViewControllerWithIdentifier("newTripNavVC") as! UINavigationController
@@ -129,6 +121,7 @@ class AllTripsTableViewController: UITableViewController {
 	
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		
+		// Prepare the following screen if a previous trip's cell was selected to be viewed
 		let indexPath: NSIndexPath! = tableView.indexPathForSelectedRow()
 		if let destVC = segue.destinationViewController as? SavedTripViewController {
 

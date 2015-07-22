@@ -12,15 +12,19 @@ import CoreData
 
 class ShareToCalTableViewController: UITableViewController {
 
+	// EventKit variables
 	let eventStore = EKEventStore()
 	var calendarsToList = [EKCalendar]()
 	var calendarToUse: EKCalendar!
 	var calendarToUseIndex: NSIndexPath?
+	
+	// CoreData vairables
 	var currentTrip: Trip!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		// Check for authorization to use calendars
 		switch EKEventStore.authorizationStatusForEntityType(EKEntityTypeEvent) {
 			
 		case .Authorized:
@@ -48,6 +52,7 @@ class ShareToCalTableViewController: UITableViewController {
 			
 		}
 		
+		// Fetch the current trip from the persistent store and assign the CoreData variables
 		let moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		let currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster!
 		let fetch = NSFetchRequest()
@@ -61,20 +66,10 @@ class ShareToCalTableViewController: UITableViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 	
+	// Get all calendars that allow modifications
 	private func extractEventEntityCalendarsOutOfSotre(eventStore: EKEventStore) {
-		
-		let calendarTypes = [
-			
-			"Local",
-			"CalDAV",
-			"Exchange",
-			"Subscription",
-			"Birthday"
-		
-		]
 		
 		let calendars = eventStore.calendarsForEntityType(EKEntityTypeEvent) as! [EKCalendar]
 		
@@ -88,6 +83,7 @@ class ShareToCalTableViewController: UITableViewController {
 			
 		}
 		
+		// Sort the array of calendars
 		calendarsToList.sort({ $0.title < $1.title })
 		calendarToUse = eventStore.defaultCalendarForNewEvents
 		var index = 0
@@ -107,6 +103,7 @@ class ShareToCalTableViewController: UITableViewController {
 		
 	}
 	
+	// Presents an alert VC for access being denied
 	private func displayDeniedAccess() {
 		
 		let alertViewController = UIAlertController(title: "Not Allowed", message: "Access to Calendars was denied.", preferredStyle: UIAlertControllerStyle.Alert)
@@ -120,6 +117,7 @@ class ShareToCalTableViewController: UITableViewController {
 		
 	}
 	
+	// Presents an alert VC for access being restricted
 	private func displayAccessRestricted() {
 		
 		let alertViewController = UIAlertController(title: "Not Allowed", message: "Access to Calendars was restricted.", preferredStyle: UIAlertControllerStyle.Alert)
@@ -197,6 +195,9 @@ class ShareToCalTableViewController: UITableViewController {
 		dismissViewControllerAnimated(true, completion: nil)
 		
 	}
+	
+	
+	// MARK: - Interval to calendar event
 	
 	private func addInterval(entry: Interval, toCalendar calendar: EKCalendar) {
 		

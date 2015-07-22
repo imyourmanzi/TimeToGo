@@ -15,31 +15,37 @@ import CoreData
 
 class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
 
+	// Interface Builder variables
 	@IBOutlet var mainLabelTextfield: UITextField!
 	@IBOutlet var schedLabelTextfield: UITextField!
 	@IBOutlet var intervalLabelCell: UITableViewCell!
 	@IBOutlet var intervalTimePicker: UIPickerView!
 	
+	// CoreData variables
 	var moc: NSManagedObjectContext?
 	var currentTripName: String!
 	var currentTrip: Trip!
 	var entries = [Interval]()
 	
+	// Current trip variables
 	var parentVC: EntriesViewController!
 	var indexPath: NSIndexPath!
 	var currentEntry: Interval!
 	
+	// Current entry variables
 	var mainLabel: String!
 	var schedLabel: String!
 	var timeValueHours: Int!
 	var timeValueMins: Int!
 	var intervalTimeStr: String!
 	
+	// Current VC variables
 	var pickerHidden = true
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		// Fetch the current trip from the persistent store and assign the CoreData variables
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		let fetchRequest = NSFetchRequest(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
@@ -52,6 +58,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		indexPath = parentVC.tableView.indexPathForSelectedRow()
 		currentEntry = self.entries[indexPath.row]
 		
+		// Customized setup of the Interface Builder variables
 		mainLabelTextfield.delegate = self
 		mainLabelTextfield.text = mainLabel
 		
@@ -67,7 +74,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
 	
@@ -75,18 +81,21 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	@IBAction func mainLabelDidChange(sender: UITextField) {
 		
+		// Set the mainLabel with it's textfield
 		mainLabel = sender.text
 		
 	}
 	
 	@IBAction func schedLabelDidChange(sender: UITextField) {
 		
+		// Set the schedLabel with it's textfield
 		schedLabel = sender.text
 		
 	}
 	
 	func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
 		
+		// Hide the flightDatePicker if beginning to edit the textfield
 		if pickerHidden == false {
 			
 			togglePicker()
@@ -103,10 +112,12 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		if textField == mainLabelTextfield {
 			
+			// Set the mainLabel with it's textfield
 			mainLabel = textField.text
 			
 		} else if textField == schedLabelTextfield {
 			
+			// Set the schedLabel with it's textfield
 			schedLabel = textField.text
 			
 		}
@@ -300,6 +311,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	override func viewWillDisappear(animated: Bool) {
 		
+		// Save the currentEntry's properities to CoreData
 		currentEntry.mainLabel = self.mainLabel
 		currentEntry.scheduleLabel = self.schedLabel
 		currentEntry.timeValueHours = self.timeValueHours

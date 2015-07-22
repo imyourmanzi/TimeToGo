@@ -11,13 +11,16 @@ import CoreData
 
 class EditFlightTimeTableViewController: UITableViewController {
 	
+	// Interface Builder variables
 	@IBOutlet var flightDatePicker: UIDatePicker!
 	@IBOutlet var flightDateCell: UITableViewCell!
 
+	// CoreData variables
 	var moc: NSManagedObjectContext?
 	var currentTripName: String!
 	var currentTrip: Trip!
 	
+	// Current VC variables
 	var pickerHidden = true
 	var flightDate = NSDate()
 	let dateFormatter = NSDateFormatter()
@@ -25,8 +28,10 @@ class EditFlightTimeTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		// Assign the moc CoreData variable by referencing the AppDelegate's
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		
+		// Define the date format and apply it to the flight time display
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
 		flightDateCell.detailTextLabel?.text = dateFormatter.stringFromDate(flightDate)
 		
@@ -34,11 +39,11 @@ class EditFlightTimeTableViewController: UITableViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 	
 	@IBAction func flightDateChanged(sender: UIDatePicker) {
 		
+		// Update the flight time and its display
 		flightDate = sender.date
 		flightDateCell.detailTextLabel?.text = dateFormatter.stringFromDate(flightDatePicker.date)
 		

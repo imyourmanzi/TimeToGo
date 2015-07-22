@@ -25,17 +25,18 @@ class SettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+		// Assign the moc CoreData variable by referencing the AppDelegate's
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
 	override func viewWillAppear(animated: Bool) {
 		
+		// Fetch the current trip from the persistent store and assign the CoreData variables
 		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
 		let fetchRequest = NSFetchRequest(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
@@ -46,10 +47,12 @@ class SettingsTableViewController: UITableViewController {
 		self.flightDate = currentTrip.flightDate
 		self.tripName = currentTrip.tripName
 		
+		// Set up the dateFormatter for the flightDate title display
 		let dateFormatter = NSDateFormatter()
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
 		flightDateCell.detailTextLabel?.text = dateFormatter.stringFromDate(self.flightDate)
 		
+		// Fetch all of the managed objects from the persistent store and update the table view
 		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
 		let fetchAll = NSFetchRequest(entityName: "Trip")
 		var fetchingAllError: NSError?
@@ -61,6 +64,7 @@ class SettingsTableViewController: UITableViewController {
 	
 	@IBAction func clickedDeleteTrip(sender: UIButton) {
 		
+		// Present an action sheet to confirm deletion of currentTrip and handle the situations that can follow
 		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(currentTripName)?", preferredStyle: .ActionSheet)
 		let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {(action: UIAlertAction!) in
 			deleteAlertController.dismissViewControllerAnimated(true, completion: nil)
@@ -139,6 +143,7 @@ class SettingsTableViewController: UITableViewController {
 	
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		
+		// Prepare the possible views that may appear by pre-setting properties
 		if let timeVC = segue.destinationViewController as? EditFlightTimeTableViewController {
 			
 			timeVC.currentTripName = self.currentTripName

@@ -5,6 +5,7 @@
 //  Created by Matteo Manzi on 7/1/15.
 //
 //
+//	CoreData entity class
 
 import Foundation
 import CoreData

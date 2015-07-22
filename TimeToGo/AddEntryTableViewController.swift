@@ -14,27 +14,30 @@ import CoreData
 
 class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
 	
+	// Interface Builder outlets
 	@IBOutlet var mainLabelTextfield: UITextField!
 	@IBOutlet var schedLabelTextfield: UITextField!
 	@IBOutlet var intervalLabelCell: UITableViewCell!
 	@IBOutlet var intervalTimePicker: UIPickerView!
 	
+	// CoreData variables
 	var moc: NSManagedObjectContext?
 	var currentTripName: String!
 	var currentTrip: Trip!
 	var entries = [Interval]()
 	
+	// Current VC variables
 	var mainLabel: String!
 	var schedLabel: String!
 	var timeValueHours: Int = 0
 	var timeValueMins: Int = 15
 	var intervalTimeStr: String!
-	
 	var pickerHidden = true
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		// Fetch the current trip from the persistent store and assign the CoreData variables
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
 		let fetchRequest = NSFetchRequest(entityName: "Trip")
@@ -44,6 +47,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		currentTrip = trips[0]
 		self.entries = currentTrip.entries as! [Interval]
 		
+		// Customized setup of the Interface Builder variables
 		mainLabelTextfield.delegate = self
 		mainLabelTextfield.text = mainLabel
 		
@@ -60,11 +64,11 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
 	}
 	
 	override func viewDidAppear(animated: Bool) {
 		
+		// Show the keyboard for the mainLabelTextfield when the view has appeared
 		mainLabelTextfield.becomeFirstResponder()
 		
 	}
@@ -73,6 +77,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		if mainLabelTextfield.text.isEmpty {
 			
+			// Alert the user that an entry cannot be saved if it does not have a mainLabel
 			let alertVC = UIAlertController(title: "Empty Field!", message: "Cannot leave Main Label empty", preferredStyle: UIAlertControllerStyle.Alert)
 			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
 				alertVC.dismissViewControllerAnimated(true, completion: nil)
@@ -82,6 +87,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		} else {
 			
+			// Fill in any empty values, save to the persistent store, and close the view controller
 			if !mainLabelTextfield.text.isEmpty && (schedLabelTextfield.text.isEmpty || schedLabelTextfield.text == nil) {
 			
 				schedLabel = mainLabel
@@ -103,6 +109,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	@IBAction func cancelEntry(sender: UIBarButtonItem) {
 		
+		// Close the view controller without committing any changes to the persistent store
 		dismissViewControllerAnimated(true, completion: nil)
 		
 	}
@@ -111,19 +118,22 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	// MARK: - Text field delegate and action
 	
 	@IBAction func mainLabelDidChange(sender: UITextField) {
-		
+
+		// Set the mainLabel with it's textfield
 		mainLabel = sender.text
 		
 	}
 	
 	@IBAction func schedLabelDidChange(sender: UITextField) {
 		
+		// Set the schedLabel with it's textfield
 		schedLabel = sender.text
 		
 	}
 	
 	func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
 		
+		// Hide the flightDatePicker if beginning to edit the textfield
 		if pickerHidden == false {
 			
 			togglePicker()
@@ -140,10 +150,12 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		if textField == mainLabelTextfield {
 			
+			// Set the mainLabel with it's textfield
 			mainLabel = textField.text
 			
 		} else if textField == schedLabelTextfield {
 			
+			// Set the schedLabel with it's textfield
 			schedLabel = textField.text
 			
 		}
@@ -152,6 +164,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
+	// Update the new entry in the currentTrip
 	private func performUpdateOnCoreData() {
 		
 		currentTrip.entries = self.entries
@@ -350,6 +363,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	override func viewWillDisappear(animated: Bool) {
 		
+		// Make sure that the keyboards are all away
 		mainLabelTextfield.resignFirstResponder()
 		schedLabelTextfield.resignFirstResponder()
 		

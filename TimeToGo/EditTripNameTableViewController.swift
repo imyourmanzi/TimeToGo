@@ -11,19 +11,24 @@ import CoreData
 
 class EditTripNameTableViewController: UITableViewController, UITextFieldDelegate {
 
+	// Interface Builder variables
 	@IBOutlet var tripNameTextfield: UITextField!
 
+	// CoreData variables
 	var moc: NSManagedObjectContext?
 	var currentTripName: String!
 	var currentTrip: Trip!
 	
+	// Current VC variables
 	var tripName: String!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 
+		// Assign the moc CoreData variable by referencing the AppDelegate's
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		
+		// Set up the tripNameTextfield
 		tripNameTextfield.delegate = self
 		tripNameTextfield.text = tripName
 		
@@ -31,17 +36,18 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 	
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
 	@IBAction func tripNameDidChange(sender: UITextField) {
 		
+		// Update the tripName varaible with the contents of the textfield
 		tripName = sender.text
 		
 	}
 	
 	func textFieldShouldReturn(textField: UITextField) -> Bool {
 	
+		// Update the tripName varaible with the contents of the textfield
 		tripName = textField.text
 		
 		textField.resignFirstResponder()
@@ -68,6 +74,7 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 			
 		}
 	
+		// Update the currentTripNameMaster in the AppDelegate so that other views will reference the updated name
 		(UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster = self.tripName
 		
 		tripNameTextfield.resignFirstResponder()
