@@ -75,7 +75,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	@IBAction func saveEntry(sender: UIBarButtonItem) {
 		
-		if mainLabelTextfield.text.isEmpty {
+		if mainLabelTextfield.text.isEmpty || mainLabelTextfield.text == nil {
 			
 			// Alert the user that an entry cannot be saved if it does not have a mainLabel
 			let alertVC = UIAlertController(title: "Empty Field!", message: "Cannot leave Main Label empty", preferredStyle: UIAlertControllerStyle.Alert)
@@ -88,11 +88,11 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		} else {
 			
 			// Fill in any empty values, save to the persistent store, and close the view controller
-			if !mainLabelTextfield.text.isEmpty && (schedLabelTextfield.text.isEmpty || schedLabelTextfield.text == nil) {
+			if schedLabelTextfield.text.isEmpty || schedLabelTextfield.text == nil {
 			
 				schedLabel = mainLabel
 				
-				entries.append(Interval(mainLabel: mainLabel, scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins))
+				entries.append(Interval(mainLabel: mainLabel, scheduleLabel: mainLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins))
 				
 			} else {
 				
@@ -120,14 +120,14 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	@IBAction func mainLabelDidChange(sender: UITextField) {
 
 		// Set the mainLabel with it's textfield
-		mainLabel = sender.text
+		mainLabel = sender.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 	}
 	
 	@IBAction func schedLabelDidChange(sender: UITextField) {
 		
 		// Set the schedLabel with it's textfield
-		schedLabel = sender.text
+		schedLabel = sender.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 	}
 	

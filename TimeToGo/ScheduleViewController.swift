@@ -12,8 +12,12 @@
 
 import UIKit
 import CoreData
+import EventKit
 
 class ScheduleViewController: UIViewController {
+	
+	// EventKit variables
+	let eventStore = EKEventStore()
 	
 	// CoreData variables
 	var moc: NSManagedObjectContext?
@@ -169,6 +173,71 @@ class ScheduleViewController: UIViewController {
 		scheduleScroll.contentSize = scrollSubview.frame.size
 		
 	}
+	
+	
+	// MARK: - Calendar access
+	
+	@IBAction func addToCal(sender: UIButton) {
+		
+		let shareCalVC = storyboard?.instantiateViewControllerWithIdentifier("shareCalNavVC") as! UINavigationController
+		
+		switch EKEventStore.authorizationStatusForEntityType(EKEntityTypeEvent) {
+			
+		case .Authorized:
+			self.presentViewController(shareCalVC, animated: true, completion: nil)
+			
+		case .Denied:
+			self.displayDeniedAccess()
+			
+		case .NotDetermined:
+			eventStore.requestAccessToEntityType(EKEntityTypeEvent, completion: {
+				(granted: Bool, error: NSError!) -> Void in
+				if granted {
+					
+					self.presentViewController(shareCalVC, animated: true, completion: nil)
+					
+				} else {
+					
+					self.displayDeniedAccess()
+					
+				}
+			})
+			
+		case .Restricted:
+			self.displayAccessRestricted()
+			
+		}
+		
+	}
+	
+	// Presents an alert VC for access being denied
+	private func displayDeniedAccess() {
+		
+		let alertViewController = UIAlertController(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars", preferredStyle: UIAlertControllerStyle.Alert)
+		let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+			alertViewController.dismissViewControllerAnimated(true, completion: nil)
+		})
+		alertViewController.addAction(dismissAction)
+		
+		presentViewController(alertViewController, animated: true, completion: nil)
+		
+	}
+	
+	// Presents an alert VC for access being restricted
+	private func displayAccessRestricted() {
+		
+		let alertViewController = UIAlertController(title: "Not Allowed", message: "Access to Calendars was restricted.", preferredStyle: UIAlertControllerStyle.Alert)
+		let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+			alertViewController.dismissViewControllerAnimated(true, completion: nil)
+		})
+		alertViewController.addAction(dismissAction)
+		
+		presentViewController(alertViewController, animated: true, completion: nil)
+		
+	}
+	
+	
+	// MARK: - Navigation
 	
 	override func viewDidDisappear(animated: Bool) {
 		

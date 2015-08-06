@@ -41,14 +41,14 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 	@IBAction func tripNameDidChange(sender: UITextField) {
 		
 		// Update the tripName varaible with the contents of the textfield
-		tripName = sender.text
+		tripName = sender.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 	}
 	
 	func textFieldShouldReturn(textField: UITextField) -> Bool {
 	
 		// Update the tripName varaible with the contents of the textfield
-		tripName = textField.text
+		tripName = textField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 		textField.resignFirstResponder()
 		

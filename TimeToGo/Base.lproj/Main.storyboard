@@ -75,9 +75,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="vho-iU-lWk" kind="popoverPresentation" popoverAnchorView="yHM-eo-cQl" id="Bk6-66-gqI">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
+                                    <action selector="addToCal:" destination="9pv-A4-QxB" eventType="touchUpInside" id="xbg-2s-erk"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -165,7 +163,7 @@
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Optional Trip Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cFp-KO-LmM">
                                                     <rect key="frame" x="8" y="8" width="584" height="27"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                     <connections>
                                                         <action selector="tripNameDidChange:" destination="qzh-9M-B2G" eventType="editingChanged" id="XhZ-LM-3y0"/>
                                                     </connections>
@@ -541,7 +539,7 @@
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Trip Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GUd-rJ-85N">
                                                     <rect key="frame" x="8" y="8" width="584" height="27"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                     <connections>
                                                         <action selector="tripNameDidChange:" destination="YWe-dU-xkS" eventType="editingChanged" id="vT8-ox-Ait"/>
                                                     </connections>
@@ -581,7 +579,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
-                            <tableViewSection id="VCW-FC-dev">
+                            <tableViewSection footerTitle="Tap a field to change it." id="VCW-FC-dev">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="l7R-O5-sSF">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -592,7 +590,7 @@
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Main Label" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rXU-HC-TsW">
                                                     <rect key="frame" x="8" y="8" width="584" height="27"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     <connections>
                                                         <action selector="mainLabelDidChange:" destination="Sgj-UZ-P1e" eventType="editingChanged" id="2TD-q0-QOD"/>
                                                     </connections>
@@ -615,7 +613,7 @@
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Optional Schedule Label" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hnz-sP-9ZL">
                                                     <rect key="frame" x="8" y="8" width="584" height="27"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     <connections>
                                                         <action selector="schedLabelDidChange:" destination="Sgj-UZ-P1e" eventType="editingChanged" id="6U5-UW-xIY"/>
                                                     </connections>
@@ -802,7 +800,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
-                            <tableViewSection id="Udo-vW-Jw8">
+                            <tableViewSection footerTitle="Tap a field to change it." id="Udo-vW-Jw8">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="ewR-dZ-94A">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -813,7 +811,7 @@
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Main Label" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="enc-SL-hqJ">
                                                     <rect key="frame" x="8" y="8" width="584" height="27"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     <connections>
                                                         <action selector="mainLabelDidChange:" destination="wGE-E8-CqS" eventType="editingChanged" id="fxL-v2-JEy"/>
                                                     </connections>
@@ -836,7 +834,7 @@
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Optional Schedule Label" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dSD-IU-pya">
                                                     <rect key="frame" x="8" y="8" width="584" height="27"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     <connections>
                                                         <action selector="schedLabelDidChange:" destination="wGE-E8-CqS" eventType="editingChanged" id="sjH-EV-Wep"/>
                                                     </connections>

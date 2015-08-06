@@ -82,14 +82,14 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	@IBAction func mainLabelDidChange(sender: UITextField) {
 		
 		// Set the mainLabel with it's textfield
-		mainLabel = sender.text
+		mainLabel = sender.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 	}
 	
 	@IBAction func schedLabelDidChange(sender: UITextField) {
 		
 		// Set the schedLabel with it's textfield
-		schedLabel = sender.text
+		schedLabel = sender.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 	}
 	
@@ -112,13 +112,13 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		if textField == mainLabelTextfield {
 			
-			// Set the mainLabel with it's textfield
-			mainLabel = textField.text
+			// Set the mainLabel with its textfield
+			mainLabel = textField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 			
 		} else if textField == schedLabelTextfield {
 			
-			// Set the schedLabel with it's textfield
-			schedLabel = textField.text
+			// Set the schedLabel with its textfield
+			schedLabel = textField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 			
 		}
 		
@@ -311,27 +311,48 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	override func viewWillDisappear(animated: Bool) {
 		
-		// Save the currentEntry's properities to CoreData
-		currentEntry.mainLabel = self.mainLabel
-		currentEntry.scheduleLabel = self.schedLabel
-		currentEntry.timeValueHours = self.timeValueHours
-		currentEntry.timeValueMins = self.timeValueMins
-		currentEntry.timeValueStr = self.intervalTimeStr
-		
-		self.entries[indexPath.row] = currentEntry
-		currentTrip.entries = self.entries
-		
-		var savingError: NSError?
-		if moc!.save(&savingError) == false {
+		// Check and save the currentEntry's properities to CoreData
+		if mainLabelTextfield.text.isEmpty || mainLabelTextfield.text == nil {
 			
-			if let error = savingError {
+			// Alert the user that an entry cannot be saved if it does not have a mainLabel
+			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Main Label field was empty.", preferredStyle: UIAlertControllerStyle.Alert)
+			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+				alertVC.dismissViewControllerAnimated(true, completion: nil)
+			})
+			alertVC.addAction(okBtn)
+			parentViewController?.presentViewController(alertVC, animated: true, completion: nil)
+			
+		} else {
+			
+			currentEntry.mainLabel = self.mainLabel
+			if schedLabelTextfield.text.isEmpty || schedLabelTextfield.text == nil {
 				
-				println("Failed to save the trip.\nError = \(error)")
+				currentEntry.scheduleLabel = self.mainLabel
+				
+			} else {
+				
+				currentEntry.scheduleLabel = self.schedLabel
+				
+			}
+			currentEntry.timeValueHours = self.timeValueHours
+			currentEntry.timeValueMins = self.timeValueMins
+			currentEntry.timeValueStr = self.intervalTimeStr
+			
+			self.entries[indexPath.row] = currentEntry
+			currentTrip.entries = self.entries
+			
+			var savingError: NSError?
+			if moc!.save(&savingError) == false {
+				
+				if let error = savingError {
+					
+					println("Failed to save the trip.\nError = \(error)")
+					
+				}
 				
 			}
 			
 		}
-
 		
 		mainLabelTextfield.resignFirstResponder()
 		schedLabelTextfield.resignFirstResponder()

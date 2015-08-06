@@ -11,7 +11,7 @@ import EventKit
 import CoreData
 
 class ShareToCalTableViewController: UITableViewController {
-
+	
 	// EventKit variables
 	let eventStore = EKEventStore()
 	var calendarsToList = [EKCalendar]()
@@ -29,9 +29,6 @@ class ShareToCalTableViewController: UITableViewController {
 			
 		case .Authorized:
 			extractEventEntityCalendarsOutOfSotre(eventStore)
-			
-		case .Denied:
-			displayDeniedAccess()
 		
 		case .NotDetermined:
 			eventStore.requestAccessToEntityType(EKEntityTypeEvent, completion: {
@@ -39,16 +36,21 @@ class ShareToCalTableViewController: UITableViewController {
 				if granted {
 					
 					self.extractEventEntityCalendarsOutOfSotre(self.eventStore)
-					
-				} else {
-					
-					self.displayDeniedAccess()
+					self.tableView.reloadData()
 					
 				}
 			})
 			
-		case .Restricted:
-			displayAccessRestricted()
+		default:
+			let alertViewController = UIAlertController(title: "No Access", message: "Access to Calendars is not allowed.", preferredStyle: UIAlertControllerStyle.Alert)
+			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+				alertViewController.dismissViewControllerAnimated(true, completion: nil)
+				self.dismissViewControllerAnimated(true, completion: nil)
+			})
+			alertViewController.addAction(dismissAction)
+			
+			presentViewController(alertViewController, animated: true, completion: nil)
+			
 			
 		}
 		
@@ -63,7 +65,7 @@ class ShareToCalTableViewController: UITableViewController {
 		currentTrip = trips[0]
 		
     }
-
+	
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -99,36 +101,6 @@ class ShareToCalTableViewController: UITableViewController {
 			
 		}
 		
-		tableView.reloadData()
-		
-	}
-	
-	// Presents an alert VC for access being denied
-	private func displayDeniedAccess() {
-		
-		let alertViewController = UIAlertController(title: "Not Allowed", message: "Access to Calendars was denied.", preferredStyle: UIAlertControllerStyle.Alert)
-		let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
-			alertViewController.dismissViewControllerAnimated(true, completion: nil)
-			self.dismissViewControllerAnimated(true, completion: nil)
-		})
-		alertViewController.addAction(dismissAction)
-		
-		presentViewController(alertViewController, animated: true, completion: nil)
-		
-	}
-	
-	// Presents an alert VC for access being restricted
-	private func displayAccessRestricted() {
-		
-		let alertViewController = UIAlertController(title: "Not Allowed", message: "Access to Calendars was restricted.", preferredStyle: UIAlertControllerStyle.Alert)
-		let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
-			alertViewController.dismissViewControllerAnimated(true, completion: nil)
-			self.dismissViewControllerAnimated(true, completion: nil)
-		})
-		alertViewController.addAction(dismissAction)
-		
-		presentViewController(alertViewController, animated: true, completion: nil)
-		
 	}
 
 	
@@ -137,15 +109,13 @@ class ShareToCalTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
         return calendarsToList.count
-		
-		
-		
+	
     }
 
 	
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("calendarCell", forIndexPath: indexPath) as! UITableViewCell
-
+		
 		cell.textLabel?.text = calendarsToList[indexPath.row].title
 		
 		if calendarToUseIndex == indexPath {
@@ -157,7 +127,7 @@ class ShareToCalTableViewController: UITableViewController {
 			cell.accessoryType = UITableViewCellAccessoryType.None
 			
 		}
-
+		
         return cell
     }
 	
@@ -203,7 +173,7 @@ class ShareToCalTableViewController: UITableViewController {
 		
 		let durationOfInterval = entry.timeIntervalByConvertingTimeValue()
 		let endDate = entry.startDate.dateByAddingTimeInterval(durationOfInterval)
-		let notes = "\(currentTrip.tripName)\n\(entry.mainLabel)\n\nOrganized and Automatically Added by TravelTimer"
+		let notes = "\(currentTrip.tripName)\n\(entry.mainLabel)\n\nOrganized and Automatically Added by It's Time To Go"
 		createEventWithTitle(entry.scheduleLabel, startDate: entry.startDate, endDate: endDate, inCalendar: calendar, inEventStore: eventStore, withNotes: notes)
 		
 	}
@@ -218,7 +188,7 @@ class ShareToCalTableViewController: UITableViewController {
 		event.endDate = endDate
 		
 		let alarm = EKAlarm(relativeOffset: 0.0)
-		event.addAlarm(alarm)
+		event.alarms = [alarm]
 		
 		var saveError: NSError?
 		let result = eventStore.saveEvent(event, span: EKSpanThisEvent, error: &saveError)
