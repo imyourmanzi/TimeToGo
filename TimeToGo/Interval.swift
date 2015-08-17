@@ -7,7 +7,10 @@
 //  Copyright (c) 2015 VMM Softwares. All rights reserved.
 //
 
+// ADD SAVING FOR LOCATION ON INTERVALS
+
 import UIKit
+import MapKit
 
 class Interval: NSObject, NSCoding {
 	
