@@ -6,19 +6,23 @@
 //  Copyright (c) 2015 VMM Softwares. All rights reserved.
 //
 
-// close keyboard when picker wheel opens
-// change hours and minutes label on picker wheel
-
 import UIKit
 import CoreData
+import MapKit
 
-class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
+class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, MKMapViewDelegate, communicationToMain {
 	
 	// Interface Builder outlets
 	@IBOutlet var mainLabelTextfield: UITextField!
 	@IBOutlet var schedLabelTextfield: UITextField!
 	@IBOutlet var intervalLabelCell: UITableViewCell!
 	@IBOutlet var intervalTimePicker: UIPickerView!
+	@IBOutlet var useLocationSwitch: UISwitch!
+	@IBOutlet var startLocCell: UITableViewCell!
+	@IBOutlet var startLocTextfield: UITextField!
+	@IBOutlet var endLocCell: UITableViewCell!
+	@IBOutlet var endLocTextfield: UITextField!
+	@IBOutlet var mapView: MKMapView!				// Be careful using the MapView, it uses ~200 MB of RAM memory
 	
 	// CoreData variables
 	var moc: NSManagedObjectContext?
@@ -33,6 +37,16 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	var timeValueMins: Int = 15
 	var intervalTimeStr: String!
 	var pickerHidden = true
+	
+	// MapKit variables
+	var useLocation = false
+	var useLocationPrev: Bool!
+	var locationManager: CLLocationManager?
+	var startLocation: MKMapItem?
+	var endLocation: MKMapItem?
+	var startAnnotation: LocationAnnotation?
+	var endAnnotation: LocationAnnotation?
+	var directionsOverlay: MKOverlay?
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -60,6 +74,63 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		intervalTimePicker.dataSource = self
 		intervalTimePicker.delegate = self
 		
+		useLocationSwitch.on = false
+		useLocation = useLocationSwitch.on
+		
+		startLocTextfield.enabled = false
+		endLocTextfield.enabled = false
+		
+	}
+	
+	func backFromSearch(mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int) {
+		
+		switch index {
+			
+		case 0:
+			startLocation = mapItem
+			startLocTextfield.text = startLocation?.name
+			mapView.removeAnnotation(startAnnotation)
+			startAnnotation = LocationAnnotation(coordinate: startLocation!.placemark.coordinate, title: startLocation!.name, subtitle: address)
+			mapView.addAnnotation(startAnnotation)
+			
+		case 1:
+			endLocation = mapItem
+			endLocTextfield.text = endLocation?.name
+			mapView.removeAnnotation(endAnnotation)
+			endAnnotation = LocationAnnotation(coordinate: endLocation!.placemark.coordinate, title: endLocation!.name, subtitle: address)
+			mapView.addAnnotation(endAnnotation)
+			
+		default:
+			break
+			
+		}
+		
+		if startLocation != nil && endLocation != nil {
+			
+			if directionsOverlay != nil {
+				mapView.removeOverlay(directionsOverlay)
+			}
+			
+			let directionsRequest = MKDirectionsRequest()
+			directionsRequest.setSource(startLocation)
+			directionsRequest.setDestination(endLocation)
+			directionsRequest.requestsAlternateRoutes = false
+			directionsRequest.transportType = MKDirectionsTransportType.Automobile
+			
+			let directions = MKDirections(request: directionsRequest)
+			directions.calculateDirectionsWithCompletionHandler({
+				(response: MKDirectionsResponse!, error: NSError!) -> Void in
+				
+				if let theResponse = response {
+					
+					self.showRoute(theResponse)
+					
+				}
+				
+			})
+			
+		}
+		
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -68,8 +139,10 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	override func viewDidAppear(animated: Bool) {
 		
-		// Show the keyboard for the mainLabelTextfield when the view has appeared
-		mainLabelTextfield.becomeFirstResponder()
+		// Show the keyboard for the mainLabelTextfield when the view has appeared if it is empty
+		if mainLabelTextfield.text.isEmpty {
+			mainLabelTextfield.becomeFirstResponder()
+		}
 		
 	}
 	
@@ -186,13 +259,33 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
-		if pickerHidden {
+		if section == 0 {
 			
-			return 3
+			if pickerHidden {
+				
+				return 3
+				
+			} else {
+				
+				return 4
+				
+			}
+			
+		} else if section == 1 {
+			
+			if useLocation {
+				
+				return 4
+				
+			} else {
+				
+				return 1
+				
+			}
 			
 		} else {
 			
-			return 4
+			return 0
 			
 		}
 		
@@ -200,9 +293,17 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
 		
-		if indexPath.row == 2 {
+		if indexPath.section == 0 {
 			
-			togglePicker()
+			if indexPath.row == 2 {
+				
+				togglePicker()
+				
+			}
+			
+		} else if indexPath.section == 1 && (indexPath.row == 1 || indexPath.row == 2) {
+			
+			loadSearchControllerWithTitle((tableView.cellForRowAtIndexPath(indexPath)?.contentView.subviews[1] as! UILabel).text, mapView: self.mapView)
 			
 		}
 		
@@ -210,21 +311,49 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 		
-		if pickerHidden {
+		if indexPath.section == 0 {
 			
-			return tableView.rowHeight
-			
-		} else {
-			
-			if indexPath.row == 3 {
+			if pickerHidden {
 				
-				return intervalTimePicker.frame.height
+				return tableView.rowHeight
+				
+			} else {
+				
+				if indexPath.row == 3 {
+					
+					return intervalTimePicker.frame.height
+					
+				} else {
+					
+					return tableView.rowHeight
+					
+				}
+				
+			}
+			
+		} else if indexPath.section == 1 {
+			
+			if useLocation {
+				
+				if indexPath.row == 3 {
+					
+					return mapView.frame.height
+					
+				} else {
+					
+					return tableView.rowHeight
+					
+				}
 				
 			} else {
 				
 				return tableView.rowHeight
 				
 			}
+			
+		} else {
+			
+			return tableView.rowHeight
 			
 		}
 		
@@ -341,12 +470,10 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 3, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
 			mainLabelTextfield.resignFirstResponder()
 			schedLabelTextfield.resignFirstResponder()
-			tableView.scrollEnabled = false
 			
 		} else {
 			
 			self.tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: 3, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
-			tableView.scrollEnabled = true
 			
 		}
 		
@@ -355,6 +482,320 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		self.tableView.endUpdates()
 		
 		self.tableView.deselectRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0), animated: true)
+		
+	}
+	
+	
+	// MARK: - Location management
+	
+	@IBAction func useLocationSwitchFlipped(sender: UISwitch) {
+		
+		if sender.on {
+			checkForLocationPermission()
+		} else {
+			locationManager?.stopUpdatingLocation()
+		}
+		useLocationPrev = useLocation
+		useLocation = sender.on
+		toggleUseLocation()
+		
+	}
+	
+	private func checkForLocationPermission() {
+		
+		if CLLocationManager.locationServicesEnabled() {
+			
+			switch CLLocationManager.authorizationStatus() {
+				
+			case .AuthorizedAlways:
+				createLocationManager(true)
+				
+			case .AuthorizedWhenInUse:
+				createLocationManager(true)
+				
+			case .Denied:
+				useLocationSwitch.on = false
+				displayAlertWithTitle("Denied", message: "Location services are not allowed for this app")
+				
+			case .NotDetermined:
+				createLocationManager(false)
+				if let manager = self.locationManager {
+					
+					manager.requestWhenInUseAuthorization()
+					
+				}
+				
+			case .Restricted:
+				useLocationSwitch.on = false
+				displayAlertWithTitle("Restricted", message: "Location services are not allowed for this app")
+				
+			}
+			
+		}
+		
+	}
+	
+	private func displayAlertWithTitle(title: String?, message: String?) {
+		
+		let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+		let dismissAction = UIAlertAction(title: "Dismiss", style: .Default, handler: nil)
+		alertController.addAction(dismissAction)
+		
+		presentViewController(alertController, animated: true, completion: nil)
+		
+	}
+	
+	private func createLocationManager(startImmediately: Bool) {
+		
+		if locationManager == nil {
+			locationManager = CLLocationManager()
+		}
+		
+		if let manager = locationManager {
+			
+			manager.delegate = self
+			if startImmediately {
+				
+				manager.startUpdatingLocation()
+				mapView.showsUserLocation = true
+				
+			}
+			
+		}
+		
+	}
+	
+	func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+		
+		switch status {
+			
+		case .AuthorizedAlways:
+			mapView.showsUserLocation = true
+			
+		case .AuthorizedWhenInUse:
+			mapView.showsUserLocation = true
+			
+		case .Denied:
+			useLocationSwitch.enabled = false
+			
+		case .Restricted:
+			useLocationSwitch.enabled = false
+			
+		case .NotDetermined:
+			checkForLocationPermission()
+			
+		}
+		
+	}
+	
+	func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+		
+		println("Location manager failed: (\(manager))\n\(error)")
+		
+		let alertController = UIAlertController(title: "Error \(error.code)", message: "Location manager failed: \(error)", preferredStyle: UIAlertControllerStyle.Alert)
+		let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default) { (action: UIAlertAction!) -> Void in
+			
+			manager.stopUpdatingLocation()
+			self.useLocationSwitch.setOn(false, animated: true)
+			self.useLocationPrev = self.useLocation
+			self.useLocation = self.useLocationSwitch.on
+			self.toggleUseLocation()
+			
+		}
+		alertController.addAction(dismissBtn)
+		
+		self.presentViewController(alertController, animated: true, completion: nil)
+		
+	}
+	
+	func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
+		
+		if mapView.annotations.count > 0 {
+			
+			let span = MKCoordinateSpan(latitudeDelta: 0.4, longitudeDelta: 0.4)
+			let region = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: span)
+			
+			mapView.setRegion(region, animated: true)
+			
+		}
+		
+	}
+	
+	func mapViewWillStartLoadingMap(mapView: MKMapView!) {
+		
+		startLocCell.userInteractionEnabled = false
+		startLocCell.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+		endLocCell.userInteractionEnabled = false
+		endLocCell.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
+		
+	}
+	
+	func mapViewDidFinishLoadingMap(mapView: MKMapView!) {
+		
+		startLocCell.userInteractionEnabled = true
+		startLocCell.backgroundColor = UIColor.whiteColor()
+		endLocCell.userInteractionEnabled = true
+		endLocCell.backgroundColor = UIColor.whiteColor()
+		
+	}
+	
+	func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
+		
+		let renderer = MKPolylineRenderer(overlay: overlay)
+		renderer.strokeColor = UIColor(red: 8/255, green: 156/255, blue: 1.0, alpha: 1.0)
+		renderer.lineWidth = 5.0
+		
+		return renderer
+		
+	}
+	
+	private func showRoute(response: MKDirectionsResponse) {
+		
+		for route in response.routes as! [MKRoute]  {
+			
+			mapView.addOverlay(route.polyline, level: MKOverlayLevel.AboveRoads)
+			directionsOverlay = (mapView.overlays as! [MKOverlay])[0]
+			
+			let timeInInt = Int((route.expectedTravelTime))
+			timeValueHours = timeInInt / 3600
+			timeValueMins = timeInInt / 60 % 60
+			intervalLabelCell.detailTextLabel?.text = "\(timeValueHours):\(timeValueMins)"
+			
+		}
+		
+	}
+	
+	func mapView(mapView: MKMapView!, didAddOverlayRenderers renderers: [AnyObject]!) {
+		
+		var zoomRect = MKMapRectNull
+		
+		for annotation in mapView.annotations as! [MKAnnotation] {
+			
+			var annotationPoint = MKMapPointForCoordinate(annotation.coordinate)
+			var pointRec = MKMapRect(origin: MKMapPoint(x: annotationPoint.x - 50.0, y: annotationPoint.y - 50.0), size: MKMapSize(width: 100.0, height: 100.0))
+			zoomRect = MKMapRectUnion(zoomRect, pointRec)
+			
+		}
+		
+		mapView.setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 35.0, left: 35.0, bottom: 35.0, right: 35.0), animated: true)
+		
+	}
+	
+	@IBAction func openRouteInMaps(sender: UIButton) {
+		
+		if let startLoc = startLocation {
+			
+			if let endLoc = endLocation {
+				
+				let launchOptions = [
+					MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving,
+					MKLaunchOptionsMapTypeKey : MKMapType.Standard.rawValue,
+					MKLaunchOptionsShowsTrafficKey : true,
+					MKLaunchOptionsMapCenterKey : NSValue(MKCoordinate: self.mapView.region.center),
+					MKLaunchOptionsMapSpanKey : NSValue(MKCoordinateSpan: self.mapView.region.span)
+				]
+				
+				MKMapItem.openMapsWithItems([startLoc, endLoc], launchOptions: launchOptions)
+				
+			}
+			
+		}
+		
+	}
+	
+	
+	// MARK: - Location-based fields show/hide
+	
+	private func toggleUseLocation() {
+		
+		let rowsToChange = [
+			
+			NSIndexPath(forRow: 1, inSection: 1),
+			NSIndexPath(forRow: 2, inSection: 1),
+			NSIndexPath(forRow: 3, inSection: 1)
+			
+		]
+		
+		self.tableView.beginUpdates()
+		
+		if useLocation && useLocationPrev == false {
+			
+			mapView.delegate = self
+			self.tableView.insertRowsAtIndexPaths(rowsToChange, withRowAnimation: UITableViewRowAnimation.Fade)
+			mainLabelTextfield.resignFirstResponder()
+			schedLabelTextfield.resignFirstResponder()
+			
+		} else if !useLocation && useLocationPrev == true {
+			
+			self.tableView.deleteRowsAtIndexPaths(rowsToChange, withRowAnimation: UITableViewRowAnimation.Fade)
+			
+		}
+		
+		self.tableView.endUpdates()
+		
+	}
+	
+	private func loadSearchControllerWithTitle(title: String?, mapView: MKMapView) {
+		
+		let searchNavVC = self.storyboard?.instantiateViewControllerWithIdentifier("searchNavVC") as! UINavigationController
+		let searchVC = searchNavVC.viewControllers[0] as! SearchViewController
+		searchVC.delegate = self
+		
+		if let theTitle = title {
+			
+			if theTitle == "Start" {
+				
+				searchVC.whichLocationIndex = 0
+				
+			} else if theTitle == "End" {
+				
+				searchVC.whichLocationIndex = 1
+				
+			} else {
+				
+				searchVC.whichLocationIndex = -1
+				
+			}
+			
+			searchVC.title = theTitle + " Location"
+			
+		} else {
+			
+			searchVC.whichLocationIndex = -1
+			searchVC.title = "Location"
+			
+		}
+		
+		searchVC.mapView = mapView
+		
+		CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location, completionHandler: { (placemarks, error: NSError!) -> Void in
+			
+			if let returnedPlacemarks = placemarks {
+				
+				if returnedPlacemarks.count > 0 {
+					
+					let userCurrentLocation = placemarks[0] as! CLPlacemark
+					searchVC.userCurrentLocation = MKMapItem(placemark: MKPlacemark(placemark: userCurrentLocation))
+					
+					searchVC.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+					self.presentViewController(searchNavVC, animated: true, completion: nil)
+					
+				}
+				
+			} else {
+				
+				let alertController = UIAlertController(title: "Location Error", message: "Connection to the server was not responsive.\nPlease try again later.", preferredStyle: UIAlertControllerStyle.Alert)
+				let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction!) -> Void in
+					
+					alertController.dismissViewControllerAnimated(true, completion: nil)
+					
+				})
+				alertController.addAction(dismissBtn)
+				self.presentViewController(alertController, animated: true, completion: nil)
+				
+			}
+			
+		})
 		
 	}
 	

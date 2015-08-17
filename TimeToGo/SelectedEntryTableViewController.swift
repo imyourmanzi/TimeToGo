@@ -7,9 +7,6 @@
 //  Copyright (c) 2015 VMM Softwares. All rights reserved.
 //
 
-// close keyboard when picker wheel opens
-// change hours and minutes label on picker wheel
-
 import UIKit
 import CoreData
 import MapKit
@@ -673,6 +670,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 			mapView.delegate = self
 			self.tableView.insertRowsAtIndexPaths(rowsToChange, withRowAnimation: UITableViewRowAnimation.Fade)
+			mainLabelTextfield.resignFirstResponder()
+			schedLabelTextfield.resignFirstResponder()
 			
 		} else if !useLocation && useLocationPrev == true {
 			
@@ -719,21 +718,33 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		//		println("Geo-ing")
 		CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location, completionHandler: { (placemarks, error: NSError!) -> Void in
 			
-			//			println(placemarks.count)
-			if placemarks.count > 0 {
+			if let returnedPlacemarks = placemarks {
 				
-				let userCurrentLocation = placemarks[0] as! CLPlacemark
-				//				println(userCurrentLocation)
-				searchVC.userCurrentLocation = MKMapItem(placemark: MKPlacemark(placemark: userCurrentLocation))
+				if returnedPlacemarks.count > 0 {
+					
+					let userCurrentLocation = placemarks[0] as! CLPlacemark
+					searchVC.userCurrentLocation = MKMapItem(placemark: MKPlacemark(placemark: userCurrentLocation))
+					
+					searchVC.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+					self.presentViewController(searchNavVC, animated: true, completion: nil)
+					
+				}
+				
+			} else {
+				
+				let alertController = UIAlertController(title: "Location Error", message: "Connection to the server was not responsive.\nPlease try again later.", preferredStyle: UIAlertControllerStyle.Alert)
+				let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction!) -> Void in
+					
+					alertController.dismissViewControllerAnimated(true, completion: nil)
+					
+				})
+				alertController.addAction(dismissBtn)
+				self.presentViewController(alertController, animated: true, completion: nil)
 				
 			}
 			
 		})
 		
-		//		let currentLocMapItem = MKMapItem(placemark: currentLocation)
-		//		searchVC.userCurrentLocation = currentLocMapItem
-		searchVC.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
-		presentViewController(searchNavVC, animated: true, completion: nil)
 		
 	}
 	
