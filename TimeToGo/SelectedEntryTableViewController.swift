@@ -45,7 +45,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	// Current VC variables
 	var pickerHidden = true
-	var useLocation = false
+	var useLocation: Bool!
 	var useLocationPrev: Bool!
 	
 	// MapKit variables
@@ -87,12 +87,29 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		startLocTextfield.enabled = false
 		endLocTextfield.enabled = false
 		
-		useLocationSwitch.on = false
-		useLocation = useLocationSwitch.on
+		self.useLocation = currentEntry.useLocation
+		
+		if let usesLocation = useLocation {
+			
+			if usesLocation == true {
+				
+				self.startLocation = MKMapItem(placemark: currentEntry.startLocation)
+				self.endLocation = MKMapItem(placemark: currentEntry.endLocation)
+				
+			}
+		} else {
+			
+			useLocation = false
+			
+		}
+		
+		mapView.delegate = self
 		
 	}
 	
 	func backFromSearch(mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int) {
+		
+//		println("came back")
 		
 		switch index {
 			
@@ -115,29 +132,82 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 		}
 		
-		if startLocation != nil && endLocation != nil {
+	}
+	
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+		
+//		println("did appear")
+		
+		if useLocation == true {
 			
-			if directionsOverlay != nil {
-				mapView.removeOverlay(directionsOverlay)
-			}
+//			println("uses location")
 			
-			let directionsRequest = MKDirectionsRequest()
-			directionsRequest.setSource(startLocation)
-			directionsRequest.setDestination(endLocation)
-			directionsRequest.requestsAlternateRoutes = false
-			directionsRequest.transportType = MKDirectionsTransportType.Automobile
+/*			
+			// Does not start location manager
+			// Code would be less efficient to do everything here that
+			// happens in useLocationSwitchFlipped(sender: UISwitch) method
+			useLocationSwitch.setOn(true, animated: true)
+			useLocationPrev = useLocation
+			useLocation = useLocationSwitch.on
+			toggleUseLocation()
+*/
+			useLocationSwitch.setOn(true, animated: true)
+			useLocationSwitchFlipped(useLocationSwitch)
 			
-			let directions = MKDirections(request: directionsRequest)
-			directions.calculateDirectionsWithCompletionHandler({
-				(response: MKDirectionsResponse!, error: NSError!) -> Void in
+
+//			println("turned on loc fields")
+			
+			if startLocation != nil && endLocation != nil {
 				
-				if let theResponse = response {
+//				println("has start and end locs: \(startLocation), \(endLocation)")
+				
+				startLocTextfield.text = startLocation!.name
+				endLocTextfield.text = endLocation!.name
+				
+				mapView.removeAnnotations(mapView.annotations)
+				
+				startAnnotation = LocationAnnotation(coordinate: startLocation!.placemark.coordinate, title: startLocation!.name, subtitle: Interval.getAddressFromMapItem(startLocation!))
+				mapView.addAnnotation(startAnnotation)
+				
+				endAnnotation = LocationAnnotation(coordinate: endLocation!.placemark.coordinate, title: endLocation!.name, subtitle: Interval.getAddressFromMapItem(endLocation!))
+				mapView.addAnnotation(endAnnotation)
+				
+				if directionsOverlay != nil {
 					
-					self.showRoute(theResponse)
+					mapView.removeOverlay(directionsOverlay)
+					
+				} else {
+					
+//					println("directionsOveraly: nil")
 					
 				}
+//				println("Overlays: \(mapView.overlays)")
+//				println("Renderer For directionsOveraly: \(mapView.rendererForOverlay(directionsOverlay))")
 				
-			})
+//				println("Current location: \(locationManager?.location)")
+//				while locationManager?.location == nil { }
+				
+				let directionsRequest = MKDirectionsRequest()
+				directionsRequest.setSource(startLocation!)
+				directionsRequest.setDestination(endLocation!)
+				directionsRequest.requestsAlternateRoutes = false
+				directionsRequest.transportType = MKDirectionsTransportType.Automobile
+				
+				let directions = MKDirections(request: directionsRequest)
+				directions.calculateDirectionsWithCompletionHandler({
+					(response: MKDirectionsResponse!, error: NSError!) -> Void in
+//					println("made request")
+					if let theResponse = response {
+						
+//						println("got response")
+						self.showRoute(theResponse)
+						
+					}
+					
+				})
+				
+			}
 			
 		}
 		
@@ -216,7 +286,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 		} else if section == 1 {
 			
-			if useLocation {
+			if useLocation == true {
 				
 				return 4
 				
@@ -276,7 +346,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 		} else if indexPath.section == 1 {
 			
-			if useLocation {
+			if useLocation == true {
 				
 				if indexPath.row == 3 {
 					
@@ -441,7 +511,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		} else {
 			locationManager?.stopUpdatingLocation()
 		}
-		//		print("changed")
 		useLocationPrev = useLocation
 		useLocation = sender.on
 		toggleUseLocation()
@@ -477,6 +546,10 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				displayAlertWithTitle("Restricted", message: "Location services are not allowed for this app")
 				
 			}
+			
+		} else {
+			
+			displayAlertWithTitle("Location Services Disabled", message: "Location services are not enabled on the device")
 			
 		}
 		
@@ -557,7 +630,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
 		
-		if mapView.annotations.count > 0 {
+		if mapView.annotations.count < 1 {
 			
 			let span = MKCoordinateSpan(latitudeDelta: 0.4, longitudeDelta: 0.4)
 			let region = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: span)
@@ -588,6 +661,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
 		
+//		println("rendererforoverlay")
+		
 		let renderer = MKPolylineRenderer(overlay: overlay)
 		renderer.strokeColor = UIColor(red: 8/255, green: 156/255, blue: 1.0, alpha: 1.0)
 		renderer.lineWidth = 5.0
@@ -606,13 +681,16 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			let timeInInt = Int((route.expectedTravelTime))
 			timeValueHours = timeInInt / 3600
 			timeValueMins = timeInInt / 60 % 60
-			intervalLabelCell.detailTextLabel?.text = "\(timeValueHours):\(timeValueMins)"
+			intervalLabelCell.detailTextLabel?.text = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
+//			println("set route")
 			
 		}
 		
 	}
 	
 	func mapView(mapView: MKMapView!, didAddOverlayRenderers renderers: [AnyObject]!) {
+		
+//		println("did add overlay renderer(s)")
 		
 		var zoomRect = MKMapRectNull
 		
@@ -666,14 +744,14 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		self.tableView.beginUpdates()
 		
-		if useLocation && useLocationPrev == false {
+		if useLocation == true && useLocationPrev == false {
 			
 			mapView.delegate = self
 			self.tableView.insertRowsAtIndexPaths(rowsToChange, withRowAnimation: UITableViewRowAnimation.Fade)
 			mainLabelTextfield.resignFirstResponder()
 			schedLabelTextfield.resignFirstResponder()
 			
-		} else if !useLocation && useLocationPrev == true {
+		} else if useLocation == false && useLocationPrev == true {
 			
 			self.tableView.deleteRowsAtIndexPaths(rowsToChange, withRowAnimation: UITableViewRowAnimation.Fade)
 			
@@ -715,7 +793,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		}
 		searchVC.mapView = mapView
 		
-		//		println("Geo-ing")
 		CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location, completionHandler: { (placemarks, error: NSError!) -> Void in
 			
 			if let returnedPlacemarks = placemarks {
@@ -779,7 +856,14 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			currentEntry.timeValueHours = self.timeValueHours
 			currentEntry.timeValueMins = self.timeValueMins
 			currentEntry.timeValueStr = self.intervalTimeStr
+			if useLocation == true && startLocation != nil && endLocation != nil {
 			
+				currentEntry.useLocation = self.useLocation
+				currentEntry.startLocation = self.startLocation?.placemark
+				currentEntry.endLocation = self.endLocation?.placemark
+//				println("saved location")
+				
+			}
 			self.entries[indexPath.row] = currentEntry
 			currentTrip.entries = self.entries
 			

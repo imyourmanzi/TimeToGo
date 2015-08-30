@@ -162,18 +162,14 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			
 			// Fill in any empty values, save to the persistent store, and close the view controller
 			if schedLabelTextfield.text.isEmpty || schedLabelTextfield.text == nil {
-			
+				
 				schedLabel = mainLabel
-				
-				entries.append(Interval(mainLabel: mainLabel, scheduleLabel: mainLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins))
-				
-			} else {
-				
-				entries.append(Interval(mainLabel: mainLabel, scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins))
-					
 			}
 			
+			// Save entry information (and location information if it's present) and dismiss the view
+			entries.append(Interval(mainLabel: mainLabel, scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, usesLocation: useLocation, startLoc: startLocation?.placemark, endLoc: endLocation?.placemark))
 			performUpdateOnCoreData()
+			
 			dismissViewControllerAnimated(true, completion: nil)
 			
 		}
@@ -659,7 +655,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			let timeInInt = Int((route.expectedTravelTime))
 			timeValueHours = timeInInt / 3600
 			timeValueMins = timeInInt / 60 % 60
-			intervalLabelCell.detailTextLabel?.text = "\(timeValueHours):\(timeValueMins)"
+			intervalLabelCell.detailTextLabel?.text = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
 			
 		}
 		

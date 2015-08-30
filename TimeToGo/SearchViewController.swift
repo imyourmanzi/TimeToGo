@@ -184,7 +184,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 			if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
 				
 				let mapItem = mapSearchResults[indexPath.row]
-				let streetAddress = getAddressFromMapItem(mapItem)
+				let streetAddress = Interval.getAddressFromMapItem(mapItem)
 				
 				cell.textLabel?.text = mapItem.name
 				cell.detailTextLabel?.text = streetAddress
@@ -197,7 +197,6 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 				
 		} else {
 			
-//			println(userCurrentLocation)
 			cell.textLabel?.text = "Current Location"
 			cell.detailTextLabel?.text = nil
 			
@@ -219,17 +218,15 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 			if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
 				
 				mapItem = mapSearchResults[indexPath.row]
-				streetAddress = getAddressFromMapItem(mapItem!)
+				streetAddress = Interval.getAddressFromMapItem(mapItem!)
 				
-//				println("Selected: \(mapSearchResults[indexPath.row])")
 				selectedLocation = mapItem
 				
 			} else {
 				
 				mapItem = defaultLocations[indexPath.row]
-				streetAddress = getAddressFromMapItem(mapItem!)
+				streetAddress = Interval.getAddressFromMapItem(mapItem!)
 				
-//				println("Selected: \(defaultLocations[indexPath.row])")
 				selectedLocation = mapItem
 				
 			}
@@ -257,41 +254,6 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		searchResultsController.dismissViewControllerAnimated(true, completion: nil)
 		self.dismissViewControllerAnimated(true, completion: nil)
-		
-	}
-	
-	private func getAddressFromMapItem(mapItem: MKMapItem) -> String {
-		
-		var streetAddress = ""
-		
-		if let thoroughfare = mapItem.placemark.thoroughfare {
-			
-			if let subThoroughfare = mapItem.placemark.subThoroughfare {
-				streetAddress += subThoroughfare
-			}
-			
-			streetAddress += " \(thoroughfare), "
-			
-		}
-		if let locality = mapItem.placemark.locality {
-			streetAddress += "\(locality), "
-		}
-		if let adminArea = mapItem.placemark.administrativeArea {
-			
-			streetAddress += adminArea
-			
-			if let postalCode = mapItem.placemark.postalCode {
-				streetAddress += postalCode
-			}
-			
-			streetAddress += ", "
-			
-		}
-		if let country = mapItem.placemark.country {
-			streetAddress += country
-		}
-		
-		return streetAddress
 		
 	}
 	

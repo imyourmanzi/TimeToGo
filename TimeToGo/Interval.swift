@@ -21,6 +21,9 @@ class Interval: NSObject, NSCoding {
 	var timeValueMins: Int!
 	var timeValueStr: String!
 	var startDate: NSDate!
+	var useLocation: Bool? = false
+	var startLocation: MKPlacemark? = nil
+	var endLocation: MKPlacemark? = nil
 	
 	// Private label variables for schedule
 	private let entryLabel = UILabel()
@@ -28,6 +31,9 @@ class Interval: NSObject, NSCoding {
 	
 	
 	// MARK: - Initializers
+	
+/*
+	// OBSOLETE INITIALIZER
 	
 	init(mainLabel: String, timeValueHours: Int, timeValueMins: Int) {
 		
@@ -57,6 +63,7 @@ class Interval: NSObject, NSCoding {
 		self.timeValueMins = timeValueMins
 		
 	}
+*/
 	
 	init(mainLabel: String, scheduleLabel: String, timeValueHours: Int, timeValueMins: Int) {
 		
@@ -64,6 +71,22 @@ class Interval: NSObject, NSCoding {
 		self.timeValueHours = timeValueHours
 		self.timeValueMins = timeValueMins
 		self.scheduleLabel = scheduleLabel
+		
+	}
+	
+	init(mainLabel: String, scheduleLabel: String, timeValueHours: Int, timeValueMins: Int, usesLocation: Bool, startLoc: MKPlacemark?, endLoc: MKPlacemark?) {
+		
+		self.mainLabel = mainLabel
+		self.timeValueHours = timeValueHours
+		self.timeValueMins = timeValueMins
+		self.scheduleLabel = scheduleLabel
+		self.useLocation = usesLocation
+		if usesLocation == true && startLoc != nil && endLoc != nil {
+			
+			self.startLocation = startLoc
+			self.endLocation = endLoc
+			
+		}
 		
 	}
 	
@@ -233,6 +256,42 @@ class Interval: NSObject, NSCoding {
 		
 	}
 	
+	// Static function that composes an address label for any MKMapItem
+	static func getAddressFromMapItem(mapItem: MKMapItem) -> String {
+		
+		var streetAddress = ""
+		
+		if let thoroughfare = mapItem.placemark.thoroughfare {
+			
+			if let subThoroughfare = mapItem.placemark.subThoroughfare {
+				streetAddress += subThoroughfare
+			}
+			
+			streetAddress += " \(thoroughfare), "
+			
+		}
+		if let locality = mapItem.placemark.locality {
+			streetAddress += "\(locality), "
+		}
+		if let adminArea = mapItem.placemark.administrativeArea {
+			
+			streetAddress += adminArea
+			
+			if let postalCode = mapItem.placemark.postalCode {
+				streetAddress += postalCode
+			}
+			
+			streetAddress += ", "
+			
+		}
+		if let country = mapItem.placemark.country {
+			streetAddress += country
+		}
+		
+		return streetAddress
+		
+	}
+	
 	
 	// MARK: - NSCoding protocol
 	
@@ -242,6 +301,9 @@ class Interval: NSObject, NSCoding {
 		self.scheduleLabel = aDecoder.decodeObjectForKey("scheduleLabel") as! String
 		self.timeValueHours = aDecoder.decodeObjectForKey("timeValueHours") as! Int
 		self.timeValueMins = aDecoder.decodeObjectForKey("timeValueMins") as! Int
+		self.useLocation = aDecoder.decodeObjectForKey("useLocation") as! Bool?
+		self.startLocation = aDecoder.decodeObjectForKey("startLocation") as! MKPlacemark?
+		self.endLocation = aDecoder.decodeObjectForKey("endLocation") as! MKPlacemark?
 		
 	}
 	
@@ -251,6 +313,9 @@ class Interval: NSObject, NSCoding {
 		aCoder.encodeObject(scheduleLabel, forKey: "scheduleLabel")
 		aCoder.encodeObject(timeValueHours, forKey: "timeValueHours")
 		aCoder.encodeObject(timeValueMins, forKey: "timeValueMins")
+		aCoder.encodeObject(useLocation, forKey: "useLocation")
+		aCoder.encodeObject(startLocation, forKey: "startLocation")
+		aCoder.encodeObject(endLocation, forKey: "endLocation")
 		
 	}
 	
@@ -264,7 +329,10 @@ class Interval: NSObject, NSCoding {
 			return (self.mainLabel == theObject.mainLabel &&
 					self.scheduleLabel == theObject.scheduleLabel &&
 					self.timeValueHours == theObject.timeValueHours &&
-					self.timeValueMins == theObject.timeValueMins)
+					self.timeValueMins == theObject.timeValueMins &&
+					self.useLocation == theObject.useLocation &&
+					self.startLocation == theObject.startLocation &&
+					self.endLocation == theObject.endLocation)
 			
 		}
 			
