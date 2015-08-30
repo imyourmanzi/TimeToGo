@@ -61,23 +61,37 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 	
 	override func viewWillDisappear(animated: Bool) {
 		
-		currentTrip.tripName = self.tripName
-		
-		var savingError: NSError?
-		if moc!.save(&savingError) == false {
+		if tripNameTextfield.text.isEmpty || tripNameTextfield.text == nil {
 			
-			if let error = savingError {
+			// Alert the user that an entry cannot be saved if it does not have a tripLabel
+			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Trip Name field was empty.", preferredStyle: UIAlertControllerStyle.Alert)
+			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+				alertVC.dismissViewControllerAnimated(true, completion: nil)
+			})
+			alertVC.addAction(okBtn)
+			parentViewController?.presentViewController(alertVC, animated: true, completion: nil)
+			
+		} else {
+			
+			currentTrip.tripName = self.tripName
+			
+			var savingError: NSError?
+			if moc!.save(&savingError) == false {
 				
-				println("Failed to save the trip.\nError = \(error)")
+				if let error = savingError {
+					
+					println("Failed to save the trip.\nError = \(error)")
+					
+				}
 				
 			}
+		
+			// Update the currentTripNameMaster in the AppDelegate so that other views will reference the updated name
+			(UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster = self.tripName
+			
+			tripNameTextfield.resignFirstResponder()
 			
 		}
-	
-		// Update the currentTripNameMaster in the AppDelegate so that other views will reference the updated name
-		(UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster = self.tripName
-		
-		tripNameTextfield.resignFirstResponder()
 		
 	}
 	

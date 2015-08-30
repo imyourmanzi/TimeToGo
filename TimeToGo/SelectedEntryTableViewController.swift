@@ -630,7 +630,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
 		
-		if mapView.annotations.count < 1 {
+		if mapView.annotations.count < 3 {
 			
 			let span = MKCoordinateSpan(latitudeDelta: 0.4, longitudeDelta: 0.4)
 			let region = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: span)
