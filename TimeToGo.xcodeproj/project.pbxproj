@@ -207,7 +207,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0640;
-				ORGANIZATIONNAME = "VMM Softwares";
+				ORGANIZATIONNAME = "VMM Software";
 				TargetAttributes = {
 					98418DA51B4847AA00ADC2D8 = {
 						CreatedOnToolsVersion = 6.4;

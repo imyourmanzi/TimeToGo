@@ -1,14 +1,10 @@
 //
 //  FlightTimeTableViewController.swift
-//  TravelTimerBasics9
+//  TimeToGo
 //
-//  Created by Matteo Manzi on 6/28/15.
-//  Copyright (c) 2015 VMM Softwares. All rights reserved.
+//  Created by Matteo Manzi on 7/4/15.
+//  Copyright (c) 2015 VMM Software. All rights reserved.
 //
-
-// No keyboard on dateTextfield DONE
-// date should be MM/dd/yy @hh:mm a DONE
-// Apple calendar -add event- style table view DONE
 
 import UIKit
 import CoreData

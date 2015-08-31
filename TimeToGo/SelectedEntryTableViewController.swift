@@ -1,10 +1,9 @@
 //
 //  SelectedEntryTableViewController.swift
-//  TravelTimerBasics7
+//  TimeToGo
 //
-//  Created by Matteo Manzi on 6/25/15.
-//	Edited by Matteo Manzi on 6/26/15.
-//  Copyright (c) 2015 VMM Softwares. All rights reserved.
+//  Created by Matteo Manzi on 7/4/15.
+//  Copyright (c) 2015 VMM Software. All rights reserved.
 //
 
 import UIKit
@@ -109,8 +108,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	func backFromSearch(mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int) {
 		
-//		println("came back")
-		
 		switch index {
 			
 		case 0:
@@ -137,30 +134,12 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 		
-//		println("did appear")
-		
 		if useLocation == true {
-			
-//			println("uses location")
-			
-/*			
-			// Does not start location manager
-			// Code would be less efficient to do everything here that
-			// happens in useLocationSwitchFlipped(sender: UISwitch) method
-			useLocationSwitch.setOn(true, animated: true)
-			useLocationPrev = useLocation
-			useLocation = useLocationSwitch.on
-			toggleUseLocation()
-*/
+
 			useLocationSwitch.setOn(true, animated: true)
 			useLocationSwitchFlipped(useLocationSwitch)
 			
-
-//			println("turned on loc fields")
-			
 			if startLocation != nil && endLocation != nil {
-				
-//				println("has start and end locs: \(startLocation), \(endLocation)")
 				
 				startLocTextfield.text = startLocation!.name
 				endLocTextfield.text = endLocation!.name
@@ -177,16 +156,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 					
 					mapView.removeOverlay(directionsOverlay)
 					
-				} else {
-					
-//					println("directionsOveraly: nil")
-					
 				}
-//				println("Overlays: \(mapView.overlays)")
-//				println("Renderer For directionsOveraly: \(mapView.rendererForOverlay(directionsOverlay))")
-				
-//				println("Current location: \(locationManager?.location)")
-//				while locationManager?.location == nil { }
 				
 				let directionsRequest = MKDirectionsRequest()
 				directionsRequest.setSource(startLocation!)
@@ -197,10 +167,9 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				let directions = MKDirections(request: directionsRequest)
 				directions.calculateDirectionsWithCompletionHandler({
 					(response: MKDirectionsResponse!, error: NSError!) -> Void in
-//					println("made request")
+					
 					if let theResponse = response {
 						
-//						println("got response")
 						self.showRoute(theResponse)
 						
 					}
@@ -661,8 +630,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
 		
-//		println("rendererforoverlay")
-		
 		let renderer = MKPolylineRenderer(overlay: overlay)
 		renderer.strokeColor = UIColor(red: 8/255, green: 156/255, blue: 1.0, alpha: 1.0)
 		renderer.lineWidth = 5.0
@@ -682,15 +649,12 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			timeValueHours = timeInInt / 3600
 			timeValueMins = timeInInt / 60 % 60
 			intervalLabelCell.detailTextLabel?.text = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
-//			println("set route")
 			
 		}
 		
 	}
 	
 	func mapView(mapView: MKMapView!, didAddOverlayRenderers renderers: [AnyObject]!) {
-		
-//		println("did add overlay renderer(s)")
 		
 		var zoomRect = MKMapRectNull
 		
@@ -861,7 +825,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				currentEntry.useLocation = self.useLocation
 				currentEntry.startLocation = self.startLocation?.placemark
 				currentEntry.endLocation = self.endLocation?.placemark
-//				println("saved location")
 				
 			}
 			self.entries[indexPath.row] = currentEntry

@@ -1,14 +1,10 @@
 //
 //  ScheduleViewController.swift
-//  TravelTimerBasics7
+//  TimeToGo
 //
-//  Created by Matteo Manzi on 6/24/15.
-//	Edited by Matteo Manzi on 6/26/15.
-//  Copyright (c) 2015 VMM Softwares. All rights reserved.
+//  Created by Matteo Manzi on 7/4/15.
+//  Copyright (c) 2015 VMM Software. All rights reserved.
 //
-
-// flight time at bottom of list DONE
-
 
 import UIKit
 import CoreData

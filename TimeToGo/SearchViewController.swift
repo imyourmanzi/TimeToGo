@@ -1,9 +1,9 @@
 //
 //  SearchViewController.swift
-//  TestTableViewWithLocationSwitch
+//  TimeToGo
 //
-//  Created by Matteo Manzi on 7/14/15.
-//  Copyright (c) 2015 VMM Softwares. All rights reserved.
+//  Created by Matteo Manzi on 7/4/15.
+//  Copyright (c) 2015 VMM Software. All rights reserved.
 //
 
 import UIKit
@@ -61,6 +61,11 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		searchResultsController.active = true
 		
+	}
+	
+	override func didReceiveMemoryWarning() {
+		super.didReceiveMemoryWarning()
+		// Dispose of any resources that can be recreated.
 	}
 	
 	
@@ -270,10 +275,5 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		self.dismissViewControllerAnimated(true, completion: nil)
 		
 	}
-	
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 	
 }
