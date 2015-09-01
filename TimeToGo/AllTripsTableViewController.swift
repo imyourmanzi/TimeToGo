@@ -37,13 +37,7 @@ class AllTripsTableViewController: UITableViewController {
 		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
 		let fetchAll = NSFetchRequest()
 		fetchAll.entity = NSEntityDescription.entityForName("Trip", inManagedObjectContext: moc!)
-		var fetchError: NSError?
-		allTrips = moc!.executeFetchRequest(fetchAll, error: &fetchError) as! [Trip]
-		if fetchError != nil {
-			
-			println("could not fetch")
-			
-		}
+		allTrips = (try! moc!.executeFetchRequest(fetchAll)) as! [Trip]
 		
 		tableView.reloadData()
 		
@@ -60,7 +54,7 @@ class AllTripsTableViewController: UITableViewController {
 	
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		
-		let cell = tableView.dequeueReusableCellWithIdentifier("TripCell", forIndexPath: indexPath) as! UITableViewCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("TripCell", forIndexPath: indexPath) 
 
 		let trip = allTrips[indexPath.row]
 		let dateFormatter = NSDateFormatter()
@@ -92,12 +86,15 @@ class AllTripsTableViewController: UITableViewController {
         }
 		
 		// Save the state of the persistent store
-		var savingError: NSError?
-		if moc!.save(&savingError) == false {
+		guard let moc = self.moc else {
+			return
+		}
+		
+		if moc.hasChanges {
 			
-			if let error = savingError {
-				
-				println("Failed to delete the trip.\nError = \(error)")
+			do {
+				try moc.save()
+			} catch {
 				
 			}
 			
@@ -122,17 +119,16 @@ class AllTripsTableViewController: UITableViewController {
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		
 		// Prepare the following screen if a previous trip's cell was selected to be viewed
-		let indexPath: NSIndexPath! = tableView.indexPathForSelectedRow()
-		if let destVC = segue.destinationViewController as? SavedTripViewController {
-
-			let selectedTrip = allTrips[indexPath.row]
-			
-			destVC.title = selectedTrip.tripName
-			destVC.tripName = selectedTrip.tripName
-			destVC.flightDate = selectedTrip.flightDate
-			destVC.numOfEntries = selectedTrip.entries.count
-				
+		let indexPath: NSIndexPath! = tableView.indexPathForSelectedRow
+		guard let destVC = segue.destinationViewController as? SavedTripViewController else {
+			return
 		}
+			let selectedTrip = allTrips[indexPath.row]
+		
+		destVC.title = selectedTrip.tripName
+		destVC.tripName = selectedTrip.tripName
+		destVC.flightDate = selectedTrip.flightDate
+		destVC.numOfEntries = selectedTrip.entries.count
 		
 	}
 

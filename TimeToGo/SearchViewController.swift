@@ -76,33 +76,33 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		mapSearchResults.removeAll(keepCapacity: false)
 		
 		let span = MKCoordinateSpan(latitudeDelta: 1.5, longitudeDelta: 1.5)
-		var region = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: span)
+		let region = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: span)
 		
 		let request = MKLocalSearchRequest()
 		request.naturalLanguageQuery = searchController.searchBar.text
 		request.region = region
 		
 		let search = MKLocalSearch(request: request)
-		search.startWithCompletionHandler { (response: MKLocalSearchResponse!, error: NSError!) -> Void in
+		search.startWithCompletionHandler { (response: MKLocalSearchResponse?, error: NSError?) -> Void in
 			
-			if let searchResults = response {
-				
-				if response.mapItems.count > 0 {
-					
-					for item in response.mapItems as! [MKMapItem] {
-						
-						self.mapSearchResults.append(item)
-						
-					}
-					
-					self.tableView.reloadData()
-						
-				}
+			
+			guard let response = response where response.mapItems.count > 0 else {
+			
+				print("There were no search results found\n")
+				return
 				
 			}
 			
+			for item in response.mapItems {
+				
+				self.mapSearchResults.append(item)
+				
+			}
+			
+			self.tableView.reloadData()
+			
 		}
-	
+		
 	}
 	
 	
@@ -142,7 +142,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if section == 1 {
 			
-			if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
+			if searchResultsController.active && !searchResultsController.searchBar.text!.isEmpty {
 				
 				return "Search Results"
 				
@@ -162,7 +162,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if section == 1 {
 			
-			if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
+			if searchResultsController.active && !searchResultsController.searchBar.text!.isEmpty {
 				
 				return mapSearchResults.count
 				
@@ -182,11 +182,11 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		
-		let cell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell!
 		
 		if indexPath.section == 1 {
 			
-			if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
+			if searchResultsController.active && !searchResultsController.searchBar.text!.isEmpty {
 				
 				let mapItem = mapSearchResults[indexPath.row]
 				let streetAddress = Interval.getAddressFromMapItem(mapItem)
@@ -220,7 +220,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if indexPath.section == 1 {
 			
-			if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
+			if searchResultsController.active && !searchResultsController.searchBar.text!.isEmpty {
 				
 				mapItem = mapSearchResults[indexPath.row]
 				streetAddress = Interval.getAddressFromMapItem(mapItem!)

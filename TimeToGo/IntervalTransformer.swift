@@ -10,7 +10,7 @@
 import UIKit
 
 class IntervalTransformer: NSValueTransformer {
-
+	
 	override class func allowsReverseTransformation() -> Bool {
 		
 		return true

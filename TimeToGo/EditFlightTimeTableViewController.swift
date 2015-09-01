@@ -133,12 +133,15 @@ class EditFlightTimeTableViewController: UITableViewController {
 		
 		currentTrip.flightDate = self.flightDate
 		
-		var savingError: NSError?
-		if moc!.save(&savingError) == false {
+		guard let moc = self.moc else {
+			return
+		}
+		
+		if moc.hasChanges {
 			
-			if let error = savingError {
-				
-				println("Failed to save the trip.\nError = \(error)")
+			do {
+				try moc.save()
+			} catch {
 				
 			}
 			

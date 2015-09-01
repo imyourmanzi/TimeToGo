@@ -58,8 +58,7 @@ class ScheduleViewController: UIViewController {
 		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
 		let fetchRequest = NSFetchRequest(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		var fetchingError: NSError?
-		let trips = moc!.executeFetchRequest(fetchRequest, error: &fetchingError) as! [Trip]
+		let trips = (try! moc!.executeFetchRequest(fetchRequest)) as! [Trip]
 		currentTrip = trips[0]
 		self.entries = currentTrip.entries as! [Interval]
 		self.flightDate = currentTrip.flightDate
@@ -75,7 +74,7 @@ class ScheduleViewController: UIViewController {
 		dateFormatter.dateFormat = "h:mm a"
 		intervalDate = flightDate.copy() as! NSDate
 		
-		for entry in entries.reverse() {
+		for entry in Array(entries.reverse()) {
 			
 			// Set up the times for each interval
 			entry.updateScheduleText()
@@ -103,8 +102,8 @@ class ScheduleViewController: UIViewController {
 		
 			// flight interval
 		dateFormatter.dateFormat = "h:mm a"
-		flightIntervalLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
-		flightIntervalTimeLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+		flightIntervalLabel.translatesAutoresizingMaskIntoConstraints = false
+		flightIntervalTimeLabel.translatesAutoresizingMaskIntoConstraints = false
 		flightIntervalLabel.text = "Flight Time"
 		flightIntervalTimeLabel.text = dateFormatter.stringFromDate(flightDate)
 		flightIntervalLabel.font = UIFont.systemFontOfSize(16.0)
@@ -177,7 +176,7 @@ class ScheduleViewController: UIViewController {
 		
 		let shareCalVC = storyboard?.instantiateViewControllerWithIdentifier("shareCalNavVC") as! UINavigationController
 		
-		switch EKEventStore.authorizationStatusForEntityType(EKEntityTypeEvent) {
+		switch EKEventStore.authorizationStatusForEntityType(EKEntityType.Event) {
 			
 		case .Authorized:
 			self.presentViewController(shareCalVC, animated: true, completion: nil)
@@ -186,8 +185,8 @@ class ScheduleViewController: UIViewController {
 			self.displayDeniedAccess()
 			
 		case .NotDetermined:
-			eventStore.requestAccessToEntityType(EKEntityTypeEvent, completion: {
-				(granted: Bool, error: NSError!) -> Void in
+			eventStore.requestAccessToEntityType(EKEntityType.Event, completion: {
+				(granted: Bool, error: NSError?) -> Void in
 				if granted {
 					
 					self.presentViewController(shareCalVC, animated: true, completion: nil)
@@ -210,7 +209,7 @@ class ScheduleViewController: UIViewController {
 	private func displayDeniedAccess() {
 		
 		let alertViewController = UIAlertController(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars", preferredStyle: UIAlertControllerStyle.Alert)
-		let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+		let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction) in
 			alertViewController.dismissViewControllerAnimated(true, completion: nil)
 		})
 		alertViewController.addAction(dismissAction)
@@ -223,7 +222,7 @@ class ScheduleViewController: UIViewController {
 	private func displayAccessRestricted() {
 		
 		let alertViewController = UIAlertController(title: "Not Allowed", message: "Access to Calendars was restricted.", preferredStyle: UIAlertControllerStyle.Alert)
-		let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+		let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction) in
 			alertViewController.dismissViewControllerAnimated(true, completion: nil)
 		})
 		alertViewController.addAction(dismissAction)

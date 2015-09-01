@@ -2,18 +2,18 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "lookout.JPG"
+      "filename" : "lookout-1.jpg",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "lookout@2x.JPG"
+      "filename" : "lookout@2x-1.jpg",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x",
-      "filename" : "lookout@3x.JPG"
+      "filename" : "lookout@3x-1.jpg",
+      "scale" : "3x"
     }
   ],
   "info" : {
