@@ -183,7 +183,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Optional Trip Name" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="cFp-KO-LmM">
-                                                    <rect key="frame" x="8" y="8" width="584" height="27"/>
+                                                    <rect key="frame" x="13" y="8" width="579" height="27"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
@@ -194,7 +194,7 @@
                                             </subviews>
                                             <animations/>
                                             <constraints>
-                                                <constraint firstItem="cFp-KO-LmM" firstAttribute="leading" secondItem="VOq-pG-HLc" secondAttribute="leadingMargin" id="DAb-wz-Xdf"/>
+                                                <constraint firstItem="cFp-KO-LmM" firstAttribute="leading" secondItem="VOq-pG-HLc" secondAttribute="leadingMargin" constant="5" id="DAb-wz-Xdf"/>
                                                 <constraint firstItem="cFp-KO-LmM" firstAttribute="top" secondItem="VOq-pG-HLc" secondAttribute="topMargin" id="F8A-u6-syq"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="cFp-KO-LmM" secondAttribute="trailing" id="aMg-sy-0Np"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="cFp-KO-LmM" secondAttribute="bottom" id="lcL-P1-acx"/>
@@ -623,7 +623,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Trip Name" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="GUd-rJ-85N">
-                                                    <rect key="frame" x="8" y="8" width="584" height="27"/>
+                                                    <rect key="frame" x="13" y="8" width="579" height="27"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
@@ -637,7 +637,7 @@
                                                 <constraint firstItem="GUd-rJ-85N" firstAttribute="top" secondItem="3hF-x0-RFf" secondAttribute="topMargin" id="1D8-7D-nLK"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="GUd-rJ-85N" secondAttribute="bottom" id="1IS-Jt-jvv"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="GUd-rJ-85N" secondAttribute="trailing" id="1Nx-0a-bWg"/>
-                                                <constraint firstItem="GUd-rJ-85N" firstAttribute="leading" secondItem="3hF-x0-RFf" secondAttribute="leadingMargin" id="hiJ-tV-Ggz"/>
+                                                <constraint firstItem="GUd-rJ-85N" firstAttribute="leading" secondItem="3hF-x0-RFf" secondAttribute="leadingMargin" constant="5" id="hiJ-tV-Ggz"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <animations/>
@@ -679,7 +679,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Main Label" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="rXU-HC-TsW">
-                                                    <rect key="frame" x="8" y="8" width="584" height="27"/>
+                                                    <rect key="frame" x="13" y="8" width="579" height="27"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -691,7 +691,7 @@
                                             <animations/>
                                             <constraints>
                                                 <constraint firstItem="rXU-HC-TsW" firstAttribute="top" secondItem="TLf-2i-heg" secondAttribute="topMargin" id="C2b-Lt-mNO"/>
-                                                <constraint firstItem="rXU-HC-TsW" firstAttribute="leading" secondItem="TLf-2i-heg" secondAttribute="leadingMargin" id="Icu-ts-BCl"/>
+                                                <constraint firstItem="rXU-HC-TsW" firstAttribute="leading" secondItem="TLf-2i-heg" secondAttribute="leadingMargin" constant="5" id="Icu-ts-BCl"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="rXU-HC-TsW" secondAttribute="bottom" id="rSK-0e-JxS"/>
                                                 <constraint firstItem="rXU-HC-TsW" firstAttribute="trailing" secondItem="TLf-2i-heg" secondAttribute="trailingMargin" id="w2F-nR-LwY"/>
                                             </constraints>
@@ -706,7 +706,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Optional Schedule Label" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="hnz-sP-9ZL">
-                                                    <rect key="frame" x="8" y="8" width="584" height="27"/>
+                                                    <rect key="frame" x="13" y="8" width="579" height="27"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -720,7 +720,7 @@
                                                 <constraint firstItem="hnz-sP-9ZL" firstAttribute="top" secondItem="gSo-Oj-CjO" secondAttribute="topMargin" id="Puq-Oa-OaN"/>
                                                 <constraint firstItem="hnz-sP-9ZL" firstAttribute="trailing" secondItem="gSo-Oj-CjO" secondAttribute="trailingMargin" id="R6h-1x-GNb"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="hnz-sP-9ZL" secondAttribute="bottom" id="iH8-Wh-8qn"/>
-                                                <constraint firstItem="hnz-sP-9ZL" firstAttribute="leading" secondItem="gSo-Oj-CjO" secondAttribute="leadingMargin" id="xrI-Et-5t2"/>
+                                                <constraint firstItem="hnz-sP-9ZL" firstAttribute="leading" secondItem="gSo-Oj-CjO" secondAttribute="leadingMargin" constant="5" id="xrI-Et-5t2"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <animations/>
@@ -1098,7 +1098,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Main Label" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="enc-SL-hqJ">
-                                                    <rect key="frame" x="8" y="8" width="584" height="27"/>
+                                                    <rect key="frame" x="13" y="8" width="579" height="27"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1111,7 +1111,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="bottomMargin" secondItem="enc-SL-hqJ" secondAttribute="bottom" id="QyV-RG-l48"/>
                                                 <constraint firstItem="enc-SL-hqJ" firstAttribute="top" secondItem="oIX-5Q-QzD" secondAttribute="topMargin" id="cY7-kZ-IG7"/>
-                                                <constraint firstItem="enc-SL-hqJ" firstAttribute="leading" secondItem="oIX-5Q-QzD" secondAttribute="leadingMargin" id="d2L-0S-YDe"/>
+                                                <constraint firstItem="enc-SL-hqJ" firstAttribute="leading" secondItem="oIX-5Q-QzD" secondAttribute="leadingMargin" constant="5" id="d2L-0S-YDe"/>
                                                 <constraint firstItem="enc-SL-hqJ" firstAttribute="trailing" secondItem="oIX-5Q-QzD" secondAttribute="trailingMargin" id="uAG-bG-9lt"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -1125,7 +1125,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Optional Schedule Label" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="dSD-IU-pya">
-                                                    <rect key="frame" x="8" y="8" width="584" height="27"/>
+                                                    <rect key="frame" x="13" y="8" width="579" height="27"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1137,7 +1137,7 @@
                                             <animations/>
                                             <constraints>
                                                 <constraint firstItem="dSD-IU-pya" firstAttribute="top" secondItem="yRR-WK-gdL" secondAttribute="topMargin" id="55I-Gy-e5q"/>
-                                                <constraint firstItem="dSD-IU-pya" firstAttribute="leading" secondItem="yRR-WK-gdL" secondAttribute="leadingMargin" id="CJA-kf-Iac"/>
+                                                <constraint firstItem="dSD-IU-pya" firstAttribute="leading" secondItem="yRR-WK-gdL" secondAttribute="leadingMargin" constant="5" id="CJA-kf-Iac"/>
                                                 <constraint firstItem="dSD-IU-pya" firstAttribute="trailing" secondItem="yRR-WK-gdL" secondAttribute="trailingMargin" id="qj4-eS-5cG"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="dSD-IU-pya" secondAttribute="bottom" id="smv-Oi-QKm"/>
                                             </constraints>
