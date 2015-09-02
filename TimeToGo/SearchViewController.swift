@@ -21,7 +21,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	
 	var mapView: MKMapView!
 	var whichLocationIndex: Int!
-	var searchResultsController = UISearchController()
+	var searchResultsController: UISearchController!
 	var userCurrentLocation: MKMapItem!
 	var mapSearchResults = [MKMapItem]()
 	var selectedLocation: MKMapItem?
@@ -36,9 +36,9 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 			controller.searchResultsUpdater = self
 			controller.dimsBackgroundDuringPresentation = false
 			controller.hidesNavigationBarDuringPresentation = false
+			controller.searchBar.showsCancelButton = false
 			controller.searchBar.delegate = self
 			controller.searchBar.placeholder = "Enter Location"
-			controller.searchBar.sizeToFit()
 			
 			self.tableView.tableHeaderView = controller.searchBar
 			
@@ -82,7 +82,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 			
 			guard let response = response where response.mapItems.count > 0 else {
 			
-				print("There were no search results found\n")
+				print("There were no search results found")
 				return
 				
 			}
@@ -104,9 +104,12 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 
 	func didPresentSearchController(searchController: UISearchController) {
 
-		searchController.searchBar.setShowsCancelButton(false, animated: false)
-		searchController.searchBar.sizeToFit()
-		searchResultsController.searchBar.becomeFirstResponder()
+		if searchController.active {
+			
+			searchController.searchBar.showsCancelButton = false
+			searchResultsController.searchBar.becomeFirstResponder()
+			
+		}
 		
 	}
 
@@ -128,7 +131,15 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	
 	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 		
-		if searchResultsController.active && !searchResultsController.searchBar.text!.isEmpty {
+//		print("\"\(searchResultsController.searchBar.text!)\"")	// nil value when view loads
+		
+		guard let searchResultsController = searchResultsController else {
+			
+			return 1
+			
+		}
+		
+		if (searchResultsController.searchBar.text == nil || searchResultsController.searchBar.text?.isEmpty == true) {
 			
 			return 1
 			

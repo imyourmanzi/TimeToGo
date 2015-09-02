@@ -51,8 +51,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	var locationManager: CLLocationManager?
 	var startLocation: MKMapItem?
 	var endLocation: MKMapItem?
-	var startAnnotation: LocationAnnotation?
-	var endAnnotation: LocationAnnotation?
+	var startAnnotation: LocationAnnotation = LocationAnnotation(coordinate: CLLocationCoordinate2DMake(0, 0), title: "", subtitle: "")
+	var endAnnotation: LocationAnnotation! = LocationAnnotation(coordinate: CLLocationCoordinate2DMake(0, 0), title: "", subtitle: "")
 	var directionsOverlay: MKOverlay?
 	
 	override func viewDidLoad() {
@@ -109,9 +109,9 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		case 0:
 			startLocation = mapItem
 			startLocTextfield.text = startLocation?.name
-			mapView.removeAnnotation(startAnnotation!)
+			mapView.removeAnnotation(startAnnotation)
 			startAnnotation = LocationAnnotation(coordinate: startLocation!.placemark.coordinate, title: startLocation!.name!, subtitle: address)
-			mapView.addAnnotation(startAnnotation!)
+			mapView.addAnnotation(startAnnotation)
 			
 		case 1:
 			endLocation = mapItem
@@ -145,10 +145,10 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			mapView.removeAnnotations(mapView.annotations)
 			
 			startAnnotation = LocationAnnotation(coordinate: startLocation.placemark.coordinate, title: startLocation.name!, subtitle: Interval.getAddressFromMapItem(startLocation))
-			mapView.addAnnotation(startAnnotation!)
+			mapView.addAnnotation(startAnnotation)
 			
 			endAnnotation = LocationAnnotation(coordinate: endLocation.placemark.coordinate, title: endLocation.name!, subtitle: Interval.getAddressFromMapItem(endLocation))
-			mapView.addAnnotation(endAnnotation!)
+			mapView.addAnnotation(endAnnotation)
 			
 			if directionsOverlay != nil {
 				
@@ -576,7 +576,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
 		
-		print("Location manager failed: (\(manager))\n\(error)\n")
+		print("Location manager failed: (\(manager))\n\(error)")
 		
 		let alertController = UIAlertController(title: "Error \(error.code)", message: "Location manager failed: \(error)", preferredStyle: UIAlertControllerStyle.Alert)
 		let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
@@ -607,6 +607,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
+	/*
 	func mapViewWillStartLoadingMap(mapView: MKMapView) {
 		
 		startLocCell.userInteractionEnabled = false
@@ -624,6 +625,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		endLocCell.backgroundColor = UIColor.whiteColor()
 		
 	}
+	*/
 	
 	func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
 		
@@ -750,7 +752,14 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		searchVC.mapView = mapView
 		
-		CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location!, completionHandler: { (placemarks, error: NSError?) -> Void in
+		guard let ulocation = mapView.userLocation.location else {
+			
+			displayAlertWithTitle("Still Loading", message: "Please try again in a few moments")
+			
+			return
+		}
+		
+		CLGeocoder().reverseGeocodeLocation(ulocation, completionHandler: { (placemarks, error: NSError?) -> Void in
 			
 			guard let placemarks = placemarks where placemarks.count > 0 else {
 				

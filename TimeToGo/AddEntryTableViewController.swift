@@ -581,7 +581,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
 		
-		print("Location manager failed: (\(manager))\n\(error)\n")
+		print("Location manager failed: (\(manager))\n\(error)")
 		
 		let alertController = UIAlertController(title: "Error \(error.code)", message: "Location manager failed: \(error)", preferredStyle: UIAlertControllerStyle.Alert)
 		let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in

@@ -194,7 +194,7 @@ class ShareToCalTableViewController: UITableViewController {
 			result = true
 		} catch {
 			
-			print("Could not save event.\nError: \(error)\n")
+			print("Could not save event.\nError: \(error)")
 			result = false
 			
 		}

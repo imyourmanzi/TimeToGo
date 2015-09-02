@@ -88,7 +88,7 @@ class SettingsTableViewController: UITableViewController {
 				try self.moc!.save()
 			} catch {
 				
-				print("Failed to delete the trip.\nError = \(error)\n")
+				print("Failed to delete the trip.\nError = \(error)")
 				
 			}
 			
