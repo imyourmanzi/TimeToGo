@@ -40,8 +40,7 @@ class SettingsTableViewController: UITableViewController {
 		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
 		let fetchRequest = NSFetchRequest(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		var fetchingError: NSError?
-		let trips = moc!.executeFetchRequest(fetchRequest, error: &fetchingError) as! [Trip]
+		let trips = (try! moc!.executeFetchRequest(fetchRequest)) as! [Trip]
 		currentTrip = trips[0]
 		
 		self.flightDate = currentTrip.flightDate
@@ -55,8 +54,7 @@ class SettingsTableViewController: UITableViewController {
 		// Fetch all of the managed objects from the persistent store and update the table view
 		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
 		let fetchAll = NSFetchRequest(entityName: "Trip")
-		var fetchingAllError: NSError?
-		allTrips = moc!.executeFetchRequest(fetchAll, error: &fetchingAllError) as! [Trip]
+		allTrips = (try! moc!.executeFetchRequest(fetchAll)) as! [Trip]
 		
 		tableView.reloadData()
 		
@@ -66,10 +64,10 @@ class SettingsTableViewController: UITableViewController {
 		
 		// Present an action sheet to confirm deletion of currentTrip and handle the situations that can follow
 		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(currentTripName)?", preferredStyle: .ActionSheet)
-		let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {(action: UIAlertAction!) in
+		let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {(action: UIAlertAction) in
 			deleteAlertController.dismissViewControllerAnimated(true, completion: nil)
 		})
-		let deleteAction = UIAlertAction(title: "Delete Trip", style: UIAlertActionStyle.Destructive, handler: { (action: UIAlertAction!) in
+		let deleteAction = UIAlertAction(title: "Delete Trip", style: UIAlertActionStyle.Destructive, handler: { (action: UIAlertAction) in
 			
 			var index = 0
 			for trip in self.allTrips {
@@ -86,14 +84,11 @@ class SettingsTableViewController: UITableViewController {
 			
 			self.moc!.deleteObject(self.allTrips.removeAtIndex(self.currentTripIndex))
 			
-			var savingError: NSError?
-			if self.moc!.save(&savingError) == false {
+			do {
+				try self.moc!.save()
+			} catch {
 				
-				if let error = savingError {
-					
-					println("Failed to delete the trip.\nError = \(error)")
-					
-				}
+				print("Failed to delete the trip.\nError = \(error)\n")
 				
 			}
 			
@@ -158,11 +153,11 @@ class SettingsTableViewController: UITableViewController {
 			
 		} else if let newTripNavVC = segue.destinationViewController as? UINavigationController {
 			
-			if let newTripVC = newTripNavVC.viewControllers[0] as? FlightTimeTableViewController {
-				
-				newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: newTripVC, action: "cancelNewTripFromSettings:")
-				
+			guard let newTripVC = newTripNavVC.viewControllers[0] as? FlightTimeTableViewController else {
+				return
 			}
+			
+			newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: newTripVC, action: "cancelNewTripFromSettings:")
 			
 		}
 		

@@ -41,14 +41,14 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 	@IBAction func tripNameDidChange(sender: UITextField) {
 		
 		// Update the tripName varaible with the contents of the textfield
-		tripName = sender.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		tripName = sender.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 	}
 	
 	func textFieldShouldReturn(textField: UITextField) -> Bool {
 	
 		// Update the tripName varaible with the contents of the textfield
-		tripName = textField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		tripName = textField.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 		textField.resignFirstResponder()
 		
@@ -61,11 +61,11 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 	
 	override func viewWillDisappear(animated: Bool) {
 		
-		if tripNameTextfield.text.isEmpty || tripNameTextfield.text == nil {
+		if tripNameTextfield.text!.isEmpty || tripNameTextfield.text == nil {
 			
 			// Alert the user that an entry cannot be saved if it does not have a tripLabel
 			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Trip Name field was empty.", preferredStyle: UIAlertControllerStyle.Alert)
-			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction) in
 				alertVC.dismissViewControllerAnimated(true, completion: nil)
 			})
 			alertVC.addAction(okBtn)
@@ -75,12 +75,15 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 			
 			currentTrip.tripName = self.tripName
 			
-			var savingError: NSError?
-			if moc!.save(&savingError) == false {
+			guard let moc = self.moc else {
+				return
+			}
+			
+			if moc.hasChanges {
 				
-				if let error = savingError {
-					
-					println("Failed to save the trip.\nError = \(error)")
+				do {
+					try moc.save()
+				} catch {
 					
 				}
 				

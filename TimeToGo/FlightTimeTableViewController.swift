@@ -73,14 +73,7 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		// Fetch all of the managed objects from the persistent store and update the table view
 		let fetchAll = NSFetchRequest()
 		fetchAll.entity = NSEntityDescription.entityForName("Trip", inManagedObjectContext: moc!)
-		var fetchError: NSError?
-		allTrips = moc!.executeFetchRequest(fetchAll, error: &fetchError) as! [Trip]
-		if fetchError != nil {
-			
-			println("could not fetch")
-			
-		}
-		
+		allTrips = (try! moc!.executeFetchRequest(fetchAll)) as! [Trip]
 		
 		// Handle a case of 0 currently saved trips
 		if allTrips.count > 0 && self.navigationItem.leftBarButtonItem == nil {
@@ -95,7 +88,7 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 	@IBAction func tripNameDidChange(sender: UITextField) {
 		
 		// Update the tripName varaible with the contents of the textfield
-		tripName = sender.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		tripName = sender.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 	}
 	
@@ -115,7 +108,7 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 	func textFieldShouldReturn(textField: UITextField) -> Bool {
 		
 		// Update the tripName varaible with the contents of the textfield
-		tripName = textField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		tripName = textField.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 		textField.resignFirstResponder()
 		
@@ -249,12 +242,15 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 			newTrip.tripName = self.tripName
 			newTrip.flightDate = self.flightDate
 			newTrip.entries = self.defaultEntries
-			var savingError: NSError?
-			if moc!.save(&savingError) == false {
+			guard let moc = self.moc else {
+				return
+			}
+			
+			if moc.hasChanges {
 				
-				if let theError = savingError {
-					
-					println("Failed to save the trip.\nError = \(theError)")
+				do {
+					try moc.save()
+				} catch {
 					
 				}
 				
@@ -270,7 +266,7 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 			
 			// Do nothing except display an alert controller
 			let nameAlertController = UIAlertController(title: "Cannot Save Trip", message: "There is already a trip with the same name.", preferredStyle: UIAlertControllerStyle.Alert)
-			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: { (alert: UIAlertAction!) in
+			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: { (alert: UIAlertAction) in
 				nameAlertController.dismissViewControllerAnimated(true, completion: nil)
 			})
 			nameAlertController.addAction(dismissAction)

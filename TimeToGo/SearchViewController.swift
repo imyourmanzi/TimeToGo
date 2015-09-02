@@ -22,12 +22,6 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	var mapView: MKMapView!
 	var whichLocationIndex: Int!
 	var searchResultsController = UISearchController()
-	let defaultLocations = [
-		MKMapItem(),
-		MKMapItem(),
-		MKMapItem(),
-		MKMapItem()
-	]
 	var userCurrentLocation: MKMapItem!
 	var mapSearchResults = [MKMapItem]()
 	var selectedLocation: MKMapItem?
@@ -76,33 +70,33 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		mapSearchResults.removeAll(keepCapacity: false)
 		
 		let span = MKCoordinateSpan(latitudeDelta: 1.5, longitudeDelta: 1.5)
-		var region = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: span)
+		let region = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: span)
 		
 		let request = MKLocalSearchRequest()
 		request.naturalLanguageQuery = searchController.searchBar.text
 		request.region = region
 		
 		let search = MKLocalSearch(request: request)
-		search.startWithCompletionHandler { (response: MKLocalSearchResponse!, error: NSError!) -> Void in
+		search.startWithCompletionHandler { (response: MKLocalSearchResponse?, error: NSError?) -> Void in
 			
-			if let searchResults = response {
-				
-				if response.mapItems.count > 0 {
-					
-					for item in response.mapItems as! [MKMapItem] {
-						
-						self.mapSearchResults.append(item)
-						
-					}
-					
-					self.tableView.reloadData()
-						
-				}
+			
+			guard let response = response where response.mapItems.count > 0 else {
+			
+				print("There were no search results found\n")
+				return
 				
 			}
 			
+			for item in response.mapItems {
+				
+				self.mapSearchResults.append(item)
+				
+			}
+			
+			self.tableView.reloadData()
+			
 		}
-	
+		
 	}
 	
 	
@@ -174,7 +168,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		
-		let cell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell!
 		
 		if indexPath.section == 1 {
 			

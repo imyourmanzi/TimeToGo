@@ -29,39 +29,6 @@ class Interval: NSObject, NSCoding {
 	
 	// MARK: - Initializers
 	
-/*
-	// OBSOLETE INITIALIZER
-	
-	init(mainLabel: String, timeValueHours: Int, timeValueMins: Int) {
-		
-		self.mainLabel = mainLabel
-		self.scheduleLabel = {
-			
-			if let timeStrRange = mainLabel.rangeOfString("Time for") {
-				
-				return mainLabel.stringByReplacingCharactersInRange(timeStrRange, withString: "Start:")
-				
-			} else if let timeStrRange = mainLabel.rangeOfString("Time to") {
-				
-				return mainLabel.stringByReplacingCharactersInRange(timeStrRange, withString: "Start:")
-				
-			} else if let timeStrRange = mainLabel.rangeOfString("Time between") {
-				
-				return mainLabel.stringByReplacingCharactersInRange(timeStrRange, withString: "Start:")
-				
-			} else {
-				
-				return mainLabel
-				
-			}
-			
-		}()
-		self.timeValueHours = timeValueHours
-		self.timeValueMins = timeValueMins
-		
-	}
-*/
-	
 	init(mainLabel: String, scheduleLabel: String, timeValueHours: Int, timeValueMins: Int) {
 		
 		self.mainLabel = mainLabel
@@ -130,28 +97,10 @@ class Interval: NSObject, NSCoding {
 	func createScheduleLabelFromTopSpace(topSpace: CGFloat, onView view: UIView) {
 		
 		if scheduleLabel == nil {
-			
-			if let timeStrRange = mainLabel.rangeOfString("Time for") {
-				
-				scheduleLabel = mainLabel.stringByReplacingCharactersInRange(timeStrRange, withString: "Start:")
-				
-			} else if let timeStrRange = mainLabel.rangeOfString("Time to") {
-				
-				scheduleLabel = mainLabel.stringByReplacingCharactersInRange(timeStrRange, withString: "Start:")
-				
-			} else if let timeStrRange = mainLabel.rangeOfString("Time between") {
-				
-				scheduleLabel = mainLabel.stringByReplacingCharactersInRange(timeStrRange, withString: "Start:")
-				
-			} else {
-				
-				scheduleLabel = mainLabel
-				
-			}
-			
+			scheduleLabel = mainLabel
 		}
 		
-		entryLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+		entryLabel.translatesAutoresizingMaskIntoConstraints = false
 		entryLabel.numberOfLines = 2
 		entryLabel.font = UIFont.systemFontOfSize(16.0)
 		view.addSubview(entryLabel)
@@ -205,11 +154,12 @@ class Interval: NSObject, NSCoding {
 	// Creates and adds label for timeValueHours and timeValueMins to a view
 	func createDateLabelOnView(view: UIView) {
 		
-		dateLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+		dateLabel.translatesAutoresizingMaskIntoConstraints = false
 		dateLabel.numberOfLines = 1
 		dateLabel.font = UIFont.systemFontOfSize(16.0)
 		view.addSubview(dateLabel)
 		
+		/*
 		let leftConstraint = NSLayoutConstraint(item: dateLabel,
 			attribute: NSLayoutAttribute.Left,
 			relatedBy: NSLayoutRelation.GreaterThanOrEqual,
@@ -217,6 +167,7 @@ class Interval: NSObject, NSCoding {
 			attribute: NSLayoutAttribute.Right,
 			multiplier: 1.0,
 			constant: 5.0)
+		*/
 		
 		let topConstraint = NSLayoutConstraint(item: dateLabel,
 			attribute: NSLayoutAttribute.Top,
@@ -292,7 +243,7 @@ class Interval: NSObject, NSCoding {
 	
 	// MARK: - NSCoding protocol
 	
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		
 		self.mainLabel = aDecoder.decodeObjectForKey("mainLabel") as! String
 		self.scheduleLabel = aDecoder.decodeObjectForKey("scheduleLabel") as! String
@@ -321,19 +272,19 @@ class Interval: NSObject, NSCoding {
 	
 	override func isEqual(object: AnyObject?) -> Bool {
 		
-		if let theObject = object as? Interval {
+		guard let theObject = object as? Interval else {
 			
-			return (self.mainLabel == theObject.mainLabel &&
-					self.scheduleLabel == theObject.scheduleLabel &&
-					self.timeValueHours == theObject.timeValueHours &&
-					self.timeValueMins == theObject.timeValueMins &&
-					self.useLocation == theObject.useLocation &&
-					self.startLocation == theObject.startLocation &&
-					self.endLocation == theObject.endLocation)
+			return false
 			
 		}
 			
-		return false
+		return (self.mainLabel == theObject.mainLabel &&
+			self.scheduleLabel == theObject.scheduleLabel &&
+			self.timeValueHours == theObject.timeValueHours &&
+			self.timeValueMins == theObject.timeValueMins &&
+			self.useLocation == theObject.useLocation &&
+			self.startLocation == theObject.startLocation &&
+			self.endLocation == theObject.endLocation)
 		
 	}
 	

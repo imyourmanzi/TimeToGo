@@ -25,14 +25,14 @@ class ShareToCalTableViewController: UITableViewController {
         super.viewDidLoad()
 		
 		// Check for authorization to use calendars
-		switch EKEventStore.authorizationStatusForEntityType(EKEntityTypeEvent) {
+		switch EKEventStore.authorizationStatusForEntityType(EKEntityType.Event) {
 			
 		case .Authorized:
 			extractEventEntityCalendarsOutOfSotre(eventStore)
 		
 		case .NotDetermined:
-			eventStore.requestAccessToEntityType(EKEntityTypeEvent, completion: {
-				(granted: Bool, error: NSError!) -> Void in
+			eventStore.requestAccessToEntityType(EKEntityType.Event, completion: {
+				(granted: Bool, error: NSError?) -> Void in
 				if granted {
 					
 					self.extractEventEntityCalendarsOutOfSotre(self.eventStore)
@@ -43,7 +43,7 @@ class ShareToCalTableViewController: UITableViewController {
 			
 		default:
 			let alertViewController = UIAlertController(title: "No Access", message: "Access to Calendars is not allowed.", preferredStyle: UIAlertControllerStyle.Alert)
-			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction) in
 				alertViewController.dismissViewControllerAnimated(true, completion: nil)
 				self.dismissViewControllerAnimated(true, completion: nil)
 			})
@@ -60,8 +60,7 @@ class ShareToCalTableViewController: UITableViewController {
 		let fetch = NSFetchRequest()
 		fetch.entity = NSEntityDescription.entityForName("Trip", inManagedObjectContext: moc!)
 		fetch.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		var fetchError: NSError?
-		let trips = moc!.executeFetchRequest(fetch, error: &fetchError)  as! [Trip]
+		let trips = (try! moc!.executeFetchRequest(fetch))  as! [Trip]
 		currentTrip = trips[0]
 		
     }
@@ -73,7 +72,7 @@ class ShareToCalTableViewController: UITableViewController {
 	// Get all calendars that allow modifications
 	private func extractEventEntityCalendarsOutOfSotre(eventStore: EKEventStore) {
 		
-		let calendars = eventStore.calendarsForEntityType(EKEntityTypeEvent) as! [EKCalendar]
+		let calendars = eventStore.calendarsForEntityType(EKEntityType.Event) 
 		
 		for calendar in calendars {
 			
@@ -86,7 +85,7 @@ class ShareToCalTableViewController: UITableViewController {
 		}
 		
 		// Sort the array of calendars
-		calendarsToList.sort({ $0.title < $1.title })
+		calendarsToList.sortInPlace({ $0.title < $1.title })
 		calendarToUse = eventStore.defaultCalendarForNewEvents
 		var index = 0
 		for calendar in calendarsToList {
@@ -114,7 +113,7 @@ class ShareToCalTableViewController: UITableViewController {
 
 	
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("calendarCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("calendarCell", forIndexPath: indexPath) 
 		
 		cell.textLabel?.text = calendarsToList[indexPath.row].title
 		
@@ -150,18 +149,17 @@ class ShareToCalTableViewController: UITableViewController {
 	
 	@IBAction func saveTripToCal(sender: UIBarButtonItem) {
 		
-		if let calendarIndex = calendarToUseIndex?.row {
-			
-			calendarToUse = calendarsToList[calendarIndex]
-			
-			for entry in currentTrip.entries as! [Interval] {
-				
-				addInterval(entry, toCalendar: calendarToUse)
-				
-			}
-			
+		guard let calendarIndex = calendarToUseIndex?.row else {
+			return
 		}
 		
+		calendarToUse = calendarsToList[calendarIndex]
+		
+		for entry in currentTrip.entries as! [Interval] {
+			
+			addInterval(entry, toCalendar: calendarToUse)
+			
+		}
 		dismissViewControllerAnimated(true, completion: nil)
 		
 	}
@@ -180,7 +178,7 @@ class ShareToCalTableViewController: UITableViewController {
 	
 	private func createEventWithTitle(title: String, startDate: NSDate, endDate: NSDate, inCalendar calendar: EKCalendar, inEventStore eventStore: EKEventStore, withNotes notes: String) -> Bool {
 		
-		var event = EKEvent(eventStore: eventStore)
+		let event = EKEvent(eventStore: eventStore)
 		event.calendar = calendar
 		event.title = title
 		event.notes = notes
@@ -190,15 +188,14 @@ class ShareToCalTableViewController: UITableViewController {
 		let alarm = EKAlarm(relativeOffset: 0.0)
 		event.alarms = [alarm]
 		
-		var saveError: NSError?
-		let result = eventStore.saveEvent(event, span: EKSpanThisEvent, error: &saveError)
-		if result == false {
+		let result: Bool
+		do {
+			try eventStore.saveEvent(event, span: EKSpan.ThisEvent)
+			result = true
+		} catch {
 			
-			if let theError = saveError {
-				
-				println("Could not save event.\nError: \(theError)")
-				
-			}
+			print("Could not save event.\nError: \(error)\n")
+			result = false
 			
 		}
 		

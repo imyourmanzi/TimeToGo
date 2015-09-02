@@ -62,13 +62,12 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		let fetchRequest = NSFetchRequest(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		var fetchingError: NSError?
-		let trips = moc!.executeFetchRequest(fetchRequest, error: &fetchingError) as! [Trip]
+		let trips = (try! moc!.executeFetchRequest(fetchRequest)) as! [Trip]
 		currentTrip = trips[0]
 		self.entries = currentTrip.entries as! [Interval]
 		
 		parentVC = self.navigationController?.viewControllers[0] as! EntriesViewController
-		indexPath = parentVC.tableView.indexPathForSelectedRow()
+		indexPath = parentVC.tableView.indexPathForSelectedRow
 		currentEntry = self.entries[indexPath.row]
 		
 		// Customized setup of the Interface Builder variables
@@ -86,23 +85,20 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		startLocTextfield.enabled = false
 		endLocTextfield.enabled = false
 		
+		mapView.delegate = self
 		self.useLocation = currentEntry.useLocation
 		
-		if let usesLocation = useLocation {
-			
-			if usesLocation == true {
-				
-				self.startLocation = MKMapItem(placemark: currentEntry.startLocation)
-				self.endLocation = MKMapItem(placemark: currentEntry.endLocation)
-				
-			}
-		} else {
-			
+		guard let usesLocation = useLocation else {
 			useLocation = false
+			return
+		}
+			
+		if usesLocation == true {
+			
+			self.startLocation = MKMapItem(placemark: currentEntry.startLocation!)
+			self.endLocation = MKMapItem(placemark: currentEntry.endLocation!)
 			
 		}
-		
-		mapView.delegate = self
 		
 	}
 	
@@ -113,16 +109,16 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		case 0:
 			startLocation = mapItem
 			startLocTextfield.text = startLocation?.name
-			mapView.removeAnnotation(startAnnotation)
-			startAnnotation = LocationAnnotation(coordinate: startLocation!.placemark.coordinate, title: startLocation!.name, subtitle: address)
-			mapView.addAnnotation(startAnnotation)
+			mapView.removeAnnotation(startAnnotation!)
+			startAnnotation = LocationAnnotation(coordinate: startLocation!.placemark.coordinate, title: startLocation!.name!, subtitle: address)
+			mapView.addAnnotation(startAnnotation!)
 			
 		case 1:
 			endLocation = mapItem
 			endLocTextfield.text = endLocation?.name
-			mapView.removeAnnotation(endAnnotation)
-			endAnnotation = LocationAnnotation(coordinate: endLocation!.placemark.coordinate, title: endLocation!.name, subtitle: address)
-			mapView.addAnnotation(endAnnotation)
+			mapView.removeAnnotation(endAnnotation!)
+			endAnnotation = LocationAnnotation(coordinate: endLocation!.placemark.coordinate, title: endLocation!.name!, subtitle: address)
+			mapView.addAnnotation(endAnnotation!)
 			
 		default:
 			break
@@ -139,44 +135,45 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			useLocationSwitch.setOn(true, animated: true)
 			useLocationSwitchFlipped(useLocationSwitch)
 			
-			if startLocation != nil && endLocation != nil {
+			guard let startLocation = startLocation, endLocation = endLocation else {
+				return
+			}
+			
+			startLocTextfield.text = startLocation.name
+			endLocTextfield.text = endLocation.name
+			
+			mapView.removeAnnotations(mapView.annotations)
+			
+			startAnnotation = LocationAnnotation(coordinate: startLocation.placemark.coordinate, title: startLocation.name!, subtitle: Interval.getAddressFromMapItem(startLocation))
+			mapView.addAnnotation(startAnnotation!)
+			
+			endAnnotation = LocationAnnotation(coordinate: endLocation.placemark.coordinate, title: endLocation.name!, subtitle: Interval.getAddressFromMapItem(endLocation))
+			mapView.addAnnotation(endAnnotation!)
+			
+			if directionsOverlay != nil {
 				
-				startLocTextfield.text = startLocation!.name
-				endLocTextfield.text = endLocation!.name
-				
-				mapView.removeAnnotations(mapView.annotations)
-				
-				startAnnotation = LocationAnnotation(coordinate: startLocation!.placemark.coordinate, title: startLocation!.name, subtitle: Interval.getAddressFromMapItem(startLocation!))
-				mapView.addAnnotation(startAnnotation)
-				
-				endAnnotation = LocationAnnotation(coordinate: endLocation!.placemark.coordinate, title: endLocation!.name, subtitle: Interval.getAddressFromMapItem(endLocation!))
-				mapView.addAnnotation(endAnnotation)
-				
-				if directionsOverlay != nil {
-					
-					mapView.removeOverlay(directionsOverlay)
-					
-				}
-				
-				let directionsRequest = MKDirectionsRequest()
-				directionsRequest.setSource(startLocation!)
-				directionsRequest.setDestination(endLocation!)
-				directionsRequest.requestsAlternateRoutes = false
-				directionsRequest.transportType = MKDirectionsTransportType.Automobile
-				
-				let directions = MKDirections(request: directionsRequest)
-				directions.calculateDirectionsWithCompletionHandler({
-					(response: MKDirectionsResponse!, error: NSError!) -> Void in
-					
-					if let theResponse = response {
-						
-						self.showRoute(theResponse)
-						
-					}
-					
-				})
+				mapView.removeOverlay(directionsOverlay!)
 				
 			}
+			
+			let directionsRequest = MKDirectionsRequest()
+			directionsRequest.source = startLocation
+			directionsRequest.destination = endLocation
+			directionsRequest.requestsAlternateRoutes = false
+			directionsRequest.transportType = MKDirectionsTransportType.Automobile
+			
+			let directions = MKDirections(request: directionsRequest)
+			directions.calculateDirectionsWithCompletionHandler({
+				(response: MKDirectionsResponse?, error: NSError?) -> Void in
+				
+				guard let response = response else {
+					self.displayAlertWithTitle("Error in Route", message: "Could not find a route from Start to End locations")
+					return
+				}
+				
+				self.showRoute(response)
+				
+			})
 			
 		}
 		
@@ -192,14 +189,14 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	@IBAction func mainLabelDidChange(sender: UITextField) {
 		
 		// Set the mainLabel with it's textfield
-		mainLabel = sender.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		mainLabel = sender.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 	}
 	
 	@IBAction func schedLabelDidChange(sender: UITextField) {
 		
 		// Set the schedLabel with it's textfield
-		schedLabel = sender.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		schedLabel = sender.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 	}
 	
@@ -223,12 +220,12 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		if textField == mainLabelTextfield {
 			
 			// Set the mainLabel with its textfield
-			mainLabel = textField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+			mainLabel = textField.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 			
 		} else if textField == schedLabelTextfield {
 			
 			// Set the schedLabel with its textfield
-			schedLabel = textField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+			schedLabel = textField.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 			
 		}
 		
@@ -368,7 +365,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		
 		if component == 0 {
 			
@@ -504,11 +501,11 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				
 			case .NotDetermined:
 				createLocationManager(false)
-				if let manager = self.locationManager {
-					
-					manager.requestWhenInUseAuthorization()
-					
+				guard let locationManager = self.locationManager else {
+					displayAlertWithTitle("Error Starting Location Services", message: "Please try again later")
+					break
 				}
+				locationManager.requestWhenInUseAuthorization()
 				
 			case .Restricted:
 				useLocationSwitch.on = false
@@ -540,21 +537,21 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			locationManager = CLLocationManager()
 		}
 		
-		if let manager = locationManager {
+		guard let manager = locationManager else {
+			return
+		}
+		
+		manager.delegate = self
+		if startImmediately {
 			
-			manager.delegate = self
-			if startImmediately {
-				
-				manager.startUpdatingLocation()
-				mapView.showsUserLocation = true
-				
-			}
+			manager.startUpdatingLocation()
+			mapView.showsUserLocation = true
 			
 		}
 		
 	}
 	
-	func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+	func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
 		
 		switch status {
 			
@@ -577,12 +574,12 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+	func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
 		
-		println("Location manager failed: (\(manager))\n\(error)")
+		print("Location manager failed: (\(manager))\n\(error)\n")
 		
 		let alertController = UIAlertController(title: "Error \(error.code)", message: "Location manager failed: \(error)", preferredStyle: UIAlertControllerStyle.Alert)
-		let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default) { (action: UIAlertAction!) -> Void in
+		let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
 			
 			manager.stopUpdatingLocation()
 			self.useLocationSwitch.setOn(false, animated: true)
@@ -597,7 +594,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
+	func mapView(mapView: MKMapView, didUpdateUserLocation userLocation: MKUserLocation) {
 		
 		if mapView.annotations.count < 3 {
 			
@@ -610,7 +607,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func mapViewWillStartLoadingMap(mapView: MKMapView!) {
+	func mapViewWillStartLoadingMap(mapView: MKMapView) {
 		
 		startLocCell.userInteractionEnabled = false
 		startLocCell.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
@@ -619,7 +616,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func mapViewDidFinishLoadingMap(mapView: MKMapView!) {
+	func mapViewDidFinishLoadingMap(mapView: MKMapView) {
 		
 		startLocCell.userInteractionEnabled = true
 		startLocCell.backgroundColor = UIColor.whiteColor()
@@ -628,7 +625,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
+	func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
 		
 		let renderer = MKPolylineRenderer(overlay: overlay)
 		renderer.strokeColor = UIColor(red: 8/255, green: 156/255, blue: 1.0, alpha: 1.0)
@@ -640,10 +637,10 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	private func showRoute(response: MKDirectionsResponse) {
 		
-		for route in response.routes as! [MKRoute]  {
+		for route in response.routes {
 			
 			mapView.addOverlay(route.polyline, level: MKOverlayLevel.AboveRoads)
-			directionsOverlay = (mapView.overlays as! [MKOverlay])[0]
+			directionsOverlay = (mapView.overlays )[0]
 			
 			let timeInInt = Int((route.expectedTravelTime))
 			timeValueHours = timeInInt / 3600
@@ -654,14 +651,14 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func mapView(mapView: MKMapView!, didAddOverlayRenderers renderers: [AnyObject]!) {
+	func mapView(mapView: MKMapView, didAddOverlayRenderers renderers: [MKOverlayRenderer]) {
 		
 		var zoomRect = MKMapRectNull
 		
-		for annotation in mapView.annotations as! [MKAnnotation] {
+		for annotation in mapView.annotations {
 			
-			var annotationPoint = MKMapPointForCoordinate(annotation.coordinate)
-			var pointRec = MKMapRect(origin: MKMapPoint(x: annotationPoint.x - 50.0, y: annotationPoint.y - 50.0), size: MKMapSize(width: 100.0, height: 100.0))
+			let annotationPoint = MKMapPointForCoordinate(annotation.coordinate)
+			let pointRec = MKMapRect(origin: MKMapPoint(x: annotationPoint.x - 50.0, y: annotationPoint.y - 50.0), size: MKMapSize(width: 100.0, height: 100.0))
 			
 			zoomRect = MKMapRectUnion(zoomRect, pointRec)
 			
@@ -673,23 +670,20 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	@IBAction func openRouteInMaps(sender: UIButton) {
 		
-		if let startLoc = startLocation {
-			
-			if let endLoc = endLocation {
-				
-				let launchOptions = [
-					MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving,
-					MKLaunchOptionsMapTypeKey : MKMapType.Standard.rawValue,
-					MKLaunchOptionsShowsTrafficKey : true,
-					MKLaunchOptionsMapCenterKey : NSValue(MKCoordinate: self.mapView.region.center),
-					MKLaunchOptionsMapSpanKey : NSValue(MKCoordinateSpan: self.mapView.region.span)
-				]
-				
-				MKMapItem.openMapsWithItems([startLoc, endLoc], launchOptions: launchOptions)
-				
-			}
-			
+		guard let startLocation = startLocation, endLocation = endLocation else {
+			displayAlertWithTitle("Can't Open Route", message: "Make sure there locations for both Start and End")
+			return
 		}
+		
+		let launchOptions = [
+			MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving,
+			MKLaunchOptionsMapTypeKey : MKMapType.Standard.rawValue,
+			MKLaunchOptionsShowsTrafficKey : true,
+			MKLaunchOptionsMapCenterKey : NSValue(MKCoordinate: self.mapView.region.center),
+			MKLaunchOptionsMapSpanKey : NSValue(MKCoordinateSpan: self.mapView.region.span)
+		]
+		
+		MKMapItem.openMapsWithItems([startLocation, endLocation], launchOptions: launchOptions)
 		
 	}
 	
@@ -731,58 +725,45 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		let searchVC = searchNavVC.viewControllers[0] as! SearchViewController
 		searchVC.delegate = self
 		
-		if let theTitle = title {
+		guard let theTitle = title else {
 			
-			if theTitle == "Start" {
-				
-				searchVC.whichLocationIndex = 0
-				
-			} else if theTitle == "End" {
-				
-				searchVC.whichLocationIndex = 1
-				
-			} else {
-				
-				searchVC.whichLocationIndex = -1
-				
-			}
+			searchVC.whichLocationIndex = -1
+			searchVC.title = "Location"
+			return
 			
-			searchVC.title = theTitle + " Location"
+		}
+		
+		if theTitle == "Start" {
+			
+			searchVC.whichLocationIndex = 0
+			
+		} else if theTitle == "End" {
+			
+			searchVC.whichLocationIndex = 1
 			
 		} else {
 			
 			searchVC.whichLocationIndex = -1
-			searchVC.title = "Location"
 			
 		}
+		searchVC.title = theTitle + " Location"
+		
 		searchVC.mapView = mapView
 		
-		CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location, completionHandler: { (placemarks, error: NSError!) -> Void in
+		CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location!, completionHandler: { (placemarks, error: NSError?) -> Void in
 			
-			if let returnedPlacemarks = placemarks {
+			guard let placemarks = placemarks where placemarks.count > 0 else {
 				
-				if returnedPlacemarks.count > 0 {
-					
-					let userCurrentLocation = placemarks[0] as! CLPlacemark
-					searchVC.userCurrentLocation = MKMapItem(placemark: MKPlacemark(placemark: userCurrentLocation))
-					
-					searchVC.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
-					self.presentViewController(searchNavVC, animated: true, completion: nil)
-					
-				}
-				
-			} else {
-				
-				let alertController = UIAlertController(title: "Location Error", message: "Connection to the server was not responsive.\nPlease try again later.", preferredStyle: UIAlertControllerStyle.Alert)
-				let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction!) -> Void in
-					
-					alertController.dismissViewControllerAnimated(true, completion: nil)
-					
-				})
-				alertController.addAction(dismissBtn)
-				self.presentViewController(alertController, animated: true, completion: nil)
+				self.displayAlertWithTitle("Location Error", message: "Connection to the server was not responsive.\nPlease try again later.")
+				return
 				
 			}
+			
+			let userCurrentLocation = placemarks[0]
+			searchVC.userCurrentLocation = MKMapItem(placemark: MKPlacemark(placemark: userCurrentLocation))
+			
+			searchVC.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+			self.presentViewController(searchNavVC, animated: true, completion: nil)
 			
 		})
 		
@@ -795,11 +776,11 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	override func viewWillDisappear(animated: Bool) {
 		
 		// Check and save the currentEntry's properities to CoreData
-		if mainLabelTextfield.text.isEmpty || mainLabelTextfield.text == nil {
+		if mainLabelTextfield.text!.isEmpty || mainLabelTextfield.text == nil {
 			
 			// Alert the user that an entry cannot be saved if it does not have a mainLabel
 			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Main Label field was empty.", preferredStyle: UIAlertControllerStyle.Alert)
-			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction!) in
+			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction) in
 				alertVC.dismissViewControllerAnimated(true, completion: nil)
 			})
 			alertVC.addAction(okBtn)
@@ -808,7 +789,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		} else {
 			
 			currentEntry.mainLabel = self.mainLabel
-			if schedLabelTextfield.text.isEmpty || schedLabelTextfield.text == nil {
+			if schedLabelTextfield.text!.isEmpty || schedLabelTextfield.text == nil {
 				
 				currentEntry.scheduleLabel = self.mainLabel
 				
@@ -830,12 +811,15 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			self.entries[indexPath.row] = currentEntry
 			currentTrip.entries = self.entries
 			
-			var savingError: NSError?
-			if moc!.save(&savingError) == false {
+			guard let moc = self.moc else {
+				return
+			}
+			
+			if moc.hasChanges {
 				
-				if let error = savingError {
-					
-					println("Failed to save the trip.\nError = \(error)")
+				do {
+					try moc.save()
+				} catch {
 					
 				}
 				
