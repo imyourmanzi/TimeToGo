@@ -128,7 +128,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	
 	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 		
-		if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
+		if searchResultsController.active && !searchResultsController.searchBar.text!.isEmpty {
 			
 			return 1
 			
@@ -157,7 +157,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		if section == 1 {
 			
 			return mapSearchResults.count
-				
+			
 		} else {
 			
 			return 1
@@ -201,6 +201,8 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 			mapItem = mapSearchResults[indexPath.row]
 			streetAddress = Interval.getAddressFromMapItem(mapItem!)
 				
+			selectedLocation = mapItem
+			
 			selectedLocation = mapItem
 			
 		} else {
