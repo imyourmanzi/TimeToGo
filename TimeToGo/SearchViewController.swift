@@ -22,12 +22,6 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	var mapView: MKMapView!
 	var whichLocationIndex: Int!
 	var searchResultsController = UISearchController()
-	let defaultLocations = [
-		MKMapItem(),
-		MKMapItem(),
-		MKMapItem(),
-		MKMapItem()
-	]
 	var userCurrentLocation: MKMapItem!
 	var mapSearchResults = [MKMapItem]()
 	var selectedLocation: MKMapItem?
@@ -142,15 +136,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if section == 1 {
 			
-			if searchResultsController.active && !searchResultsController.searchBar.text!.isEmpty {
-				
-				return "Search Results"
-				
-			} else {
-				
-				return "Default Locations"
-				
-			}
+			return "Search Results"
 			
 		}
 		
@@ -162,16 +148,8 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if section == 1 {
 			
-			if searchResultsController.active && !searchResultsController.searchBar.text!.isEmpty {
-				
-				return mapSearchResults.count
-				
-			} else {
-				
-				return defaultLocations.count
-				
-			}
-				
+			return mapSearchResults.count
+			
 		} else {
 			
 			return 1
@@ -186,20 +164,12 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if indexPath.section == 1 {
 			
-			if searchResultsController.active && !searchResultsController.searchBar.text!.isEmpty {
-				
-				let mapItem = mapSearchResults[indexPath.row]
-				let streetAddress = Interval.getAddressFromMapItem(mapItem)
-				
-				cell.textLabel?.text = mapItem.name
-				cell.detailTextLabel?.text = streetAddress
-				
-			} else {
-				
-				cell.textLabel?.text = defaultLocations[indexPath.row].name
-				
-			}
-				
+			let mapItem = mapSearchResults[indexPath.row]
+			let streetAddress = Interval.getAddressFromMapItem(mapItem)
+			
+			cell.textLabel?.text = mapItem.name
+			cell.detailTextLabel?.text = streetAddress
+			
 		} else {
 			
 			cell.textLabel?.text = "Current Location"
@@ -220,28 +190,16 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if indexPath.section == 1 {
 			
-			if searchResultsController.active && !searchResultsController.searchBar.text!.isEmpty {
-				
-				mapItem = mapSearchResults[indexPath.row]
-				streetAddress = Interval.getAddressFromMapItem(mapItem!)
-				
-				selectedLocation = mapItem
-				
-			} else {
-				
-				mapItem = defaultLocations[indexPath.row]
-				streetAddress = Interval.getAddressFromMapItem(mapItem!)
-				
-				selectedLocation = mapItem
-				
-			}
+			mapItem = mapSearchResults[indexPath.row]
+			streetAddress = Interval.getAddressFromMapItem(mapItem!)
+			
+			selectedLocation = mapItem
 			
 		} else {
 			
 			selectedLocation = userCurrentLocation
 			
 		}
-		
 		
 		
 		switch whichLocationIndex {
