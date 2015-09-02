@@ -134,23 +134,23 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	
 	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 		
-		return 2
+		if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
+			
+			return 1
+			
+		} else {
+			
+			return 2
+			
+		}
 		
 	}
 	
 	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		
 		if section == 1 {
-			
-			if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
-				
-				return "Search Results"
-				
-			} else {
-				
-				return "Default Locations"
-				
-			}
+
+			return "Search Results"
 			
 		}
 		
@@ -162,15 +162,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if section == 1 {
 			
-			if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
-				
-				return mapSearchResults.count
-				
-			} else {
-				
-				return defaultLocations.count
-				
-			}
+			return mapSearchResults.count
 				
 		} else {
 			
@@ -186,20 +178,12 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if indexPath.section == 1 {
 			
-			if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
-				
-				let mapItem = mapSearchResults[indexPath.row]
-				let streetAddress = Interval.getAddressFromMapItem(mapItem)
-				
-				cell.textLabel?.text = mapItem.name
-				cell.detailTextLabel?.text = streetAddress
-				
-			} else {
-				
-				cell.textLabel?.text = defaultLocations[indexPath.row].name
-				
-			}
-				
+			let mapItem = mapSearchResults[indexPath.row]
+			let streetAddress = Interval.getAddressFromMapItem(mapItem)
+			
+			cell.textLabel?.text = mapItem.name
+			cell.detailTextLabel?.text = streetAddress
+			
 		} else {
 			
 			cell.textLabel?.text = "Current Location"
@@ -220,28 +204,16 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if indexPath.section == 1 {
 			
-			if searchResultsController.active && !searchResultsController.searchBar.text.isEmpty {
+			mapItem = mapSearchResults[indexPath.row]
+			streetAddress = Interval.getAddressFromMapItem(mapItem!)
 				
-				mapItem = mapSearchResults[indexPath.row]
-				streetAddress = Interval.getAddressFromMapItem(mapItem!)
-				
-				selectedLocation = mapItem
-				
-			} else {
-				
-				mapItem = defaultLocations[indexPath.row]
-				streetAddress = Interval.getAddressFromMapItem(mapItem!)
-				
-				selectedLocation = mapItem
-				
-			}
+			selectedLocation = mapItem
 			
 		} else {
 			
 			selectedLocation = userCurrentLocation
 			
 		}
-		
 		
 		
 		switch whichLocationIndex {
