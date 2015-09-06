@@ -128,7 +128,7 @@ class AllTripsTableViewController: UITableViewController {
 		destVC.title = selectedTrip.tripName
 		destVC.tripName = selectedTrip.tripName
 		destVC.flightDate = selectedTrip.flightDate
-		destVC.numOfEntries = selectedTrip.entries.count
+		destVC.entries = selectedTrip.entries as! [Interval]
 		
 	}
 

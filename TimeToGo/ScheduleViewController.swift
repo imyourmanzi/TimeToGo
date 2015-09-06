@@ -38,10 +38,10 @@ class ScheduleViewController: UIViewController {
 		
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		
-		let lessHeight = self.tabBarController!.tabBar.frame.height + 44.0 + 44.0
-		scheduleScroll = UIScrollView(frame: CGRect(x: 0.0, y: 44.0, width: view.frame.width, height: view.frame.height - lessHeight))
+		let lessHeight = self.tabBarController!.tabBar.frame.height + 64.0 + 44.0
+		scheduleScroll = UIScrollView(frame: CGRect(x: 0.0, y: 64.0, width: view.frame.width, height: view.frame.height - lessHeight))
 		view.addSubview(scheduleScroll)
-		scrollSubview.frame = scheduleScroll.frame
+		scrollSubview.frame = CGRect(x: 0.0, y: 30.0, width: scheduleScroll.frame.width, height: scheduleScroll.frame.height)
 		scheduleScroll.addSubview(scrollSubview)
 		scheduleScroll.contentInset = UIEdgeInsetsZero
 		
@@ -164,7 +164,7 @@ class ScheduleViewController: UIViewController {
 		
 		
 		// Finish setting up scroll sub-view
-		scrollSubview.frame.size.height = i + 80.0
+		scrollSubview.frame.size.height = i + 30.0
 		scheduleScroll.contentSize = scrollSubview.frame.size
 		
 	}
