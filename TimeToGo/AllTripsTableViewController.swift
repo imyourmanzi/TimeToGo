@@ -16,6 +16,10 @@ class AllTripsTableViewController: UITableViewController {
 	var allTrips = [Trip]()
 	var currentTripName: String!
 	
+	// Current VC variables
+	var indexPathForSaved: NSIndexPath?
+	var destinationVC: UIViewController?
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
@@ -113,23 +117,63 @@ class AllTripsTableViewController: UITableViewController {
 	
     }
 	
+	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+		
+//		print("a: \(indexPath)")
+		
+		// Update currentTripNameMaster in the AppDelegate to the chosen tripName
+		(UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster = self.allTrips[indexPath.row].tripName
+		
+		// Transition to the Scheudle VC
+		let mainTabVC = self.storyboard?.instantiateViewControllerWithIdentifier("mainTabVC") as! UITabBarController
+		mainTabVC.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+		self.presentViewController(mainTabVC, animated: true, completion: nil)
+		
+	}
+	
+	override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+		
+//		print("b: \(indexPath)")
+		
+		self.indexPathForSaved = indexPath
+		
+	}
+	
 	
 	// MARK: - Navigation
 	
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		
+		destinationVC = segue.destinationViewController
+
+	}
+	
+	override func viewWillDisappear(animated: Bool) {
+		
+//		print("will disappear")
+		
 		// Prepare the following screen if a previous trip's cell was selected to be viewed
-		let indexPath: NSIndexPath! = tableView.indexPathForSelectedRow
-		guard let destVC = segue.destinationViewController as? SavedTripViewController else {
+		guard let indexPath = indexPathForSaved else {
+//			print("b again: \(indexPathForSaved)")
 			return
 		}
-			let selectedTrip = allTrips[indexPath.row]
 		
-		destVC.title = selectedTrip.tripName
-		destVC.tripName = selectedTrip.tripName
-		destVC.flightDate = selectedTrip.flightDate
-		destVC.entries = selectedTrip.entries as! [Interval]
+		guard let savedTripVC = destinationVC as? SavedTripViewController else {
+//			print("z: no saved trip vc")
+			return
+		}
+		
+		let selectedTrip = allTrips[indexPath.row]
+		
+//		print("c: \(allTrips)")
+//		print("d: \(selectedTrip)")
+		
+		savedTripVC.title = selectedTrip.tripName
+		savedTripVC.tripName = selectedTrip.tripName
+		savedTripVC.flightDate = selectedTrip.flightDate
+		savedTripVC.entries = selectedTrip.entries as! [Interval]
 		
 	}
+	
 
 }
