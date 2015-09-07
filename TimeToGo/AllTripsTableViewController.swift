@@ -145,8 +145,10 @@ class AllTripsTableViewController: UITableViewController {
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		
 		destinationVC = segue.destinationViewController
-
+		
 	}
+	
+	
 	
 	override func viewWillDisappear(animated: Bool) {
 		

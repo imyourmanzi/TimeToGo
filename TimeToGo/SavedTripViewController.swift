@@ -23,17 +23,20 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
+    }
+
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
 		
 		// Set up the dateFormatter
 		let dateFormatter = NSDateFormatter()
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
 		
-		
 		// Set the Interface Builder variables
 		flightDateLabel.text = "Flight Date and Time:\n\(dateFormatter.stringFromDate(flightDate))"
-
-    }
-
+		
+	}
+	
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
