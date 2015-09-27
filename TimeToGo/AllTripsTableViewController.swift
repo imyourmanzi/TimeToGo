@@ -38,7 +38,7 @@ class AllTripsTableViewController: UITableViewController {
 	override func viewWillAppear(animated: Bool) {
 		
 		// Fetch all of the managed objects from the persistent store and update the table view
-		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
+		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
 		let fetchAll = NSFetchRequest()
 		fetchAll.entity = NSEntityDescription.entityForName("Trip", inManagedObjectContext: moc!)
 		allTrips = (try! moc!.executeFetchRequest(fetchAll)) as! [Trip]
@@ -79,7 +79,7 @@ class AllTripsTableViewController: UITableViewController {
 			if allTrips[indexPath.row].tripName == currentTripName && allTrips.count > 1 {
 				
 				currentTripName = allTrips[allTrips.count - 2].tripName
-				(UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster = currentTripName
+				NSUserDefaults.standardUserDefaults().setObject(currentTripName, forKey: "currentTripName")
 				
 			}
 			
@@ -121,8 +121,9 @@ class AllTripsTableViewController: UITableViewController {
 		
 //		print("a: \(indexPath)")
 		
-		// Update currentTripNameMaster in the AppDelegate to the chosen tripName
-		(UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster = self.allTrips[indexPath.row].tripName
+		// Update currentTripName to the chosen tripName
+		let theTripName = self.allTrips[indexPath.row].tripName
+		NSUserDefaults.standardUserDefaults().setObject(theTripName, forKey: "currentTripName")
 		
 		// Transition to the Scheudle VC
 		let mainTabVC = self.storyboard?.instantiateViewControllerWithIdentifier("mainTabVC") as! UITabBarController

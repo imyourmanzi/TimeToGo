@@ -36,6 +36,7 @@ class ScheduleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		// Get the app's managedObjectContext
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		
 		let lessHeight = self.tabBarController!.tabBar.frame.height + 64.0 + 44.0
@@ -55,7 +56,7 @@ class ScheduleViewController: UIViewController {
 	override func viewWillAppear(animated: Bool) {
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
-		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
+		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
 		let fetchRequest = NSFetchRequest(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
 		let trips = (try! moc!.executeFetchRequest(fetchRequest)) as! [Trip]

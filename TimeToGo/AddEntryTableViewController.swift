@@ -53,7 +53,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
+		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
 		let fetchRequest = NSFetchRequest(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
 		let trips = (try! moc!.executeFetchRequest(fetchRequest)) as! [Trip]

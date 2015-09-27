@@ -89,8 +89,8 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 				
 			}
 		
-			// Update the currentTripNameMaster in the AppDelegate so that other views will reference the updated name
-			(UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster = self.tripName
+			// Update the currentTripName so that other views will reference the updated name
+			NSUserDefaults.standardUserDefaults().setObject(self.tripName, forKey: "currentTripName")
 			
 			tripNameTextfield.resignFirstResponder()
 			

@@ -14,8 +14,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 	// The variable that all classes and views call in order to find out which trip
-	// is the current, it's also updated accordingly
-	var currentTripNameMaster: String?
+	// is the current, it's also updated accordingly - DEPRECATED
+//	var currentTripNameMaster: String?
+	// Now using a key-value pair in the NSUserDefaults class for the app called: "currentTripName"
 
 	override class func initialize() {
 		
@@ -31,6 +32,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// blue bar color and white text color
 		UINavigationBar.appearance().barTintColor = UIColor(red: 46/255, green: 172/255, blue: 240/255, alpha: 1.0)
 		UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+		
+		let defaults = NSUserDefaults.standardUserDefaults()
+		defaults.registerDefaults(["currentTripName": ""])
 		
 		return true
 	}

@@ -82,8 +82,8 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
 	
 	@IBAction func loadTrip(sender: UIBarButtonItem) {
 		
-		// Update currentTripNameMaster in the AppDelegate to the chosen tripName
-		(UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster = self.tripName
+		// Update currentTripName to the chosen tripName
+		NSUserDefaults.standardUserDefaults().setObject(self.tripName, forKey: "currentTripName")
 		
 		// Transition to the Scheudle VC
 		let mainTabVC = self.storyboard?.instantiateViewControllerWithIdentifier("mainTabVC") as! UITabBarController

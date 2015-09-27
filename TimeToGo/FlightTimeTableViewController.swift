@@ -42,7 +42,7 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		backgroundImageView.contentMode = UIViewContentMode.ScaleAspectFill
 		self.tableView.backgroundView = backgroundImageView
 		
-		// Fetch the current trip from the persistent store and assign the CoreData variables
+		// Get the app's managedObjectContext
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 		
 		// Set up tripNameTextfield
@@ -79,7 +79,8 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		if allTrips.count > 0 && self.navigationItem.leftBarButtonItem == nil {
 			
 			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "cancelNewTrip:")
-			(UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster = allTrips[allTrips.count - 1].tripName
+			let theTripName = allTrips[allTrips.count - 1].tripName
+			NSUserDefaults.standardUserDefaults().setObject(theTripName, forKey: "currentTripName")
 			
 		}
 		
@@ -256,7 +257,7 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 				
 			}
 			
-			(UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster = self.tripName
+			NSUserDefaults.standardUserDefaults().setObject(self.tripName, forKey: "currentTripName")
 			
 			let mainVC = self.storyboard?.instantiateViewControllerWithIdentifier("mainTabVC") as! UITabBarController
 			mainVC.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve

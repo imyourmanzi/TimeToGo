@@ -37,7 +37,7 @@ class SettingsTableViewController: UITableViewController {
 	override func viewWillAppear(animated: Bool) {
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
-		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
+		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
 		let fetchRequest = NSFetchRequest(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
 		let trips = (try! moc!.executeFetchRequest(fetchRequest)) as! [Trip]
@@ -52,7 +52,7 @@ class SettingsTableViewController: UITableViewController {
 		flightDateCell.detailTextLabel?.text = dateFormatter.stringFromDate(self.flightDate)
 		
 		// Fetch all of the managed objects from the persistent store and update the table view
-		currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster
+//		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
 		let fetchAll = NSFetchRequest(entityName: "Trip")
 		allTrips = (try! moc!.executeFetchRequest(fetchAll)) as! [Trip]
 		
@@ -95,7 +95,7 @@ class SettingsTableViewController: UITableViewController {
 			if self.allTrips.count >= 1 {
 				
 				self.currentTripName = self.allTrips[self.allTrips.count - 1].tripName
-				(UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster = self.currentTripName
+				NSUserDefaults.standardUserDefaults().setObject(self.currentTripName, forKey: "currentTripName")
 				
 				self.viewWillAppear(true)
 				

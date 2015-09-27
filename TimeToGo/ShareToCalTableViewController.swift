@@ -56,7 +56,7 @@ class ShareToCalTableViewController: UITableViewController {
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
 		let moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-		let currentTripName = (UIApplication.sharedApplication().delegate as! AppDelegate).currentTripNameMaster!
+		let currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
 		let fetch = NSFetchRequest()
 		fetch.entity = NSEntityDescription.entityForName("Trip", inManagedObjectContext: moc!)
 		fetch.predicate = NSPredicate(format: "tripName == %@", currentTripName)
