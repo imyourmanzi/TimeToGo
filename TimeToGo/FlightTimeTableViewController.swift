@@ -78,7 +78,7 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		// Handle a case of 0 currently saved trips
 		if allTrips.count > 0 && self.navigationItem.leftBarButtonItem == nil {
 			
-			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "cancelNewTrip:")
+			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: #selector(cancelNewTrip))
 			let theTripName = allTrips[allTrips.count - 1].tripName
 			NSUserDefaults.standardUserDefaults().setObject(theTripName, forKey: "currentTripName")
 			

@@ -151,6 +151,7 @@ class EntriesViewController: UITableViewController {
 		destVC.timeValueHours = selectedEntry.timeValueHours
 		destVC.timeValueMins = selectedEntry.timeValueMins
 		destVC.intervalTimeStr = selectedEntry.stringFromTimeValue()
+		destVC.notes = selectedEntry.notesStr
 		
     }
 

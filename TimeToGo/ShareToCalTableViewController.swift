@@ -96,7 +96,7 @@ class ShareToCalTableViewController: UITableViewController {
 				
 			}
 			
-			index++
+			index += 1
 			
 		}
 		

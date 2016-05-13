@@ -21,6 +21,7 @@ class Interval: NSObject, NSCoding {
 	var useLocation: Bool? = false
 	var startLocation: MKPlacemark? = nil
 	var endLocation: MKPlacemark? = nil
+	var notesStr: String? = nil
 	
 	// Private label variables for schedule
 	private let entryLabel = UILabel()
@@ -44,6 +45,23 @@ class Interval: NSObject, NSCoding {
 		self.timeValueHours = timeValueHours
 		self.timeValueMins = timeValueMins
 		self.scheduleLabel = scheduleLabel
+		self.useLocation = usesLocation
+		if usesLocation == true && startLoc != nil && endLoc != nil {
+			
+			self.startLocation = startLoc
+			self.endLocation = endLoc
+			
+		}
+		
+	}
+	
+	init(mainLabel: String, scheduleLabel: String, timeValueHours: Int, timeValueMins: Int, notesStr: String?, usesLocation: Bool, startLoc: MKPlacemark?, endLoc: MKPlacemark?) {
+		
+		self.mainLabel = mainLabel
+		self.timeValueHours = timeValueHours
+		self.timeValueMins = timeValueMins
+		self.scheduleLabel = scheduleLabel
+		self.notesStr = notesStr
 		self.useLocation = usesLocation
 		if usesLocation == true && startLoc != nil && endLoc != nil {
 			
@@ -252,6 +270,7 @@ class Interval: NSObject, NSCoding {
 		self.useLocation = aDecoder.decodeObjectForKey("useLocation") as! Bool?
 		self.startLocation = aDecoder.decodeObjectForKey("startLocation") as! MKPlacemark?
 		self.endLocation = aDecoder.decodeObjectForKey("endLocation") as! MKPlacemark?
+		self.notesStr = aDecoder.decodeObjectForKey("notesStr") as! String?
 		
 	}
 	
@@ -264,6 +283,7 @@ class Interval: NSObject, NSCoding {
 		aCoder.encodeObject(useLocation, forKey: "useLocation")
 		aCoder.encodeObject(startLocation, forKey: "startLocation")
 		aCoder.encodeObject(endLocation, forKey: "endLocation")
+		aCoder.encodeObject(notesStr, forKey: "notesStr")
 		
 	}
 	
@@ -284,7 +304,8 @@ class Interval: NSObject, NSCoding {
 			self.timeValueMins == theObject.timeValueMins &&
 			self.useLocation == theObject.useLocation &&
 			self.startLocation == theObject.startLocation &&
-			self.endLocation == theObject.endLocation)
+			self.endLocation == theObject.endLocation &&
+			self.notesStr == theObject.notesStr)
 		
 	}
 	

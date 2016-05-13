@@ -10,13 +10,15 @@ import UIKit
 import CoreData
 import MapKit
 
-class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, MKMapViewDelegate, communicationToMain {
+class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, UITextViewDelegate, CLLocationManagerDelegate, MKMapViewDelegate, communicationToMain {
 	
 	// Interface Builder outlets
 	@IBOutlet var mainLabelTextfield: UITextField!
 	@IBOutlet var schedLabelTextfield: UITextField!
 	@IBOutlet var intervalLabelCell: UITableViewCell!
 	@IBOutlet var intervalTimePicker: UIPickerView!
+	@IBOutlet var notesTextview: UITextView!
+	@IBOutlet var notesTextviewPlaceholder: UITextField!
 	@IBOutlet var useLocationSwitch: UISwitch!
 	@IBOutlet var startLocCell: UITableViewCell!
 	@IBOutlet var startLocTextfield: UITextField!
@@ -37,6 +39,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	var timeValueMins: Int = 15
 	var intervalTimeStr: String!
 	var pickerHidden = true
+	var notes: String?
 	
 	// MapKit variables
 	var useLocation = false
@@ -60,6 +63,9 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		currentTrip = trips[0]
 		self.entries = currentTrip.entries as! [Interval]
 		
+		// Setting the row heights for the table view
+		self.tableView.rowHeight = UITableViewAutomaticDimension
+		
 		// Customized setup of the Interface Builder variables
 		mainLabelTextfield.delegate = self
 		mainLabelTextfield.text = mainLabel
@@ -72,6 +78,13 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		intervalTimePicker.dataSource = self
 		intervalTimePicker.delegate = self
+		
+		notesTextview.delegate = self
+		notesTextview.text = notes
+		
+		if notes != nil && notes != "" {
+			notesTextviewPlaceholder.placeholder = ""
+		}
 		
 		useLocationSwitch.on = false
 		useLocation = useLocationSwitch.on
@@ -160,7 +173,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			}
 			
 			// Save entry information (and location information if it's present) and dismiss the view
-			entries.append(Interval(mainLabel: mainLabel, scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, usesLocation: useLocation, startLoc: startLocation?.placemark, endLoc: endLocation?.placemark))
+			entries.append(Interval(mainLabel: mainLabel, scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, notesStr: notes, usesLocation: useLocation, startLoc: startLocation?.placemark, endLoc: endLocation?.placemark))
 			performUpdateOnCoreData()
 			
 			dismissViewControllerAnimated(true, completion: nil)
@@ -181,14 +194,14 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	@IBAction func mainLabelDidChange(sender: UITextField) {
 
-		// Set the mainLabel with it's textfield
+		// Set the mainLabel with its textfield
 		mainLabel = sender.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 	}
 	
 	@IBAction func schedLabelDidChange(sender: UITextField) {
 		
-		// Set the schedLabel with it's textfield
+		// Set the schedLabel with its textfield
 		schedLabel = sender.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
 		
 	}
@@ -246,6 +259,57 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
+	
+	// MARK: - Text view delegate and action
+	
+	func textViewDidChange(textView: UITextView) {
+		
+		// Set the notes with its textview
+		notes = textView.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		
+		if notes == nil || notes == "" {
+			
+			notesTextviewPlaceholder.placeholder = "Notes"
+			
+		} else {
+			
+			notesTextviewPlaceholder.placeholder = ""
+			
+		}
+		
+	}
+	
+	func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+		
+		// Hide the flightDatePicker if beginning to edit the textview
+		if pickerHidden == false {
+			
+			togglePicker()
+			
+		}
+		
+		return true
+		
+	}
+	
+	func textViewShouldEndEditing(textView: UITextView) -> Bool {
+		
+		textView.resignFirstResponder()
+		
+		// Set the notes with its textview
+		notes = textView.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		
+		return true
+		
+	}
+	
+	override func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+		
+		notesTextview.resignFirstResponder()
+		
+	}
+	
+	
 	// MARK: - Table view data source
 	
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -254,11 +318,11 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			
 			if pickerHidden {
 				
-				return 3
+				return 4
 				
 			} else {
 				
-				return 4
+				return 5
 				
 			}
 			
@@ -286,7 +350,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		if indexPath.section == 0 {
 			
-			if indexPath.row == 2 {
+			if indexPath.row == 3 {
 				
 				togglePicker()
 				
@@ -300,6 +364,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
+	/*
 	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 		
 		if indexPath.section == 0 {
@@ -310,7 +375,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 				
 			} else {
 				
-				if indexPath.row == 3 {
+				if indexPath.row == 4 {
 					
 					return intervalTimePicker.frame.height
 					
@@ -349,6 +414,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		}
 		
 	}
+	*/
 	
 	
 	// MARK: - Picker view data source and delegate
@@ -458,13 +524,14 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			
 			intervalTimePicker.selectRow(timeValueHours, inComponent: 0, animated: false)
 			intervalTimePicker.selectRow(timeValueMins, inComponent: 2, animated: false)
-			self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 3, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
+			self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 4, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
 			mainLabelTextfield.resignFirstResponder()
 			schedLabelTextfield.resignFirstResponder()
+			notesTextview.resignFirstResponder()
 			
 		} else {
 			
-			self.tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: 3, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
+			self.tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: 4, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
 			
 		}
 		
@@ -472,7 +539,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		self.tableView.endUpdates()
 		
-		self.tableView.deselectRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0), animated: true)
+		self.tableView.deselectRowAtIndexPath(NSIndexPath(forRow: 3, inSection: 0), animated: true)
 		
 	}
 	
@@ -712,6 +779,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			self.tableView.insertRowsAtIndexPaths(rowsToChange, withRowAnimation: UITableViewRowAnimation.Fade)
 			mainLabelTextfield.resignFirstResponder()
 			schedLabelTextfield.resignFirstResponder()
+			notesTextview.resignFirstResponder()
 			
 		} else if !useLocation && useLocationPrev == true {
 			
@@ -780,6 +848,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		// Make sure that the keyboards are all away
 		mainLabelTextfield.resignFirstResponder()
 		schedLabelTextfield.resignFirstResponder()
+		notesTextview.resignFirstResponder()
 		
 	}
 

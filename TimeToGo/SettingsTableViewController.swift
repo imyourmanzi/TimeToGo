@@ -78,7 +78,7 @@ class SettingsTableViewController: UITableViewController {
 					
 				}
 				
-				index++
+				index += 1
 				
 			}
 			
@@ -157,7 +157,7 @@ class SettingsTableViewController: UITableViewController {
 				return
 			}
 			
-			newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: newTripVC, action: "cancelNewTripFromSettings:")
+			newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: newTripVC, action: #selector(newTripVC.cancelNewTripFromSettings))
 			
 		}
 		
