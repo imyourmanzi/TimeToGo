@@ -22,7 +22,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	var mapView: MKMapView!
 	var whichLocationIndex: Int!
 	var searchResultsController: UISearchController!
-	var userCurrentLocation: MKMapItem!
+	var userCurrentLocation: MKMapItem?
 	var mapSearchResults = [MKMapItem]()
 	var selectedLocation: MKMapItem?
 	
@@ -47,6 +47,9 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		})()
 		
 		self.tableView.reloadData()
+		
+//		print("2.")
+//		print(userCurrentLocation)
 		
 	}
 	
@@ -82,7 +85,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 			
 			guard let response = response where response.mapItems.count > 0 else {
 			
-				print("There were no search results found")
+//				print("There were no search results found")
 				return
 				
 			}
@@ -192,7 +195,20 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		} else {
 			
 			cell.textLabel?.text = "Current Location"
-			cell.detailTextLabel?.text = nil
+			
+//			print("3.")
+//			print(userCurrentLocation)
+			
+			if userCurrentLocation?.placemark.coordinate == nil {
+				
+				cell.detailTextLabel?.text = "(Not found)"
+				
+			} else {
+				
+				cell.detailTextLabel?.text = userCurrentLocation!.name
+				
+			}
+			
 			
 		}
 		

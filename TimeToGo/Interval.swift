@@ -114,7 +114,7 @@ class Interval: NSObject, NSCoding {
 	// Creates and adds label for scheduleLabel to a view
 	func createScheduleLabelFromTopSpace(topSpace: CGFloat, onView view: UIView) {
 		
-		if scheduleLabel == nil {
+		if scheduleLabel == nil || scheduleLabel == "" {
 			scheduleLabel = mainLabel
 		}
 		

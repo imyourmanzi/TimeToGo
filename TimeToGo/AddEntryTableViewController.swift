@@ -47,8 +47,8 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	var locationManager: CLLocationManager?
 	var startLocation: MKMapItem?
 	var endLocation: MKMapItem?
-	var startAnnotation: LocationAnnotation?
-	var endAnnotation: LocationAnnotation?
+	var startAnnotation: LocationAnnotation = LocationAnnotation(coordinate: CLLocationCoordinate2DMake(0, 0), title: "", subtitle: "")
+	var endAnnotation: LocationAnnotation = LocationAnnotation(coordinate: CLLocationCoordinate2DMake(0, 0), title: "", subtitle: "")
 	var directionsOverlay: MKOverlay?
 	
 	override func viewDidLoad() {
@@ -96,21 +96,29 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	func backFromSearch(mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int) {
 		
+		guard let mItem = mapItem else {
+			
+			// Needs to be re-implemented
+//			displayAlertWithTitle("No Location", message: "Could not find the requested location")
+			return
+			
+		}
+		
 		switch index {
 			
 		case 0:
-			startLocation = mapItem
+			startLocation = mItem
 			startLocTextfield.text = startLocation?.name
-			mapView.removeAnnotation(startAnnotation!)
-			startAnnotation = LocationAnnotation(coordinate: startLocation!.placemark.coordinate, title: startLocation!.name!, subtitle: address)
-			mapView.addAnnotation(startAnnotation!)
+			mapView.removeAnnotation(startAnnotation)
+			startAnnotation = LocationAnnotation(coordinate: startLocation!.placemark.coordinate, title: startLocation!.name, subtitle: address)
+			mapView.addAnnotation(startAnnotation)
 			
 		case 1:
-			endLocation = mapItem
+			endLocation = mItem
 			endLocTextfield.text = endLocation?.name
-			mapView.removeAnnotation(endAnnotation!)
-			endAnnotation = LocationAnnotation(coordinate: endLocation!.placemark.coordinate, title: endLocation!.name!, subtitle: address)
-			mapView.addAnnotation(endAnnotation!)
+			mapView.removeAnnotation(endAnnotation)
+			endAnnotation = LocationAnnotation(coordinate: endLocation!.placemark.coordinate, title: endLocation!.name, subtitle: address)
+			mapView.addAnnotation(endAnnotation)
 			
 		default:
 			break
@@ -364,58 +372,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
-	/*
-	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-		
-		if indexPath.section == 0 {
-			
-			if pickerHidden {
-				
-				return tableView.rowHeight
-				
-			} else {
-				
-				if indexPath.row == 4 {
-					
-					return intervalTimePicker.frame.height
-					
-				} else {
-					
-					return tableView.rowHeight
-					
-				}
-				
-			}
-			
-		} else if indexPath.section == 1 {
-			
-			if useLocation {
-				
-				if indexPath.row == 3 {
-					
-					return mapView.frame.height
-					
-				} else {
-					
-					return tableView.rowHeight
-					
-				}
-				
-			} else {
-				
-				return tableView.rowHeight
-				
-			}
-			
-		} else {
-			
-			return tableView.rowHeight
-			
-		}
-		
-	}
-	*/
-	
 	
 	// MARK: - Picker view data source and delegate
 	
@@ -599,7 +555,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		let dismissAction = UIAlertAction(title: "Dismiss", style: .Default, handler: nil)
 		alertController.addAction(dismissAction)
 		
-		presentViewController(alertController, animated: true, completion: nil)
+		self.presentViewController(alertController, animated: true, completion: nil)
 		
 	}
 	
@@ -648,22 +604,26 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
 		
-		print("Location manager failed: (\(manager))\n\(error)")
+//		print("Location manager failed: (\(manager))\n\(error)")
 		
-		let alertController = UIAlertController(title: "Error \(error.code)", message: "Location manager failed: \(error)", preferredStyle: UIAlertControllerStyle.Alert)
-		let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
+		if error as? CLError != CLError.LocationUnknown {
 			
-			manager.stopUpdatingLocation()
-			self.useLocationSwitch.setOn(false, animated: true)
-			self.useLocationPrev = self.useLocation
-			self.useLocation = self.useLocationSwitch.on
-			self.toggleUseLocation()
+			let alertController = UIAlertController(title: "Error \(error.code)", message: "Location manager failed: \(error) -- Please contact support via the App Store with a screenshot of this error.", preferredStyle: UIAlertControllerStyle.Alert)
+			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
+				
+				manager.stopUpdatingLocation()
+				self.useLocationSwitch.setOn(false, animated: true)
+				self.useLocationPrev = self.useLocation
+				self.useLocation = self.useLocationSwitch.on
+				self.toggleUseLocation()
+				
+			}
+			alertController.addAction(dismissBtn)
 			
-		}
-		alertController.addAction(dismissBtn)
-		
-		self.presentViewController(alertController, animated: true, completion: nil)
-		
+			self.presentViewController(alertController, animated: true, completion: nil)
+
+		}		
+			
 	}
 	
 	func mapView(mapView: MKMapView, didUpdateUserLocation userLocation: MKUserLocation) {
@@ -676,24 +636,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			mapView.setRegion(region, animated: true)
 			
 		}
-		
-	}
-	
-	func mapViewWillStartLoadingMap(mapView: MKMapView) {
-		
-		startLocCell.userInteractionEnabled = false
-		startLocCell.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
-		endLocCell.userInteractionEnabled = false
-		endLocCell.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
-		
-	}
-	
-	func mapViewDidFinishLoadingMap(mapView: MKMapView) {
-		
-		startLocCell.userInteractionEnabled = true
-		startLocCell.backgroundColor = UIColor.whiteColor()
-		endLocCell.userInteractionEnabled = true
-		endLocCell.backgroundColor = UIColor.whiteColor()
 		
 	}
 	
@@ -717,7 +659,8 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			let timeInInt = Int((route.expectedTravelTime))
 			timeValueHours = timeInInt / 3600
 			timeValueMins = timeInInt / 60 % 60
-			intervalLabelCell.detailTextLabel?.text = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
+			intervalTimeStr = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
+			intervalLabelCell.detailTextLabel?.text = intervalTimeStr
 			
 		}
 		
@@ -742,7 +685,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	@IBAction func openRouteInMaps(sender: UIButton) {
 		
 		guard let startLocation = startLocation, endLocation = endLocation else {
-			displayAlertWithTitle("Can't Open Route", message: "Make sure there locations for both Start and End")
+			displayAlertWithTitle("Can't Open Route", message: "Make sure there are locations for both Start and End")
 			return
 		}
 
@@ -821,22 +764,31 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		searchVC.mapView = mapView
 		
-		CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location!, completionHandler: { (placemarks, error: NSError?) -> Void in
+		if mapView.userLocation.location != nil {
 			
-			guard let placemarks = placemarks where placemarks.count > 0 else {
+			CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location!, completionHandler: { (placemarks, error: NSError?) -> Void in
 				
-				self.displayAlertWithTitle("Location Error", message: "Connection to the server was not responsive.\nPlease try again later.")
-				return
+				guard let placemarks = placemarks where placemarks.count > 0 else {
+					
+					// Deprecated as of 1.1.6
+//					self.displayAlertWithTitle("Location Error", message: "Connection to the server was not responsive.\nPlease try again later.")
+					self.displayAlertWithTitle("Location Error", message: "Unable to confirm your current location. Please try again later.")
+					return
+					
+				}
 				
-			}
+				let userCurrentLocation = placemarks[0]
+				searchVC.userCurrentLocation = MKMapItem(placemark: MKPlacemark(placemark: userCurrentLocation))
+//				print("1a.")
+//				print(userCurrentLocation)
+				searchVC.tableView.reloadData()
+				
+			})
 			
-			let userCurrentLocation = placemarks[0]
-			searchVC.userCurrentLocation = MKMapItem(placemark: MKPlacemark(placemark: userCurrentLocation))
-			
-			searchVC.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
-			self.presentViewController(searchNavVC, animated: true, completion: nil)
-			
-		})
+		}
+		
+		searchVC.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+		self.presentViewController(searchNavVC, animated: true, completion: nil)
 		
 	}
 	

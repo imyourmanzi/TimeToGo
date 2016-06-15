@@ -55,7 +55,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	var startLocation: MKMapItem?
 	var endLocation: MKMapItem?
 	var startAnnotation: LocationAnnotation = LocationAnnotation(coordinate: CLLocationCoordinate2DMake(0, 0), title: "", subtitle: "")
-	var endAnnotation: LocationAnnotation! = LocationAnnotation(coordinate: CLLocationCoordinate2DMake(0, 0), title: "", subtitle: "")
+	var endAnnotation: LocationAnnotation = LocationAnnotation(coordinate: CLLocationCoordinate2DMake(0, 0), title: "", subtitle: "")
 	var directionsOverlay: MKOverlay?
 	
 	override func viewDidLoad() {
@@ -101,37 +101,48 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		mapView.delegate = self
 		self.useLocation = currentEntry.useLocation
 		
-		guard let usesLocation = useLocation else {
-			useLocation = false
+		/*
+		// Deprecated as of 1.1.6
+		guard let useLocation = self.useLocation else {
+			self.useLocation = false
 			return
 		}
-			
-		if usesLocation == true {
+		
+		if useLocation == true {
 			
 			self.startLocation = MKMapItem(placemark: currentEntry.startLocation!)
 			self.endLocation = MKMapItem(placemark: currentEntry.endLocation!)
 			
 		}
+		*/
 		
 	}
 	
 	func backFromSearch(mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int) {
 		
+		guard let mItem = mapItem else {
+			
+			// Needs to be re-implemented
+//			displayAlertWithTitle("No Location", message: "Could not find the requested location")
+			return
+			
+		}
+		
 		switch index {
 			
 		case 0:
-			startLocation = mapItem
+			startLocation = mItem
 			startLocTextfield.text = startLocation?.name
 			mapView.removeAnnotation(startAnnotation)
-			startAnnotation = LocationAnnotation(coordinate: startLocation!.placemark.coordinate, title: startLocation!.name!, subtitle: address)
+			startAnnotation = LocationAnnotation(coordinate: startLocation!.placemark.coordinate, title: startLocation!.name, subtitle: address)
 			mapView.addAnnotation(startAnnotation)
 			
 		case 1:
-			endLocation = mapItem
+			endLocation = mItem
 			endLocTextfield.text = endLocation?.name
-			mapView.removeAnnotation(endAnnotation!)
-			endAnnotation = LocationAnnotation(coordinate: endLocation!.placemark.coordinate, title: endLocation!.name!, subtitle: address)
-			mapView.addAnnotation(endAnnotation!)
+			mapView.removeAnnotation(endAnnotation)
+			endAnnotation = LocationAnnotation(coordinate: endLocation!.placemark.coordinate, title: endLocation!.name, subtitle: address)
+			mapView.addAnnotation(endAnnotation)
 			
 		default:
 			break
@@ -346,70 +357,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		}
 		
 	}
-	
-	/*
-	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-		
-		if indexPath.section == 0 {
-			
-			if pickerHidden {
-				
-				if indexPath.row == 2 {
-					
-					return notesTextview.frame.height
-					
-				} else {
-					
-					return tableView.rowHeight
-					
-				}				
-				
-			} else {
-				
-				if indexPath.row == 4 {
-					
-					return intervalTimePicker.frame.height
-					
-				} else if indexPath.row == 2 {
-					
-					return notesTextview.frame.height
-					
-				} else {
-					
-					return tableView.rowHeight
-					
-				}
-				
-			}
-			
-		} else if indexPath.section == 1 {
-			
-			if useLocation == true {
-				
-				if indexPath.row == 3 {
-					
-					return mapView.frame.height
-					
-				} else {
-					
-					return tableView.rowHeight
-					
-				}
-				
-			} else {
-				
-				return tableView.rowHeight
-				
-			}
-			
-		} else {
-			
-			return tableView.rowHeight
-			
-		}
-		
-	}
-	*/
 	
 	
 	// MARK: - Picker view data source and delegate
@@ -650,21 +597,25 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
 		
-		print("Location manager failed: (\(manager))\n\(error)")
+//		print("Location manager failed: (\(manager))\n\(error)")
 		
-		let alertController = UIAlertController(title: "Error \(error.code)", message: "Location manager failed: \(error)", preferredStyle: UIAlertControllerStyle.Alert)
-		let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
+		if error as? CLError != CLError.LocationUnknown {
 			
-			manager.stopUpdatingLocation()
-			self.useLocationSwitch.setOn(false, animated: true)
-			self.useLocationPrev = self.useLocation
-			self.useLocation = self.useLocationSwitch.on
-			self.toggleUseLocation()
+			let alertController = UIAlertController(title: "Error \(error.code)", message: "Location manager failed: \(error) -- Please contact support via the App Store with a screenshot of this error.", preferredStyle: UIAlertControllerStyle.Alert)
+			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
+				
+				manager.stopUpdatingLocation()
+				self.useLocationSwitch.setOn(false, animated: true)
+				self.useLocationPrev = self.useLocation
+				self.useLocation = self.useLocationSwitch.on
+				self.toggleUseLocation()
+				
+			}
+			alertController.addAction(dismissBtn)
+			
+			self.presentViewController(alertController, animated: true, completion: nil)
 			
 		}
-		alertController.addAction(dismissBtn)
-		
-		self.presentViewController(alertController, animated: true, completion: nil)
 		
 	}
 	
@@ -680,26 +631,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		}
 		
 	}
-	
-	/*
-	func mapViewWillStartLoadingMap(mapView: MKMapView) {
-		
-		startLocCell.userInteractionEnabled = false
-		startLocCell.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
-		endLocCell.userInteractionEnabled = false
-		endLocCell.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
-		
-	}
-	
-	func mapViewDidFinishLoadingMap(mapView: MKMapView) {
-		
-		startLocCell.userInteractionEnabled = true
-		startLocCell.backgroundColor = UIColor.whiteColor()
-		endLocCell.userInteractionEnabled = true
-		endLocCell.backgroundColor = UIColor.whiteColor()
-		
-	}
-	*/
 	
 	func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
 		
@@ -721,7 +652,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			let timeInInt = Int((route.expectedTravelTime))
 			timeValueHours = timeInInt / 3600
 			timeValueMins = timeInInt / 60 % 60
-			intervalLabelCell.detailTextLabel?.text = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
+			intervalTimeStr = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
+			intervalLabelCell.detailTextLabel?.text = intervalTimeStr
 			
 		}
 		
@@ -747,7 +679,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	@IBAction func openRouteInMaps(sender: UIButton) {
 		
 		guard let startLocation = startLocation, endLocation = endLocation else {
-			displayAlertWithTitle("Can't Open Route", message: "Make sure there locations for both Start and End")
+			displayAlertWithTitle("Can't Open Route", message: "Make sure there are locations for both Start and End")
 			return
 		}
 		
@@ -827,30 +759,41 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		searchVC.mapView = mapView
 		
+		/*
+		// Deprecated as of 1.1.6
 		guard let ulocation = mapView.userLocation.location else {
 			
 			displayAlertWithTitle("Still Loading", message: "Please try again in a few moments")
 			
 			return
 		}
+		*/
 		
-		CLGeocoder().reverseGeocodeLocation(ulocation, completionHandler: { (placemarks, error: NSError?) -> Void in
+		if mapView.userLocation.location != nil {
 			
-			guard let placemarks = placemarks where placemarks.count > 0 else {
+			CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location!, completionHandler: { (placemarks, error: NSError?) -> Void in
 				
-				self.displayAlertWithTitle("Location Error", message: "Connection to the server was not responsive.\nPlease try again later.")
-				return
+				guard let placemarks = placemarks where placemarks.count > 0 else {
+					
+					// Deprecated as of 1.1.6
+//					self.displayAlertWithTitle("Location Error", message: "Connection to the server was not responsive.\nPlease try again later.")
+					self.displayAlertWithTitle("Location Error", message: "Unable to confirm your current location. Please try again later.")
+					return
+					
+				}
 				
-			}
+				let userCurrentLocation = placemarks[0]
+				searchVC.userCurrentLocation = MKMapItem(placemark: MKPlacemark(placemark: userCurrentLocation))
+//				print("1b.")
+//				print(userCurrentLocation)
+				searchVC.tableView.reloadData()
+				
+			})
 			
-			let userCurrentLocation = placemarks[0]
-			searchVC.userCurrentLocation = MKMapItem(placemark: MKPlacemark(placemark: userCurrentLocation))
-			
-			searchVC.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
-			self.presentViewController(searchNavVC, animated: true, completion: nil)
-			
-		})
+		}
 		
+		searchVC.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+		self.presentViewController(searchNavVC, animated: true, completion: nil)
 		
 	}
 	
@@ -872,50 +815,78 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 		} else {
 			
-			currentEntry.mainLabel = self.mainLabel
-			if schedLabelTextfield.text!.isEmpty || schedLabelTextfield.text == nil {
-				
-				currentEntry.scheduleLabel = self.mainLabel
-				
-			} else {
-				
-				currentEntry.scheduleLabel = self.schedLabel
-				
-			}
-			currentEntry.timeValueHours = self.timeValueHours
-			currentEntry.timeValueMins = self.timeValueMins
-			currentEntry.timeValueStr = self.intervalTimeStr
-			currentEntry.notesStr = self.notes
-			
-			if useLocation == true && startLocation != nil && endLocation != nil {
-			
-				currentEntry.useLocation = self.useLocation
-				currentEntry.startLocation = self.startLocation?.placemark
-				currentEntry.endLocation = self.endLocation?.placemark
-				
-			}
-			self.entries[indexPath.row] = currentEntry
-			currentTrip.entries = self.entries
-			
-			guard let moc = self.moc else {
-				return
-			}
-			
-			if moc.hasChanges {
-				
-				do {
-					try moc.save()
-				} catch {
-					
-				}
-				
-			}
+			saveToContextAndUpdateCoreData()
 			
 		}
 		
 		mainLabelTextfield.resignFirstResponder()
 		schedLabelTextfield.resignFirstResponder()
 		notesTextview.resignFirstResponder()
+		
+	}
+
+	func saveToContextAndUpdateCoreData() {
+		
+		currentEntry.mainLabel = self.mainLabel
+		if schedLabelTextfield.text!.isEmpty || schedLabelTextfield.text == nil {
+			
+			currentEntry.scheduleLabel = self.mainLabel
+			
+		} else {
+			
+			currentEntry.scheduleLabel = self.schedLabel
+			
+		}
+		currentEntry.timeValueHours = self.timeValueHours
+		currentEntry.timeValueMins = self.timeValueMins
+		currentEntry.timeValueStr = self.intervalTimeStr
+		currentEntry.notesStr = self.notes
+		
+		if useLocation == true && startLocation != nil && endLocation != nil {
+			
+			currentEntry.useLocation = self.useLocation
+			currentEntry.startLocation = self.startLocation?.placemark
+			currentEntry.endLocation = self.endLocation?.placemark
+			
+		} else {
+			
+			currentEntry.useLocation = false
+			currentEntry.startLocation = nil
+			currentEntry.endLocation = nil
+			
+		}
+		self.entries[indexPath.row] = currentEntry
+		currentTrip.entries = self.entries
+		
+		guard let moc = self.moc else {
+			return
+		}
+		
+		/*
+		print(currentEntry.timeValueHours, terminator: "")
+		print("\t\(self.timeValueHours)")
+		print(currentEntry.timeValueMins, terminator: "")
+		print("\t\(self.timeValueMins)")
+		print(currentEntry.timeValueStr, terminator: "")
+		print("\t\(self.intervalTimeStr)")
+		print(currentEntry.useLocation, terminator: "")
+		print("\t\(self.useLocation)")
+		print(currentEntry.startLocation)
+		print("\t\(self.startLocation)")
+		print(currentEntry.endLocation)
+		print("\t\(self.endLocation)")
+		*/
+		
+		if moc.hasChanges {
+			
+			do {
+				try moc.save()
+//				print("Did save")
+			} catch {
+//				print("Did not save")
+			}
+			
+		}
 		
 	}
 	

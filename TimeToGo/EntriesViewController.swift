@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import MapKit
 
 class EntriesViewController: UITableViewController {
 	
@@ -44,6 +45,7 @@ class EntriesViewController: UITableViewController {
 		self.entries = currentTrip.entries as! [Interval]
 		self.flightDate = currentTrip.flightDate
 		
+		performUpdateOnCoreData()
 		tableView.reloadData()
 		
 	}
@@ -152,6 +154,12 @@ class EntriesViewController: UITableViewController {
 		destVC.timeValueMins = selectedEntry.timeValueMins
 		destVC.intervalTimeStr = selectedEntry.stringFromTimeValue()
 		destVC.notes = selectedEntry.notesStr
+		if selectedEntry.useLocation == true && selectedEntry.startLocation != nil && selectedEntry.endLocation != nil {
+			
+			destVC.startLocation = MKMapItem(placemark: selectedEntry.startLocation!)
+			destVC.endLocation = MKMapItem(placemark: selectedEntry.endLocation!)
+			
+		}
 		
     }
 
