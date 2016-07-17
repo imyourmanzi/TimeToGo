@@ -9,6 +9,7 @@
 import UIKit
 import EventKit
 import CoreData
+import MapKit
 
 class ShareToCalTableViewController: UITableViewController {
 	
@@ -171,12 +172,21 @@ class ShareToCalTableViewController: UITableViewController {
 		
 		let durationOfInterval = entry.timeIntervalByConvertingTimeValue()
 		let endDate = entry.startDate.dateByAddingTimeInterval(durationOfInterval)
-		let notes = "\(currentTrip.tripName)\n\(entry.mainLabel)\n\nOrganized and Automatically Added by It's Time To Go"
-		createEventWithTitle(entry.scheduleLabel, startDate: entry.startDate, endDate: endDate, inCalendar: calendar, inEventStore: eventStore, withNotes: notes)
+		var endLocStr: String?
+		var notes = ""
+		if entry.notesStr != nil && entry.notesStr != "" {
+			notes = entry.notesStr!
+		}
+		notes += "\n\(entry.mainLabel)\nFor \(currentTrip.tripName)\n\nOrganized and Automatically Added by It's Time To Go"
+		if entry.endLocation != nil {
+			let endLoc = MKMapItem(placemark: entry.endLocation!)
+			endLocStr = "\(endLoc.name!) \(Interval.getAddressFromMapItem(endLoc))"
+		}
+		createEventWithTitle(entry.scheduleLabel, startDate: entry.startDate, endDate: endDate, location: endLocStr, inCalendar: calendar, inEventStore: eventStore, withNotes: notes)
 		
 	}
 	
-	private func createEventWithTitle(title: String, startDate: NSDate, endDate: NSDate, inCalendar calendar: EKCalendar, inEventStore eventStore: EKEventStore, withNotes notes: String) -> Bool {
+	private func createEventWithTitle(title: String, startDate: NSDate, endDate: NSDate, location: String?, inCalendar calendar: EKCalendar, inEventStore eventStore: EKEventStore, withNotes notes: String) -> Bool {
 		
 		let event = EKEvent(eventStore: eventStore)
 		event.calendar = calendar
@@ -184,22 +194,22 @@ class ShareToCalTableViewController: UITableViewController {
 		event.notes = notes
 		event.startDate = startDate
 		event.endDate = endDate
+		event.location = location
 		
 		let alarm = EKAlarm(relativeOffset: 0.0)
 		event.alarms = [alarm]
 		
-		let result: Bool
 		do {
+			
 			try eventStore.saveEvent(event, span: EKSpan.ThisEvent)
-			result = true
+			return true
+			
 		} catch {
 			
-			print("Could not save event.\nError: \(error)")
-			result = false
+//			print("Could not save event.\nError: \(error)")
+			return false
 			
 		}
-		
-		return result
 		
 	}
 	

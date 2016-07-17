@@ -244,7 +244,7 @@ class Interval: NSObject, NSCoding {
 			streetAddress += adminArea
 			
 			if let postalCode = mapItem.placemark.postalCode {
-				streetAddress += postalCode
+				streetAddress += " \(postalCode)"
 			}
 			
 			streetAddress += ", "

@@ -8,10 +8,12 @@
 
 import UIKit
 import CoreData
+import MessageUI
 
-class SettingsTableViewController: UITableViewController {
+class SettingsTableViewController: UITableViewController, MFMailComposeViewControllerDelegate {
 
 	@IBOutlet var flightDateCell: UITableViewCell!
+	@IBOutlet var tripNameCell: UITableViewCell!
 	
 	var moc: NSManagedObjectContext?
 	var currentTripName: String!
@@ -43,8 +45,10 @@ class SettingsTableViewController: UITableViewController {
 		let trips = (try! moc!.executeFetchRequest(fetchRequest)) as! [Trip]
 		currentTrip = trips[0]
 		
-		self.flightDate = currentTrip.flightDate
 		self.tripName = currentTrip.tripName
+		self.flightDate = currentTrip.flightDate
+		
+		tripNameCell.detailTextLabel?.text = self.tripName
 		
 		// Set up the dateFormatter for the flightDate title display
 		let dateFormatter = NSDateFormatter()
@@ -88,7 +92,7 @@ class SettingsTableViewController: UITableViewController {
 				try self.moc!.save()
 			} catch {
 				
-				print("Failed to delete the trip.\nError = \(error)")
+//				print("Failed to delete the trip.\nError = \(error)")
 				
 			}
 			
@@ -114,8 +118,18 @@ class SettingsTableViewController: UITableViewController {
 		deleteAlertController.addAction(cancelAction)
 		deleteAlertController.addAction(deleteAction)
 		
-		self.presentViewController(deleteAlertController, animated: true, completion: nil)
+		presentViewController(deleteAlertController, animated: true, completion: nil)
 
+	}
+	
+	private func displayAlertWithTitle(title: String?, message: String?) {
+		
+		let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+		let dismiss = UIAlertAction(title: "Dismiss", style: .Default, handler: nil)
+		alert.addAction(dismiss)
+		
+		self.presentViewController(alert, animated: true, completion: nil)
+		
 	}
 
 	
@@ -130,6 +144,66 @@ class SettingsTableViewController: UITableViewController {
 		}
 		
 		return nil
+		
+	}
+	
+	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+		
+		if indexPath.section == 2 {
+			
+			if indexPath.row == 0 {
+				
+				newEmailToRecipients(["timetogosupport@narwhalsandcode.com"], subject: "Question/Comment/Concern with It's Time To Go")
+				
+			} else if indexPath.row == 1 {
+			
+				if let homepage = NSURL(string: "https://www.narwhalsandcode.com/apps/#time-to-go") {		// Check this address
+					UIApplication.sharedApplication().openURL(homepage)
+				}
+				
+			}
+			
+		}
+		
+		tableView.deselectRowAtIndexPath(indexPath, animated: true)
+		
+	}
+	
+	
+	// MARK: - Mail composer delegate
+	
+	private func newEmailToRecipients(recipients: [String], subject: String) {
+		
+		if MFMailComposeViewController.canSendMail() {
+			
+			let mailComposer = MFMailComposeViewController()
+			mailComposer.mailComposeDelegate = self
+			mailComposer.setToRecipients(recipients)
+			mailComposer.setSubject(subject)
+			
+			mailComposer.setMessageBody("<p><strong>Issue:</strong> </p><p><strong>Detail:</strong> </p><br /><p>Date and time: \(NSDate())<br />Device Family: \(UIDevice.currentDevice().model)<br />Device Model: \(UIDevice.currentDevice().modelName)<br />iOS Version: \(UIDevice.currentDevice().systemVersion)</p>", isHTML: true)
+			
+			presentViewController(mailComposer, animated: true, completion: nil)
+			
+		} else {
+			
+			self.displayAlertWithTitle("Cannot Send Email", message: "Email is not set up on this device.")
+			
+		}
+		
+	}
+	
+	func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+		
+		controller.dismissViewControllerAnimated(true) { 
+			
+			if result == MFMailComposeResultSent || result == MFMailComposeResultSaved {
+				
+				self.displayAlertWithTitle("Thank You!", message: "Your feedback is greatly appreciated! You should receive a reply within a week. Visit the website to find learn a bit more about It's Time To Go.")
+				
+			}
+			
+		}
 		
 	}
 	
@@ -163,4 +237,68 @@ class SettingsTableViewController: UITableViewController {
 		
 	}
 	
+}
+
+// Extension courtesy of Sajeel
+// https://www.sajeel.me/ios-swift-get-device-model/
+public extension UIDevice {  
+	var modelName: String {
+		var systemInfo = utsname()
+		uname(&systemInfo)
+		let machineMirror = Mirror(reflecting: systemInfo.machine)
+		let identifier = machineMirror.children.reduce("") { identifier, element in
+			guard let value = element.value as? Int8 where value != 0 else { return identifier }
+			return identifier + String(UnicodeScalar(UInt8(value)))
+		}
+		switch identifier {
+		case "iPod5,1":
+			return "iPod Touch 5"
+		case "iPod7,1":
+			return "iPod Touch 6"
+		case "iPhone3,1", "iPhone3,2", "iPhone3,3": 
+			return "iPhone 4"
+		case "iPhone4,1":
+			return "iPhone 4s"
+		case "iPhone5,1", "iPhone5,2": 
+			return "iPhone 5"
+		case "iPhone5,3", "iPhone5,4": 
+			return "iPhone 5c"
+		case "iPhone6,1", "iPhone6,2":
+			return "iPhone 5s"
+		case "iPhone7,2":
+			return "iPhone 6"
+		case "iPhone7,1":
+			return "iPhone 6 Plus"
+		case "iPhone8,1": 
+			return "iPhone 6s"
+		case "iPhone8,2":
+			return "iPhone 6s Plus"
+		case "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4":
+			return "iPad 2"
+		case "iPad3,1", "iPad3,2", "iPad3,3": 
+			return "iPad 3"
+		case "iPad3,4", "iPad3,5", "iPad3,6":
+			return "iPad 4"
+		case "iPad4,1", "iPad4,2", "iPad4,3": 
+			return "iPad Air"
+		case "iPad5,3", "iPad5,4":
+			return "iPad Air 2"
+		case "iPad2,5", "iPad2,6", "iPad2,7": 
+			return "iPad Mini"
+		case "iPad4,4", "iPad4,5", "iPad4,6":
+			return "iPad Mini 2"
+		case "iPad4,7", "iPad4,8", "iPad4,9":
+			return "iPad Mini 3"
+		case "iPad5,1", "iPad5,2":
+			return "iPad Mini 4"
+		case "iPad6,7", "iPad6,8":
+			return "iPad Pro"
+		case "AppleTV5,3":
+			return "Apple TV"
+		case "i386", "x86_64":
+			return "Simulator"
+		default:
+			return identifier
+		}
+	}
 }
