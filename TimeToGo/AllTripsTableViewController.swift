@@ -9,16 +9,18 @@
 import UIKit
 import CoreData
 
-class AllTripsTableViewController: UITableViewController {
+class AllTripsTableViewController: UITableViewController, UISearchResultsUpdating {
 
 	// CoreData variables
 	var moc: NSManagedObjectContext?
 	var allTrips = [Trip]()
+	var filteredTrips = [Trip]()
 	var currentTripName: String!
 	
 	// Current VC variables
 	var indexPathForSaved: NSIndexPath?
 	var destinationVC: UIViewController?
+	var searchResultsController = UISearchController()
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +30,25 @@ class AllTripsTableViewController: UITableViewController {
 		
 		// Assign the moc CoreData variable by referencing the AppDelegate's
 		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+		
+		// Set up the search controller
+		if #available(iOS 9.0, *) {
+			searchResultsController.loadViewIfNeeded()
+		} else {
+			searchResultsController.loadView()
+		}
+		searchResultsController = ({
+			let controller = UISearchController(searchResultsController: nil)
+			controller.searchResultsUpdater = self
+			controller.dimsBackgroundDuringPresentation = false
+			controller.searchBar.sizeToFit()
+			
+			self.tableView.tableHeaderView = controller.searchBar
+			
+			return controller
+		})()
+		
+		tableView.reloadData()
 		
 	}
 	
@@ -52,15 +73,26 @@ class AllTripsTableViewController: UITableViewController {
 
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
-		return allTrips.count
+		if searchResultsController.active {
+			return filteredTrips.count
+		} else {
+			return allTrips.count
+		}
 		
 	}
 	
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		
 		let cell = tableView.dequeueReusableCellWithIdentifier("TripCell", forIndexPath: indexPath) 
-
-		let trip = allTrips[indexPath.row]
+		
+		var trip: Trip!
+		
+		if searchResultsController.active {
+			 trip = filteredTrips[indexPath.row]
+		} else {
+			trip = allTrips[indexPath.row]
+		}
+		
 		let dateFormatter = NSDateFormatter()
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
 		
@@ -122,7 +154,14 @@ class AllTripsTableViewController: UITableViewController {
 //		print("a: \(indexPath)")
 		
 		// Update currentTripName to the chosen tripName
-		let theTripName = self.allTrips[indexPath.row].tripName
+		var theTripName: String!
+		
+		if searchResultsController.active {
+			theTripName = self.filteredTrips[indexPath.row].tripName
+		} else {
+			theTripName = self.allTrips[indexPath.row].tripName
+		}
+		
 		NSUserDefaults.standardUserDefaults().setObject(theTripName, forKey: "currentTripName")
 		
 		// Transition to the Scheudle VC
@@ -141,9 +180,26 @@ class AllTripsTableViewController: UITableViewController {
 	}
 	
 	
+	// MARK: - Search
+	
+	func updateSearchResultsForSearchController(searchController: UISearchController) {
+		
+		filteredTrips.removeAll(keepCapacity: false)
+		
+		let searchPredicate = NSPredicate(format: "tripName CONTAINS[c] %@", searchController.searchBar.text!)
+		let tempArr = (allTrips as NSArray).filteredArrayUsingPredicate(searchPredicate)
+		filteredTrips = tempArr as! [Trip]
+		
+		tableView.reloadData()
+		
+	}
+	
+	
 	// MARK: - Navigation
 	
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		
+		searchResultsController.active = false
 		
 		destinationVC = segue.destinationViewController
 		
