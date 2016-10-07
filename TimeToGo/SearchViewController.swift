@@ -11,7 +11,7 @@ import MapKit
 
 protocol communicationToMain {
 	
-	func backFromSearch(mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int)
+	func backFromSearch(_ mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int)
 	
 }
 
@@ -53,10 +53,10 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 	}
 	
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		searchResultsController.active = true
+		searchResultsController.isActive = true
 		
 	}
 	
@@ -68,9 +68,9 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	
 	// MARK: - Search updating
 	
-	func updateSearchResultsForSearchController(searchController: UISearchController) {
+	func updateSearchResults(for searchController: UISearchController) {
 		
-		mapSearchResults.removeAll(keepCapacity: false)
+		mapSearchResults.removeAll(keepingCapacity: false)
 		
 		let span = MKCoordinateSpan(latitudeDelta: 1.5, longitudeDelta: 1.5)
 		let region = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: span)
@@ -80,10 +80,10 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		request.region = region
 		
 		let search = MKLocalSearch(request: request)
-		search.startWithCompletionHandler { (response: MKLocalSearchResponse?, error: NSError?) -> Void in
+		search.start { (response: MKLocalSearchResponse?, error: Error?) -> Void in
 			
 			
-			guard let response = response where response.mapItems.count > 0 else {
+			guard let response = response , response.mapItems.count > 0 else {
 			
 //				print("There were no search results found")
 				return
@@ -105,9 +105,9 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	
 	// MARK: - Search controller delegate
 
-	func didPresentSearchController(searchController: UISearchController) {
+	func didPresentSearchController(_ searchController: UISearchController) {
 
-		if searchController.active {
+		if searchController.isActive {
 			
 			searchController.searchBar.showsCancelButton = false
 			searchResultsController.searchBar.becomeFirstResponder()
@@ -119,7 +119,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	
 	// MARK: - Search bar delegate
 	
-	func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 		
 		if searchText.isEmpty {
 			
@@ -132,7 +132,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	
 	// MARK: - Table view data source
 	
-	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	override func numberOfSections(in tableView: UITableView) -> Int {
 		
 //		print("\"\(searchResultsController.searchBar.text!)\"")	// nil value when view loads
 		
@@ -154,7 +154,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 	}
 	
-	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		
 		if section == 1 {
 
@@ -166,7 +166,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 	}
 	
-	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
 		if section == 1 {
 			
@@ -180,52 +180,52 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 	}
 	
-	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
-		let cell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell!
+		let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as UITableViewCell!
 		
-		if indexPath.section == 1 {
+		if (indexPath as NSIndexPath).section == 1 {
 			
-			let mapItem = mapSearchResults[indexPath.row]
+			let mapItem = mapSearchResults[(indexPath as NSIndexPath).row]
 			let streetAddress = Interval.getAddressFromMapItem(mapItem)
 			
-			cell.textLabel?.text = mapItem.name
-			cell.detailTextLabel?.text = streetAddress
+			cell?.textLabel?.text = mapItem.name
+			cell?.detailTextLabel?.text = streetAddress
 			
 		} else {
 			
-			cell.textLabel?.text = "Current Location"
+			cell?.textLabel?.text = "Current Location"
 			
 //			print("3.")
 //			print(userCurrentLocation)
 			
 			if userCurrentLocation?.placemark.coordinate == nil {
 				
-				cell.detailTextLabel?.text = "(Not found)"
+				cell?.detailTextLabel?.text = "(Not found)"
 				
 			} else {
 				
-				cell.detailTextLabel?.text = userCurrentLocation!.name
+				cell?.detailTextLabel?.text = userCurrentLocation!.name
 				
 			}
 			
 			
 		}
 		
-		return cell
+		return cell!
 		
 	}
 	
-	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		tableView.deselectRowAtIndexPath(indexPath, animated: true)
+		tableView.deselectRow(at: indexPath, animated: true)
 		
 		var mapItem: MKMapItem?
 		var streetAddress = ""
 		
-		if indexPath.section == 1 {
+		if (indexPath as NSIndexPath).section == 1 {
 			
-			mapItem = mapSearchResults[indexPath.row]
+			mapItem = mapSearchResults[(indexPath as NSIndexPath).row]
 			streetAddress = Interval.getAddressFromMapItem(mapItem!)
 				
 			selectedLocation = mapItem
@@ -252,22 +252,22 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 			
 		}
 		
-		searchResultsController.dismissViewControllerAnimated(true, completion: nil)
-		self.dismissViewControllerAnimated(true, completion: nil)
+		searchResultsController.dismiss(animated: true, completion: nil)
+		self.dismiss(animated: true, completion: nil)
 		
 	}
 	
 	
 	// MARK: - Navigation
 	
-	@IBAction func dismissLocationSearch(sender: UIBarButtonItem) {
+	@IBAction func dismissLocationSearch(_ sender: UIBarButtonItem) {
 		
-		if searchResultsController.active {
+		if searchResultsController.isActive {
 			
-			searchResultsController.dismissViewControllerAnimated(true, completion: nil)
+			searchResultsController.dismiss(animated: true, completion: nil)
 			
 		}
-		self.dismissViewControllerAnimated(true, completion: nil)
+		self.dismiss(animated: true, completion: nil)
 		
 	}
 	

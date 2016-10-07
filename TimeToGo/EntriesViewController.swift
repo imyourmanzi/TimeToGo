@@ -17,16 +17,16 @@ class EntriesViewController: UITableViewController {
 	var currentTripName: String!
 	var currentTrip: Trip!
 	var entries = [Interval]()
-	var flightDate: NSDate!
+	var flightDate: Date!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		// Use auto-implemented 'Edit' button on right side of navigation bar
-		self.navigationItem.leftBarButtonItem = self.editButtonItem()
+		self.navigationItem.leftBarButtonItem = self.editButtonItem
 		
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 		
     }
 
@@ -34,16 +34,16 @@ class EntriesViewController: UITableViewController {
 		super.didReceiveMemoryWarning()
 	}
 	
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
-		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
-		let fetchRequest = NSFetchRequest(entityName: "Trip")
+		currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
+		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.executeFetchRequest(fetchRequest)) as! [Trip]
+		let trips = (try! moc!.fetch(fetchRequest))
 		currentTrip = trips[0]
 		self.entries = currentTrip.entries as! [Interval]
-		self.flightDate = currentTrip.flightDate
+		self.flightDate = currentTrip.flightDate as Date!
 		
 		performUpdateOnCoreData()
 		tableView.reloadData()
@@ -53,27 +53,27 @@ class EntriesViewController: UITableViewController {
 	
 	// MARK: - Table view data source
 	
-	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		
-		let dateFormatter = NSDateFormatter()
+		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
 		
-		return "Flight: \(dateFormatter.stringFromDate(flightDate))"
+		return "Flight: \(dateFormatter.string(from: flightDate))"
 		
 	}
 	
-	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 	
 		return entries.count
 		
 	}
 
-	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
-		let cell = self.tableView.dequeueReusableCellWithIdentifier("EntryCell", forIndexPath: indexPath) 
+		let cell = self.tableView.dequeueReusableCell(withIdentifier: "EntryCell", for: indexPath) 
 		
 		var entry: Interval!
-		entry = entries[indexPath.row]
+		entry = entries[(indexPath as NSIndexPath).row]
 		
 		cell.textLabel?.text = entry.mainLabel
 		
@@ -91,13 +91,13 @@ class EntriesViewController: UITableViewController {
 		
 	}
 	
-	override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		
-		if editingStyle == UITableViewCellEditingStyle.Delete {
+		if editingStyle == UITableViewCellEditingStyle.delete {
 			
-			entries.removeAtIndex(indexPath.row)
+			entries.remove(at: (indexPath as NSIndexPath).row)
 			
-			tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+			tableView.deleteRows(at: [indexPath], with: .fade)
 			
 			performUpdateOnCoreData()
 			
@@ -105,18 +105,18 @@ class EntriesViewController: UITableViewController {
 		
 	}
 	
-	override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+	override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
 		
-		let movedEntry = entries.removeAtIndex(sourceIndexPath.row)
-		entries.insert(movedEntry, atIndex: destinationIndexPath.row)
+		let movedEntry = entries.remove(at: (sourceIndexPath as NSIndexPath).row)
+		entries.insert(movedEntry, at: (destinationIndexPath as NSIndexPath).row)
 		
 		performUpdateOnCoreData()
 		
 	}
 	
-	private func performUpdateOnCoreData() {
+	fileprivate func performUpdateOnCoreData() {
 		
-		currentTrip.entries = self.entries
+		currentTrip.entries = self.entries as NSArray
 		
 		guard let moc = self.moc else {
 			return
@@ -137,12 +137,12 @@ class EntriesViewController: UITableViewController {
 	
     // MARK: - Navigation
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 		// Prepare a selection's view to have all of the information of the current selection's row and associated data
-		let indexPath: NSIndexPath! = tableView.indexPathForSelectedRow
+		let indexPath: IndexPath! = tableView.indexPathForSelectedRow
 		
-		guard let destVC = segue.destinationViewController as? SelectedEntryTableViewController else {
+		guard let destVC = segue.destination as? SelectedEntryTableViewController else {
 			return
 		}
 		let selectedEntry = entries[indexPath.row]

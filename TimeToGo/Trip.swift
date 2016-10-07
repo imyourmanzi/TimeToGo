@@ -12,7 +12,7 @@ import CoreData
 
 @objc(Trip) class Trip: NSManagedObject {
 
-    @NSManaged var flightDate: NSDate
+    @NSManaged var flightDate: Date
     @NSManaged var tripName: String
     @NSManaged var entries: NSArray
 

@@ -16,7 +16,7 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
 	
 	// CoreData variables
 	var tripName: String!
-	var flightDate: NSDate!
+	var flightDate: Date!
 	
 	// Current VC variables
 	var entries: [Interval]!
@@ -25,15 +25,15 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
         super.viewDidLoad()
     }
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
 		// Set up the dateFormatter
-		let dateFormatter = NSDateFormatter()
+		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
 		
 		// Set the Interface Builder variables
-		flightDateLabel.text = "Flight Date and Time:\n\(dateFormatter.stringFromDate(flightDate))"
+		flightDateLabel.text = "Flight Date and Time:\n\(dateFormatter.string(from: flightDate))"
 		
 	}
 	
@@ -44,25 +44,25 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
 	
 	// MARK: - Table view data source
 	
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
 		return entries.count
 		
 	}
 	
 	
-	func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		
 		return "Entries"
 		
 	}
 	
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
-		let cell = tableView.dequeueReusableCellWithIdentifier("entryCell", forIndexPath: indexPath)
+		let cell = tableView.dequeueReusableCell(withIdentifier: "entryCell", for: indexPath)
 		
 		var entry: Interval!
-		entry = entries[indexPath.row]
+		entry = entries[(indexPath as NSIndexPath).row]
 		
 		cell.textLabel?.text = entry.mainLabel
 		
@@ -80,15 +80,15 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
 		
 	}
 	
-	@IBAction func loadTrip(sender: UIBarButtonItem) {
+	@IBAction func loadTrip(_ sender: UIBarButtonItem) {
 		
 		// Update currentTripName to the chosen tripName
-		NSUserDefaults.standardUserDefaults().setObject(self.tripName, forKey: "currentTripName")
+		UserDefaults.standard.set(self.tripName, forKey: "currentTripName")
 		
 		// Transition to the Scheudle VC
-		let mainTabVC = self.storyboard?.instantiateViewControllerWithIdentifier("mainTabVC") as! UITabBarController
-		mainTabVC.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-		self.presentViewController(mainTabVC, animated: true, completion: nil)
+		let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as! UITabBarController
+		mainTabVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+		self.present(mainTabVC, animated: true, completion: nil)
 		
 	}
 	

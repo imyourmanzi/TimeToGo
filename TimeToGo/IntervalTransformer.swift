@@ -9,7 +9,7 @@
 
 import UIKit
 
-class IntervalTransformer: NSValueTransformer {
+class IntervalTransformer: ValueTransformer {
 	
 	override class func allowsReverseTransformation() -> Bool {
 		
@@ -23,15 +23,15 @@ class IntervalTransformer: NSValueTransformer {
 		
 	}
 	
-	override func transformedValue(value: AnyObject?) -> AnyObject? {
+	override func transformedValue(_ value: Any?) -> Any? {
 		
-		return NSKeyedArchiver.archivedDataWithRootObject(value!)
+		return NSKeyedArchiver.archivedData(withRootObject: value!)
 		
 	}
 	
-	override func reverseTransformedValue(value: AnyObject?) -> AnyObject? {
+	override func reverseTransformedValue(_ value: Any?) -> Any? {
 		
-		return NSKeyedUnarchiver.unarchiveObjectWithData(value! as! NSData)
+		return NSKeyedUnarchiver.unarchiveObject(with: value! as! Data)
 		
 	}
 	

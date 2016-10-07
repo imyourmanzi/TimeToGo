@@ -18,7 +18,7 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 	var currentTripName: String!
 	
 	// Current VC variables
-	var indexPathForSaved: NSIndexPath?
+	var indexPathForSaved: IndexPath?
 	var destinationVC: UIViewController?
 	var searchResultsController = UISearchController()
 	
@@ -26,10 +26,10 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
         super.viewDidLoad()
 		
 		// Use auto-implemented 'Edit' button on right side of navigation bar
-        self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
 		
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 		
 		// Set up the search controller
 		if #available(iOS 9.0, *) {
@@ -56,13 +56,13 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
         super.didReceiveMemoryWarning()
     }
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		
 		// Fetch all of the managed objects from the persistent store and update the table view
-		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
-		let fetchAll = NSFetchRequest()
-		fetchAll.entity = NSEntityDescription.entityForName("Trip", inManagedObjectContext: moc!)
-		allTrips = (try! moc!.executeFetchRequest(fetchAll)) as! [Trip]
+		currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
+		let fetchAll = NSFetchRequest<Trip>()
+		fetchAll.entity = NSEntityDescription.entity(forEntityName: "Trip", in: moc!)
+		allTrips = (try! moc!.fetch(fetchAll))
 		
 		tableView.reloadData()
 		
@@ -71,9 +71,9 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 	
     // MARK: - Table view data source
 
-	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
-		if searchResultsController.active {
+		if searchResultsController.isActive {
 			return filteredTrips.count
 		} else {
 			return allTrips.count
@@ -81,43 +81,43 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 		
 	}
 	
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
-		let cell = tableView.dequeueReusableCellWithIdentifier("TripCell", forIndexPath: indexPath) 
+		let cell = tableView.dequeueReusableCell(withIdentifier: "TripCell", for: indexPath) 
 		
 		var trip: Trip!
 		
-		if searchResultsController.active {
-			 trip = filteredTrips[indexPath.row]
+		if searchResultsController.isActive {
+			 trip = filteredTrips[(indexPath as NSIndexPath).row]
 		} else {
-			trip = allTrips[indexPath.row]
+			trip = allTrips[(indexPath as NSIndexPath).row]
 		}
 		
-		let dateFormatter = NSDateFormatter()
+		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
 		
 		cell.textLabel?.text = trip.tripName
-		cell.detailTextLabel?.text = dateFormatter.stringFromDate(trip.flightDate)
+		cell.detailTextLabel?.text = dateFormatter.string(from: trip.flightDate as Date)
 
         return cell
 		
     }
 
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		
-        if editingStyle == .Delete {
+        if editingStyle == .delete {
 			
 			// Update the current trip if the current one has been deleted
-			if allTrips[indexPath.row].tripName == currentTripName && allTrips.count > 1 {
+			if allTrips[(indexPath as NSIndexPath).row].tripName == currentTripName && allTrips.count > 1 {
 				
 				currentTripName = allTrips[allTrips.count - 2].tripName
-				NSUserDefaults.standardUserDefaults().setObject(currentTripName, forKey: "currentTripName")
+				UserDefaults.standard.set(currentTripName, forKey: "currentTripName")
 				
 			}
 			
             // Delete the row from the data sources and the table view
-			moc!.deleteObject(allTrips.removeAtIndex(indexPath.row))
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+			moc!.delete(allTrips.remove(at: (indexPath as NSIndexPath).row))
+            tableView.deleteRows(at: [indexPath], with: .fade)
 			
         }
 		
@@ -139,39 +139,39 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 		// Check for more existing trips, if there are not, redirect the user back to the new trip screen
 		if allTrips.count <= 0 {
 			
-			let semiDestVC = self.storyboard?.instantiateViewControllerWithIdentifier("newTripNavVC") as! UINavigationController
+			let semiDestVC = self.storyboard?.instantiateViewController(withIdentifier: "newTripNavVC") as! UINavigationController
 			let destVC = semiDestVC.viewControllers[0] as! FlightTimeTableViewController
 			destVC.hidesBottomBarWhenPushed = true
 			destVC.navigationItem.hidesBackButton = true
-			showViewController(destVC, sender: self)
+			show(destVC, sender: self)
 			
 		}
 	
     }
 	
-	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
 //		print("a: \(indexPath)")
 		
 		// Update currentTripName to the chosen tripName
 		var theTripName: String!
 		
-		if searchResultsController.active {
-			theTripName = self.filteredTrips[indexPath.row].tripName
+		if searchResultsController.isActive {
+			theTripName = self.filteredTrips[(indexPath as NSIndexPath).row].tripName
 		} else {
-			theTripName = self.allTrips[indexPath.row].tripName
+			theTripName = self.allTrips[(indexPath as NSIndexPath).row].tripName
 		}
 		
-		NSUserDefaults.standardUserDefaults().setObject(theTripName, forKey: "currentTripName")
+		UserDefaults.standard.set(theTripName, forKey: "currentTripName")
 		
 		// Transition to the Scheudle VC
-		let mainTabVC = self.storyboard?.instantiateViewControllerWithIdentifier("mainTabVC") as! UITabBarController
-		mainTabVC.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-		self.presentViewController(mainTabVC, animated: true, completion: nil)
+		let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as! UITabBarController
+		mainTabVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+		self.present(mainTabVC, animated: true, completion: nil)
 		
 	}
 	
-	override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+	override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
 		
 //		print("b: \(indexPath)")
 		
@@ -182,12 +182,12 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 	
 	// MARK: - Search
 	
-	func updateSearchResultsForSearchController(searchController: UISearchController) {
+	func updateSearchResults(for searchController: UISearchController) {
 		
-		filteredTrips.removeAll(keepCapacity: false)
+		filteredTrips.removeAll(keepingCapacity: false)
 		
 		let searchPredicate = NSPredicate(format: "tripName CONTAINS[c] %@", searchController.searchBar.text!)
-		let tempArr = (allTrips as NSArray).filteredArrayUsingPredicate(searchPredicate)
+		let tempArr = (allTrips as NSArray).filtered(using: searchPredicate)
 		filteredTrips = tempArr as! [Trip]
 		
 		tableView.reloadData()
@@ -197,17 +197,17 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 	
 	// MARK: - Navigation
 	
-	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		
-		searchResultsController.active = false
+		searchResultsController.isActive = false
 		
-		destinationVC = segue.destinationViewController
+		destinationVC = segue.destination
 		
 	}
 	
 	
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		
 //		print("will disappear")
 		
@@ -222,7 +222,7 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 			return
 		}
 		
-		let selectedTrip = allTrips[indexPath.row]
+		let selectedTrip = allTrips[(indexPath as NSIndexPath).row]
 		
 //		print("c: \(allTrips)")
 //		print("d: \(selectedTrip)")

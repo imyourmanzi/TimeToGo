@@ -21,14 +21,14 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	var currentTripIndex: Int!
 	var allTrips = [Trip]()
 	
-	var flightDate: NSDate!
+	var flightDate: Date!
 	var tripName: String!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 		
     }
 
@@ -36,42 +36,42 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         super.didReceiveMemoryWarning()
     }
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
-		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
-		let fetchRequest = NSFetchRequest(entityName: "Trip")
+		currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
+		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.executeFetchRequest(fetchRequest)) as! [Trip]
+		let trips = (try! moc!.fetch(fetchRequest))
 		currentTrip = trips[0]
 		
 		self.tripName = currentTrip.tripName
-		self.flightDate = currentTrip.flightDate
+		self.flightDate = currentTrip.flightDate as Date!
 		
 		tripNameCell.detailTextLabel?.text = self.tripName
 		
 		// Set up the dateFormatter for the flightDate title display
-		let dateFormatter = NSDateFormatter()
+		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
-		flightDateCell.detailTextLabel?.text = dateFormatter.stringFromDate(self.flightDate)
+		flightDateCell.detailTextLabel?.text = dateFormatter.string(from: self.flightDate)
 		
 		// Fetch all of the managed objects from the persistent store and update the table view
 //		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
-		let fetchAll = NSFetchRequest(entityName: "Trip")
-		allTrips = (try! moc!.executeFetchRequest(fetchAll)) as! [Trip]
+		let fetchAll = NSFetchRequest<Trip>(entityName: "Trip")
+		allTrips = (try! moc!.fetch(fetchAll))
 		
 		tableView.reloadData()
 		
 	}
 	
-	@IBAction func clickedDeleteTrip(sender: UIButton) {
+	@IBAction func clickedDeleteTrip(_ sender: UIButton) {
 		
 		// Present an action sheet to confirm deletion of currentTrip and handle the situations that can follow
-		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(currentTripName)?", preferredStyle: .ActionSheet)
-		let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {(action: UIAlertAction) in
-			deleteAlertController.dismissViewControllerAnimated(true, completion: nil)
+		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(currentTripName)?", preferredStyle: .actionSheet)
+		let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {(action: UIAlertAction) in
+			deleteAlertController.dismiss(animated: true, completion: nil)
 		})
-		let deleteAction = UIAlertAction(title: "Delete Trip", style: UIAlertActionStyle.Destructive, handler: { (action: UIAlertAction) in
+		let deleteAction = UIAlertAction(title: "Delete Trip", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction) in
 			
 			var index = 0
 			for trip in self.allTrips {
@@ -86,7 +86,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 				
 			}
 			
-			self.moc!.deleteObject(self.allTrips.removeAtIndex(self.currentTripIndex))
+			self.moc!.delete(self.allTrips.remove(at: self.currentTripIndex))
 			
 			do {
 				try self.moc!.save()
@@ -99,17 +99,17 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			if self.allTrips.count >= 1 {
 				
 				self.currentTripName = self.allTrips[self.allTrips.count - 1].tripName
-				NSUserDefaults.standardUserDefaults().setObject(self.currentTripName, forKey: "currentTripName")
+				UserDefaults.standard.set(self.currentTripName, forKey: "currentTripName")
 				
 				self.viewWillAppear(true)
 				
 			} else if self.allTrips.count <= 0 {
 				
-				let semiDestVC = self.storyboard?.instantiateViewControllerWithIdentifier("newTripNavVC") as! UINavigationController
+				let semiDestVC = self.storyboard?.instantiateViewController(withIdentifier: "newTripNavVC") as! UINavigationController
 				let destVC = semiDestVC.viewControllers[0] as! FlightTimeTableViewController
 				destVC.hidesBottomBarWhenPushed = true
 				destVC.navigationItem.hidesBackButton = true
-				self.showViewController(destVC, sender: self)
+				self.show(destVC, sender: self)
 				
 			}
 			
@@ -118,24 +118,24 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		deleteAlertController.addAction(cancelAction)
 		deleteAlertController.addAction(deleteAction)
 		
-		presentViewController(deleteAlertController, animated: true, completion: nil)
+		present(deleteAlertController, animated: true, completion: nil)
 
 	}
 	
-	private func displayAlertWithTitle(title: String?, message: String?) {
+	fileprivate func displayAlertWithTitle(_ title: String?, message: String?) {
 		
-		let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-		let dismiss = UIAlertAction(title: "Dismiss", style: .Default, handler: nil)
+		let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+		let dismiss = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
 		alert.addAction(dismiss)
 		
-		self.presentViewController(alert, animated: true, completion: nil)
+		self.present(alert, animated: true, completion: nil)
 		
 	}
 
 	
 	// MARK: - Table view data source
 	
-	override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
 		
 		if section == 1 {
 			
@@ -147,32 +147,32 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		
 	}
 	
-	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		if indexPath.section == 2 {
+		if (indexPath as NSIndexPath).section == 2 {
 			
-			if indexPath.row == 0 {
+			if (indexPath as NSIndexPath).row == 0 {
 				
 				newEmailToRecipients(["timetogosupport@narwhalsandcode.com"], subject: "Question/Comment/Concern with It's Time To Go")
 				
-			} else if indexPath.row == 1 {
+			} else if (indexPath as NSIndexPath).row == 1 {
 			
-				if let homepage = NSURL(string: "https://www.narwhalsandcode.com/apps/#time-to-go") {		// Check this address
-					UIApplication.sharedApplication().openURL(homepage)
+				if let homepage = URL(string: "https://www.narwhalsandcode.com/apps/#time-to-go") {		// Check this address
+					UIApplication.shared.openURL(homepage)
 				}
 				
 			}
 			
 		}
 		
-		tableView.deselectRowAtIndexPath(indexPath, animated: true)
+		tableView.deselectRow(at: indexPath, animated: true)
 		
 	}
 	
 	
 	// MARK: - Mail composer delegate
 	
-	private func newEmailToRecipients(recipients: [String], subject: String) {
+	fileprivate func newEmailToRecipients(_ recipients: [String], subject: String) {
 		
 		if MFMailComposeViewController.canSendMail() {
 			
@@ -181,9 +181,9 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			mailComposer.setToRecipients(recipients)
 			mailComposer.setSubject(subject)
 			
-			mailComposer.setMessageBody("<p><strong>Issue:</strong> </p><p><strong>Detail:</strong> </p><br /><p>Date and time: \(NSDate())<br />Device Family: \(UIDevice.currentDevice().model)<br />Device Model: \(UIDevice.currentDevice().modelName)<br />iOS Version: \(UIDevice.currentDevice().systemVersion)</p>", isHTML: true)
+			mailComposer.setMessageBody("<p><strong>Issue:</strong> </p><p><strong>Detail:</strong> </p><br /><p>Date and time: \(Date())<br />Device Family: \(UIDevice.current.model)<br />Device Model: \(UIDevice.current.modelName)<br />iOS Version: \(UIDevice.current.systemVersion)</p>", isHTML: true)
 			
-			presentViewController(mailComposer, animated: true, completion: nil)
+			present(mailComposer, animated: true, completion: nil)
 			
 		} else {
 			
@@ -193,11 +193,11 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		
 	}
 	
-	func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+	func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
 		
-		controller.dismissViewControllerAnimated(true) { 
+		controller.dismiss(animated: true) { 
 			
-			if result == MFMailComposeResultSent || result == MFMailComposeResultSaved {
+			if result == MFMailComposeResult.sent || result == MFMailComposeResult.saved {
 				
 				self.displayAlertWithTitle("Thank You!", message: "Your feedback is greatly appreciated! You should receive a reply within a week. Visit the website to find learn a bit more about It's Time To Go.")
 				
@@ -210,28 +210,28 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	
 	// MARK: - Navigation
 	
-	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		
 		// Prepare the possible views that may appear by pre-setting properties
-		if let timeVC = segue.destinationViewController as? EditFlightTimeTableViewController {
+		if let timeVC = segue.destination as? EditFlightTimeTableViewController {
 			
 			timeVC.currentTripName = self.currentTripName
 			timeVC.flightDate = self.flightDate
 			timeVC.currentTrip = self.currentTrip
 			
-		} else if let nameVC = segue.destinationViewController as? EditTripNameTableViewController {
+		} else if let nameVC = segue.destination as? EditTripNameTableViewController {
 			
 			nameVC.currentTripName = self.currentTripName
 			nameVC.tripName = self.tripName
 			nameVC.currentTrip = self.currentTrip
 			
-		} else if let newTripNavVC = segue.destinationViewController as? UINavigationController {
+		} else if let newTripNavVC = segue.destination as? UINavigationController {
 			
 			guard let newTripVC = newTripNavVC.viewControllers[0] as? FlightTimeTableViewController else {
 				return
 			}
 			
-			newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: newTripVC, action: #selector(newTripVC.cancelNewTripFromSettings))
+			newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: newTripVC, action: #selector(newTripVC.cancelNewTripFromSettings))
 			
 		}
 		
@@ -247,7 +247,7 @@ public extension UIDevice {
 		uname(&systemInfo)
 		let machineMirror = Mirror(reflecting: systemInfo.machine)
 		let identifier = machineMirror.children.reduce("") { identifier, element in
-			guard let value = element.value as? Int8 where value != 0 else { return identifier }
+			guard let value = element.value as? Int8 , value != 0 else { return identifier }
 			return identifier + String(UnicodeScalar(UInt8(value)))
 		}
 		switch identifier {

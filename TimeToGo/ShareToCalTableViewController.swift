@@ -17,7 +17,7 @@ class ShareToCalTableViewController: UITableViewController {
 	let eventStore = EKEventStore()
 	var calendarsToList = [EKCalendar]()
 	var calendarToUse: EKCalendar!
-	var calendarToUseIndex: NSIndexPath?
+	var calendarToUseIndex: IndexPath?
 	
 	// CoreData vairables
 	var currentTrip: Trip!
@@ -26,13 +26,13 @@ class ShareToCalTableViewController: UITableViewController {
         super.viewDidLoad()
 		
 		// Check for authorization to use calendars
-		switch EKEventStore.authorizationStatusForEntityType(EKEntityType.Event) {
+		switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
 			
-		case .Authorized:
+		case .authorized:
 			extractEventEntityCalendarsOutOfSotre(eventStore)
 		
-		case .NotDetermined:
-			eventStore.requestAccessToEntityType(EKEntityType.Event, completion: {
+		case .notDetermined:
+			eventStore.requestAccess(to: EKEntityType.event, completion: {
 				(granted: Bool, error: NSError?) -> Void in
 				if granted {
 					
@@ -40,28 +40,28 @@ class ShareToCalTableViewController: UITableViewController {
 					self.tableView.reloadData()
 					
 				}
-			})
+			} as! EKEventStoreRequestAccessCompletionHandler)
 			
 		default:
-			let alertViewController = UIAlertController(title: "No Access", message: "Access to Calendars is not allowed.", preferredStyle: UIAlertControllerStyle.Alert)
-			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction) in
-				alertViewController.dismissViewControllerAnimated(true, completion: nil)
-				self.dismissViewControllerAnimated(true, completion: nil)
+			let alertViewController = UIAlertController(title: "No Access", message: "Access to Calendars is not allowed.", preferredStyle: UIAlertControllerStyle.alert)
+			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
+				alertViewController.dismiss(animated: true, completion: nil)
+				self.dismiss(animated: true, completion: nil)
 			})
 			alertViewController.addAction(dismissAction)
 			
-			presentViewController(alertViewController, animated: true, completion: nil)
+			present(alertViewController, animated: true, completion: nil)
 			
 			
 		}
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
-		let moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-		let currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
-		let fetch = NSFetchRequest()
-		fetch.entity = NSEntityDescription.entityForName("Trip", inManagedObjectContext: moc!)
+		let moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		let currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
+		let fetch = NSFetchRequest<Trip>()
+		fetch.entity = NSEntityDescription.entity(forEntityName: "Trip", in: moc!)
 		fetch.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.executeFetchRequest(fetch))  as! [Trip]
+		let trips = (try! moc!.fetch(fetch))
 		currentTrip = trips[0]
 		
     }
@@ -71,9 +71,9 @@ class ShareToCalTableViewController: UITableViewController {
     }
 	
 	// Get all calendars that allow modifications
-	private func extractEventEntityCalendarsOutOfSotre(eventStore: EKEventStore) {
+	fileprivate func extractEventEntityCalendarsOutOfSotre(_ eventStore: EKEventStore) {
 		
-		let calendars = eventStore.calendarsForEntityType(EKEntityType.Event) 
+		let calendars = eventStore.calendars(for: EKEntityType.event) 
 		
 		for calendar in calendars {
 			
@@ -86,14 +86,14 @@ class ShareToCalTableViewController: UITableViewController {
 		}
 		
 		// Sort the array of calendars
-		calendarsToList.sortInPlace({ $0.title < $1.title })
+		calendarsToList.sort(by: { $0.title < $1.title })
 		calendarToUse = eventStore.defaultCalendarForNewEvents
 		var index = 0
 		for calendar in calendarsToList {
 			
 			if calendar.title == calendarToUse.title && calendar.source == calendarToUse.source {
 				
-				calendarToUseIndex = NSIndexPath(forRow: index, inSection: 0)
+				calendarToUseIndex = IndexPath(row: index, section: 0)
 				
 			}
 			
@@ -106,32 +106,32 @@ class ShareToCalTableViewController: UITableViewController {
 	
     // MARK: - Table view data source
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
         return calendarsToList.count
 	
     }
 
 	
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("calendarCell", forIndexPath: indexPath) 
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "calendarCell", for: indexPath) 
 		
-		cell.textLabel?.text = calendarsToList[indexPath.row].title
+		cell.textLabel?.text = calendarsToList[(indexPath as NSIndexPath).row].title
 		
 		if calendarToUseIndex == indexPath {
 			
-			cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+			cell.accessoryType = UITableViewCellAccessoryType.checkmark
 			
 		} else {
 			
-			cell.accessoryType = UITableViewCellAccessoryType.None
+			cell.accessoryType = UITableViewCellAccessoryType.none
 			
 		}
 		
         return cell
     }
 	
-	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
 		calendarToUseIndex = indexPath
 		
@@ -142,15 +142,15 @@ class ShareToCalTableViewController: UITableViewController {
 	
 	// MARK: - Navigation
 	
-	@IBAction func cancelAddToCal(sender: UIBarButtonItem) {
+	@IBAction func cancelAddToCal(_ sender: UIBarButtonItem) {
 		
-		dismissViewControllerAnimated(true, completion: nil)
+		dismiss(animated: true, completion: nil)
 		
 	}
 	
-	@IBAction func saveTripToCal(sender: UIBarButtonItem) {
+	@IBAction func saveTripToCal(_ sender: UIBarButtonItem) {
 		
-		guard let calendarIndex = calendarToUseIndex?.row else {
+		guard let calendarIndex = (calendarToUseIndex as NSIndexPath?)?.row else {
 			return
 		}
 		
@@ -161,17 +161,17 @@ class ShareToCalTableViewController: UITableViewController {
 			addInterval(entry, toCalendar: calendarToUse)
 			
 		}
-		dismissViewControllerAnimated(true, completion: nil)
+		dismiss(animated: true, completion: nil)
 		
 	}
 	
 	
 	// MARK: - Interval to calendar event
 	
-	private func addInterval(entry: Interval, toCalendar calendar: EKCalendar) {
+	fileprivate func addInterval(_ entry: Interval, toCalendar calendar: EKCalendar) {
 		
 		let durationOfInterval = entry.timeIntervalByConvertingTimeValue()
-		let endDate = entry.startDate.dateByAddingTimeInterval(durationOfInterval)
+		let endDate = entry.startDate.addingTimeInterval(durationOfInterval)
 		var endLocStr: String?
 		var notes = ""
 		if entry.notesStr != nil && entry.notesStr != "" {
@@ -186,7 +186,7 @@ class ShareToCalTableViewController: UITableViewController {
 		
 	}
 	
-	private func createEventWithTitle(title: String, startDate: NSDate, endDate: NSDate, location: String?, inCalendar calendar: EKCalendar, inEventStore eventStore: EKEventStore, withNotes notes: String) -> Bool {
+	fileprivate func createEventWithTitle(_ title: String, startDate: Date, endDate: Date, location: String?, inCalendar calendar: EKCalendar, inEventStore eventStore: EKEventStore, withNotes notes: String) {
 		
 		let event = EKEvent(eventStore: eventStore)
 		event.calendar = calendar
@@ -201,13 +201,13 @@ class ShareToCalTableViewController: UITableViewController {
 		
 		do {
 			
-			try eventStore.saveEvent(event, span: EKSpan.ThisEvent)
-			return true
+			try eventStore.save(event, span: EKSpan.thisEvent)
+//			return true
 			
 		} catch {
 			
 //			print("Could not save event.\nError: \(error)")
-			return false
+//			return false
 			
 		}
 		

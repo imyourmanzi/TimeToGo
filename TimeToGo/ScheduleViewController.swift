@@ -25,26 +25,26 @@ class ScheduleViewController: UIViewController {
 	var scheduleScroll: UIScrollView!
 	let scrollSubview = UIView()
 	
-	var flightDate: NSDate!
-	var intervalDate: NSDate!
+	var flightDate: Date!
+	var intervalDate: Date!
 	
 	let flightIntervalLabel = UILabel()
 	let flightIntervalTimeLabel = UILabel()
 	
-	let dateFormatter = NSDateFormatter()
+	let dateFormatter = DateFormatter()
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		// Get the app's managedObjectContext
-		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 		
 		let lessHeight = self.tabBarController!.tabBar.frame.height + 64.0 + 44.0
 		scheduleScroll = UIScrollView(frame: CGRect(x: 0.0, y: 64.0, width: view.frame.width, height: view.frame.height - lessHeight))
 		view.addSubview(scheduleScroll)
 		scrollSubview.frame = CGRect(x: 0.0, y: 30.0, width: scheduleScroll.frame.width, height: scheduleScroll.frame.height)
 		scheduleScroll.addSubview(scrollSubview)
-		scheduleScroll.contentInset = UIEdgeInsetsZero
+		scheduleScroll.contentInset = UIEdgeInsets.zero
 		
     }
 	
@@ -53,42 +53,42 @@ class ScheduleViewController: UIViewController {
 		// Dispose of any resources that can be recreated.
 	}
 	
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
-		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
-		let fetchRequest = NSFetchRequest(entityName: "Trip")
+		currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
+		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.executeFetchRequest(fetchRequest)) as! [Trip]
+		let trips = (try! moc!.fetch(fetchRequest))
 		currentTrip = trips[0]
 		self.entries = currentTrip.entries as! [Interval]
-		self.flightDate = currentTrip.flightDate
+		self.flightDate = currentTrip.flightDate as Date!
 		
 		// Set up the dateFormatter for the flightDate title display
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
-		self.navigationItem.title = "Flight: \(dateFormatter.stringFromDate(flightDate))"
+		self.navigationItem.title = "Flight: \(dateFormatter.string(from: flightDate))"
 		
 		// Set up labels
 		setupLabels()
 		
 		// Reset dateFormatter for setting interval times
 		dateFormatter.dateFormat = "h:mm a"
-		intervalDate = flightDate.copy() as! NSDate
+		intervalDate = (flightDate as NSDate).copy() as! Date
 		
-		for entry in Array(entries.reverse()) {
+		for entry in Array(entries.reversed()) {
 			
 			// Set up the times for each interval
 			entry.updateScheduleText()
-			intervalDate = NSDate(timeInterval: -(entry.timeIntervalByConvertingTimeValue()), sinceDate: intervalDate)
+			intervalDate = Date(timeInterval: -(entry.timeIntervalByConvertingTimeValue()), since: intervalDate)
 			entry.startDate = intervalDate
-			entry.updateDateTextWithString(dateFormatter.stringFromDate(intervalDate))
+			entry.updateDateTextWithString(dateFormatter.string(from: intervalDate))
 			
 		}
 		
 	}
 	
 	// Set up and add the flight labels and the interval labels
-	private func setupLabels() {
+	fileprivate func setupLabels() {
 		
 		// Intervals
 		var i: CGFloat = 0.0
@@ -106,57 +106,57 @@ class ScheduleViewController: UIViewController {
 		flightIntervalLabel.translatesAutoresizingMaskIntoConstraints = false
 		flightIntervalTimeLabel.translatesAutoresizingMaskIntoConstraints = false
 		flightIntervalLabel.text = "Flight Time"
-		flightIntervalTimeLabel.text = dateFormatter.stringFromDate(flightDate)
-		flightIntervalLabel.font = UIFont.systemFontOfSize(16.0)
-		flightIntervalTimeLabel.font = UIFont.systemFontOfSize(16.0)
+		flightIntervalTimeLabel.text = dateFormatter.string(from: flightDate)
+		flightIntervalLabel.font = UIFont.systemFont(ofSize: 16.0)
+		flightIntervalTimeLabel.font = UIFont.systemFont(ofSize: 16.0)
 		scrollSubview.addSubview(flightIntervalLabel)
 		scrollSubview.addSubview(flightIntervalTimeLabel)
 		
 		let leftLabelConstraint = NSLayoutConstraint(item: flightIntervalLabel,
-			attribute: NSLayoutAttribute.Left,
-			relatedBy: NSLayoutRelation.Equal,
+			attribute: NSLayoutAttribute.left,
+			relatedBy: NSLayoutRelation.equal,
 			toItem: scrollSubview,
-			attribute: NSLayoutAttribute.LeftMargin,
+			attribute: NSLayoutAttribute.leftMargin,
 			multiplier: 1.0,
 			constant: 15.0)
 		
 		let topLabelConstraint = NSLayoutConstraint(item: flightIntervalLabel,
-			attribute: NSLayoutAttribute.Top,
-			relatedBy: NSLayoutRelation.Equal,
+			attribute: NSLayoutAttribute.top,
+			relatedBy: NSLayoutRelation.equal,
 			toItem: scrollSubview,
-			attribute: NSLayoutAttribute.TopMargin,
+			attribute: NSLayoutAttribute.topMargin,
 			multiplier: 1.0,
 			constant: i)
 		
 		let rightLabelConstraint = NSLayoutConstraint(item: flightIntervalLabel,
-			attribute: NSLayoutAttribute.Right,
-			relatedBy: NSLayoutRelation.Equal,
+			attribute: NSLayoutAttribute.right,
+			relatedBy: NSLayoutRelation.equal,
 			toItem: scrollSubview,
-			attribute: NSLayoutAttribute.CenterX,
+			attribute: NSLayoutAttribute.centerX,
 			multiplier: 1.0,
 			constant: 40.0)
 		
 		let leftTimeConstraint = NSLayoutConstraint(item: flightIntervalTimeLabel,
-			attribute: NSLayoutAttribute.Left,
-			relatedBy: NSLayoutRelation.GreaterThanOrEqual,
+			attribute: NSLayoutAttribute.left,
+			relatedBy: NSLayoutRelation.greaterThanOrEqual,
 			toItem: flightIntervalLabel,
-			attribute: NSLayoutAttribute.Right,
+			attribute: NSLayoutAttribute.right,
 			multiplier: 1.0,
 			constant: 5.0)
 		
 		let topTimeConstraint = NSLayoutConstraint(item: flightIntervalTimeLabel,
-			attribute: NSLayoutAttribute.Top,
-			relatedBy: NSLayoutRelation.Equal,
+			attribute: NSLayoutAttribute.top,
+			relatedBy: NSLayoutRelation.equal,
 			toItem: flightIntervalLabel,
-			attribute: NSLayoutAttribute.Top,
+			attribute: NSLayoutAttribute.top,
 			multiplier: 1.0,
 			constant: 0.0)
 		
 		let rightTimeConstraint = NSLayoutConstraint(item: flightIntervalTimeLabel,
-			attribute: NSLayoutAttribute.Right,
-			relatedBy: NSLayoutRelation.Equal,
+			attribute: NSLayoutAttribute.right,
+			relatedBy: NSLayoutRelation.equal,
 			toItem: scrollSubview,
-			attribute: NSLayoutAttribute.RightMargin,
+			attribute: NSLayoutAttribute.rightMargin,
 			multiplier: 1.0,
 			constant: -15.0)
 		
@@ -173,53 +173,53 @@ class ScheduleViewController: UIViewController {
 	
 	// MARK: - Calendar access
 	
-	@IBAction func addToCal(sender: UIButton) {
+	@IBAction func addToCal(_ sender: UIButton) {
 		
-		let shareCalVC = storyboard?.instantiateViewControllerWithIdentifier("shareCalNavVC") as! UINavigationController
+		let shareCalVC = storyboard?.instantiateViewController(withIdentifier: "shareCalNavVC") as! UINavigationController
 		
-		switch EKEventStore.authorizationStatusForEntityType(EKEntityType.Event) {
+		switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
 			
-		case .Authorized:
-			self.presentViewController(shareCalVC, animated: true, completion: nil)
+		case .authorized:
+			self.present(shareCalVC, animated: true, completion: nil)
 			
-		case .Denied:
+		case .denied:
 			self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
 			
-		case .NotDetermined:
-			eventStore.requestAccessToEntityType(EKEntityType.Event, completion: {
+		case .notDetermined:
+			eventStore.requestAccess(to: EKEntityType.event, completion: {
 				(granted: Bool, error: NSError?) -> Void in
 				if granted {
 					
-					self.presentViewController(shareCalVC, animated: true, completion: nil)
+					self.present(shareCalVC, animated: true, completion: nil)
 					
 				} else {
 					
 					self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
 					
 				}
-			})
+			} as! EKEventStoreRequestAccessCompletionHandler)
 			
-		case .Restricted:
+		case .restricted:
 			self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was restricted.")
 			
 		}
 		
 	}
 	
-	private func displayAlertWithTitle(title: String?, message: String?) {
+	fileprivate func displayAlertWithTitle(_ title: String?, message: String?) {
 		
-		let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-		let dismissAction = UIAlertAction(title: "Dismiss", style: .Default, handler: nil)
+		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
 		alertController.addAction(dismissAction)
 		
-		presentViewController(alertController, animated: true, completion: nil)
+		present(alertController, animated: true, completion: nil)
 		
 	}
 	
 	
 	// MARK: - Navigation
 	
-	override func viewDidDisappear(animated: Bool) {
+	override func viewDidDisappear(_ animated: Bool) {
 		
 		// Remove all views from the scrollSubview
 		for entry in entries {

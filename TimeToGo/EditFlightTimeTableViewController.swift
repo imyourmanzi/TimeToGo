@@ -22,18 +22,18 @@ class EditFlightTimeTableViewController: UITableViewController {
 	
 	// Current VC variables
 	var pickerHidden = true
-	var flightDate = NSDate()
-	let dateFormatter = NSDateFormatter()
+	var flightDate = Date()
+	let dateFormatter = DateFormatter()
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 		
 		// Define the date format and apply it to the flight time display
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
-		flightDateCell.detailTextLabel?.text = dateFormatter.stringFromDate(flightDate)
+		flightDateCell.detailTextLabel?.text = dateFormatter.string(from: flightDate)
 		
 	}
 
@@ -41,18 +41,18 @@ class EditFlightTimeTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
     }
 	
-	@IBAction func flightDateChanged(sender: UIDatePicker) {
+	@IBAction func flightDateChanged(_ sender: UIDatePicker) {
 		
 		// Update the flight time and its display
 		flightDate = sender.date
-		flightDateCell.detailTextLabel?.text = dateFormatter.stringFromDate(flightDatePicker.date)
+		flightDateCell.detailTextLabel?.text = dateFormatter.string(from: flightDatePicker.date)
 		
 	}
 	
 	
     // MARK: - Table view data source
 
-	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
 		if pickerHidden {
 			
@@ -66,9 +66,9 @@ class EditFlightTimeTableViewController: UITableViewController {
 		
 	}
 	
-	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		if indexPath.row == 0 {
+		if (indexPath as NSIndexPath).row == 0 {
 			
 			togglePicker()
 			
@@ -76,7 +76,7 @@ class EditFlightTimeTableViewController: UITableViewController {
 		
 	}
 	
-	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		
 		if pickerHidden {
 			
@@ -84,7 +84,7 @@ class EditFlightTimeTableViewController: UITableViewController {
 			
 		} else {
 			
-			if indexPath.row == 1 {
+			if (indexPath as NSIndexPath).row == 1 {
 				
 				return flightDatePicker.frame.height
 				
@@ -108,13 +108,13 @@ class EditFlightTimeTableViewController: UITableViewController {
 		if pickerHidden {
 			
 			flightDatePicker.setDate(flightDate, animated: true)
-			self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
-			tableView.scrollEnabled = false
+			self.tableView.insertRows(at: [IndexPath(row: 1, section: 0)], with: UITableViewRowAnimation.fade)
+			tableView.isScrollEnabled = false
 			
 		} else {
 			
-			self.tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
-			tableView.scrollEnabled = true
+			self.tableView.deleteRows(at: [IndexPath(row: 1, section: 0)], with: UITableViewRowAnimation.fade)
+			tableView.isScrollEnabled = true
 			
 		}
 		
@@ -122,14 +122,14 @@ class EditFlightTimeTableViewController: UITableViewController {
 		
 		self.tableView.endUpdates()
 		
-		self.tableView.deselectRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0), animated: true)
+		self.tableView.deselectRow(at: IndexPath(row: 0, section: 0), animated: true)
 		
 	}
 	
 	
 	// MARK: - Navigation
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		
 		currentTrip.flightDate = self.flightDate
 		

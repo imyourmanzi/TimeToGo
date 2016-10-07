@@ -11,9 +11,9 @@ import MapKit
 
 class LocationAnnotation: NSObject, MKAnnotation {
  
-	private(set) var coordinate: CLLocationCoordinate2D
-	private(set) var title: String?
-	private(set) var subtitle: String?
+	fileprivate(set) var coordinate: CLLocationCoordinate2D
+	fileprivate(set) var title: String?
+	fileprivate(set) var subtitle: String?
 	
 	init(coordinate: CLLocationCoordinate2D, title: String?, subtitle: String?) {
 		

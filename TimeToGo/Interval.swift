@@ -17,15 +17,15 @@ class Interval: NSObject, NSCoding {
 	var timeValueHours: Int!
 	var timeValueMins: Int!
 	var timeValueStr: String!
-	var startDate: NSDate!
+	var startDate: Date!
 	var useLocation: Bool? = false
 	var startLocation: MKPlacemark? = nil
 	var endLocation: MKPlacemark? = nil
 	var notesStr: String? = nil
 	
 	// Private label variables for schedule
-	private let entryLabel = UILabel()
-	private let dateLabel = UILabel()
+	fileprivate let entryLabel = UILabel()
+	fileprivate let dateLabel = UILabel()
 	
 	
 	// MARK: - Initializers
@@ -93,7 +93,7 @@ class Interval: NSObject, NSCoding {
 	}
 	
 	// Class level function for getting custom built time interval string from a combination of hours and minutes
-	static func stringFromTimeValue(timeValueHours: Int, timeValueMins: Int) -> String {
+	static func stringFromTimeValue(_ timeValueHours: Int, timeValueMins: Int) -> String {
 		
 		var timeString: String!
 		
@@ -112,7 +112,7 @@ class Interval: NSObject, NSCoding {
 	}
 	
 	// Creates and adds label for scheduleLabel to a view
-	func createScheduleLabelFromTopSpace(topSpace: CGFloat, onView view: UIView) {
+	func createScheduleLabelFromTopSpace(_ topSpace: CGFloat, onView view: UIView) {
 		
 		if scheduleLabel == nil || scheduleLabel == "" {
 			scheduleLabel = mainLabel
@@ -120,30 +120,30 @@ class Interval: NSObject, NSCoding {
 		
 		entryLabel.translatesAutoresizingMaskIntoConstraints = false
 		entryLabel.numberOfLines = 2
-		entryLabel.font = UIFont.systemFontOfSize(16.0)
+		entryLabel.font = UIFont.systemFont(ofSize: 16.0)
 		view.addSubview(entryLabel)
 		
 		let leftConstraint = NSLayoutConstraint(item: entryLabel,
-			attribute: NSLayoutAttribute.Left,
-			relatedBy: NSLayoutRelation.Equal,
+			attribute: NSLayoutAttribute.left,
+			relatedBy: NSLayoutRelation.equal,
 			toItem: view,
-			attribute: NSLayoutAttribute.LeftMargin,
+			attribute: NSLayoutAttribute.leftMargin,
 			multiplier: 1.0,
 			constant: 15.0)
 		
 		let topConstraint = NSLayoutConstraint(item: entryLabel,
-			attribute: NSLayoutAttribute.Top,
-			relatedBy: NSLayoutRelation.Equal,
+			attribute: NSLayoutAttribute.top,
+			relatedBy: NSLayoutRelation.equal,
 			toItem: view,
-			attribute: NSLayoutAttribute.Top,
+			attribute: NSLayoutAttribute.top,
 			multiplier: 1.0,
 			constant: topSpace)
 		
 		let rightConstraint = NSLayoutConstraint(item: entryLabel,
-			attribute: NSLayoutAttribute.Right,
-			relatedBy: NSLayoutRelation.Equal,
+			attribute: NSLayoutAttribute.right,
+			relatedBy: NSLayoutRelation.equal,
 			toItem: view,
-			attribute: NSLayoutAttribute.CenterX,
+			attribute: NSLayoutAttribute.centerX,
 			multiplier: 1.0,
 			constant: 40.0)
 		
@@ -159,22 +159,22 @@ class Interval: NSObject, NSCoding {
 	}
 	
 	// Returns an NSTimeInterval by converting timeValueHours and timeValueMins
-	func timeIntervalByConvertingTimeValue() -> NSTimeInterval {
+	func timeIntervalByConvertingTimeValue() -> TimeInterval {
 		
 		let timeIntervalHours = Double(timeValueHours) * 60.0 * 60.0
 		let timeIntervalMins = Double(timeValueMins) * 60.0
-		let timeInterval: NSTimeInterval = timeIntervalHours + timeIntervalMins
+		let timeInterval: TimeInterval = timeIntervalHours + timeIntervalMins
 		
 		return timeInterval
 		
 	}
 	
 	// Creates and adds label for timeValueHours and timeValueMins to a view
-	func createDateLabelOnView(view: UIView) {
+	func createDateLabelOnView(_ view: UIView) {
 		
 		dateLabel.translatesAutoresizingMaskIntoConstraints = false
 		dateLabel.numberOfLines = 1
-		dateLabel.font = UIFont.systemFontOfSize(16.0)
+		dateLabel.font = UIFont.systemFont(ofSize: 16.0)
 		view.addSubview(dateLabel)
 		
 		/*
@@ -188,18 +188,18 @@ class Interval: NSObject, NSCoding {
 		*/
 		
 		let topConstraint = NSLayoutConstraint(item: dateLabel,
-			attribute: NSLayoutAttribute.Top,
-			relatedBy: NSLayoutRelation.Equal,
+			attribute: NSLayoutAttribute.top,
+			relatedBy: NSLayoutRelation.equal,
 			toItem: entryLabel,
-			attribute: NSLayoutAttribute.Top,
+			attribute: NSLayoutAttribute.top,
 			multiplier: 1.0,
 			constant: 0.0)
 		
 		let rightConstraint = NSLayoutConstraint(item: dateLabel,
-			attribute: NSLayoutAttribute.Right,
-			relatedBy: NSLayoutRelation.Equal,
+			attribute: NSLayoutAttribute.right,
+			relatedBy: NSLayoutRelation.equal,
 			toItem: view,
-			attribute: NSLayoutAttribute.RightMargin,
+			attribute: NSLayoutAttribute.rightMargin,
 			multiplier: 1.0,
 			constant: -15.0)
 		
@@ -208,7 +208,7 @@ class Interval: NSObject, NSCoding {
 	}
 
 	// Updates text on above dateLabel
-	func updateDateTextWithString(dateString: String) {
+	func updateDateTextWithString(_ dateString: String) {
 		
 		dateLabel.text = dateString
 		
@@ -223,7 +223,7 @@ class Interval: NSObject, NSCoding {
 	}
 	
 	// Static function that composes an address label for any MKMapItem
-	static func getAddressFromMapItem(mapItem: MKMapItem) -> String {
+	static func getAddressFromMapItem(_ mapItem: MKMapItem) -> String {
 		
 		var streetAddress = ""
 		
@@ -263,34 +263,34 @@ class Interval: NSObject, NSCoding {
 	
 	required init?(coder aDecoder: NSCoder) {
 		
-		self.mainLabel = aDecoder.decodeObjectForKey("mainLabel") as! String
-		self.scheduleLabel = aDecoder.decodeObjectForKey("scheduleLabel") as! String
-		self.timeValueHours = aDecoder.decodeObjectForKey("timeValueHours") as! Int
-		self.timeValueMins = aDecoder.decodeObjectForKey("timeValueMins") as! Int
-		self.useLocation = aDecoder.decodeObjectForKey("useLocation") as! Bool?
-		self.startLocation = aDecoder.decodeObjectForKey("startLocation") as! MKPlacemark?
-		self.endLocation = aDecoder.decodeObjectForKey("endLocation") as! MKPlacemark?
-		self.notesStr = aDecoder.decodeObjectForKey("notesStr") as! String?
+		self.mainLabel = aDecoder.decodeObject(forKey: "mainLabel") as! String
+		self.scheduleLabel = aDecoder.decodeObject(forKey: "scheduleLabel") as! String
+		self.timeValueHours = aDecoder.decodeObject(forKey: "timeValueHours") as! Int
+		self.timeValueMins = aDecoder.decodeObject(forKey: "timeValueMins") as! Int
+		self.useLocation = aDecoder.decodeObject(forKey: "useLocation") as! Bool?
+		self.startLocation = aDecoder.decodeObject(forKey: "startLocation") as! MKPlacemark?
+		self.endLocation = aDecoder.decodeObject(forKey: "endLocation") as! MKPlacemark?
+		self.notesStr = aDecoder.decodeObject(forKey: "notesStr") as! String?
 		
 	}
 	
-	func encodeWithCoder(aCoder: NSCoder) {
+	func encode(with aCoder: NSCoder) {
 		
-		aCoder.encodeObject(mainLabel, forKey: "mainLabel")
-		aCoder.encodeObject(scheduleLabel, forKey: "scheduleLabel")
-		aCoder.encodeObject(timeValueHours, forKey: "timeValueHours")
-		aCoder.encodeObject(timeValueMins, forKey: "timeValueMins")
-		aCoder.encodeObject(useLocation, forKey: "useLocation")
-		aCoder.encodeObject(startLocation, forKey: "startLocation")
-		aCoder.encodeObject(endLocation, forKey: "endLocation")
-		aCoder.encodeObject(notesStr, forKey: "notesStr")
+		aCoder.encode(mainLabel, forKey: "mainLabel")
+		aCoder.encode(scheduleLabel, forKey: "scheduleLabel")
+		aCoder.encode(timeValueHours, forKey: "timeValueHours")
+		aCoder.encode(timeValueMins, forKey: "timeValueMins")
+		aCoder.encode(useLocation, forKey: "useLocation")
+		aCoder.encode(startLocation, forKey: "startLocation")
+		aCoder.encode(endLocation, forKey: "endLocation")
+		aCoder.encode(notesStr, forKey: "notesStr")
 		
 	}
 	
 	
 	// MARK: - NSObject
 	
-	override func isEqual(object: AnyObject?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		
 		guard let theObject = object as? Interval else {
 			

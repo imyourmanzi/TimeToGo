@@ -26,7 +26,7 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
         super.viewDidLoad()
 
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 		
 		// Set up the tripNameTextfield
 		tripNameTextfield.delegate = self
@@ -38,17 +38,17 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
         super.didReceiveMemoryWarning()
     }
 
-	@IBAction func tripNameDidChange(sender: UITextField) {
+	@IBAction func tripNameDidChange(_ sender: UITextField) {
 		
 		// Update the tripName varaible with the contents of the textfield
-		tripName = sender.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		tripName = sender.text!.trimmingCharacters(in: CharacterSet.whitespaces)
 		
 	}
 	
-	func textFieldShouldReturn(textField: UITextField) -> Bool {
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 	
 		// Update the tripName varaible with the contents of the textfield
-		tripName = textField.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		tripName = textField.text!.trimmingCharacters(in: CharacterSet.whitespaces)
 		
 		textField.resignFirstResponder()
 		
@@ -59,17 +59,17 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 	
 	// MARK: - Navigation
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		
 		if tripNameTextfield.text!.isEmpty || tripNameTextfield.text == nil {
 			
 			// Alert the user that an entry cannot be saved if it does not have a tripLabel
-			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Trip Name field was empty.", preferredStyle: UIAlertControllerStyle.Alert)
-			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction) in
-				alertVC.dismissViewControllerAnimated(true, completion: nil)
+			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Trip Name field was empty.", preferredStyle: UIAlertControllerStyle.alert)
+			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
+				alertVC.dismiss(animated: true, completion: nil)
 			})
 			alertVC.addAction(okBtn)
-			parentViewController?.presentViewController(alertVC, animated: true, completion: nil)
+			parent?.present(alertVC, animated: true, completion: nil)
 			
 		} else {
 			
@@ -90,7 +90,7 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 			}
 		
 			// Update the currentTripName so that other views will reference the updated name
-			NSUserDefaults.standardUserDefaults().setObject(self.tripName, forKey: "currentTripName")
+			UserDefaults.standard.set(self.tripName, forKey: "currentTripName")
 			
 			tripNameTextfield.resignFirstResponder()
 			

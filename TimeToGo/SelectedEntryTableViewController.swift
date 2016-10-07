@@ -34,7 +34,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	// Current trip variables
 	var parentVC: EntriesViewController!
-	var indexPath: NSIndexPath!
+	var indexPath: IndexPath!
 	var currentEntry: Interval!
 	
 	// Current entry variables
@@ -62,10 +62,10 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		super.viewDidLoad()
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
-		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-		let fetchRequest = NSFetchRequest(entityName: "Trip")
+		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.executeFetchRequest(fetchRequest)) as! [Trip]
+		let trips = (try! moc!.fetch(fetchRequest))
 		currentTrip = trips[0]
 		self.entries = currentTrip.entries as! [Interval]
 		
@@ -95,8 +95,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			notesTextviewPlaceholder.placeholder = ""
 		}
 		
-		startLocTextfield.enabled = false
-		endLocTextfield.enabled = false
+		startLocTextfield.isEnabled = false
+		endLocTextfield.isEnabled = false
 		
 		mapView.delegate = self
 		self.useLocation = currentEntry.useLocation
@@ -118,7 +118,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func backFromSearch(mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int) {
+	func backFromSearch(_ mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int) {
 		
 		guard let mItem = mapItem else {
 			
@@ -151,7 +151,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	override func viewDidAppear(animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
 		if useLocation == true {
@@ -159,7 +159,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			useLocationSwitch.setOn(true, animated: true)
 			useLocationSwitchFlipped(useLocationSwitch)
 			
-			guard let startLocation = startLocation, endLocation = endLocation else {
+			guard let startLocation = startLocation, let endLocation = endLocation else {
 				return
 			}
 			
@@ -176,7 +176,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 			if directionsOverlay != nil {
 				
-				mapView.removeOverlay(directionsOverlay!)
+				mapView.remove(directionsOverlay!)
 				
 			}
 			
@@ -184,10 +184,10 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			directionsRequest.source = startLocation
 			directionsRequest.destination = endLocation
 			directionsRequest.requestsAlternateRoutes = false
-			directionsRequest.transportType = MKDirectionsTransportType.Automobile
+			directionsRequest.transportType = MKDirectionsTransportType.automobile
 			
 			let directions = MKDirections(request: directionsRequest)
-			directions.calculateDirectionsWithCompletionHandler({
+			directions.calculate(completionHandler: {
 				(response: MKDirectionsResponse?, error: NSError?) -> Void in
 				
 				guard let response = response else {
@@ -197,7 +197,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				
 				self.showRoute(response)
 				
-			})
+			} as! MKDirectionsHandler)
 			
 		}
 		
@@ -210,21 +210,21 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	// MARK: - Text field delegate and action
 	
-	@IBAction func mainLabelDidChange(sender: UITextField) {
+	@IBAction func mainLabelDidChange(_ sender: UITextField) {
 		
 		// Set the mainLabel with its textfield
-		mainLabel = sender.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		mainLabel = sender.text!.trimmingCharacters(in: CharacterSet.whitespaces)
 		
 	}
 	
-	@IBAction func schedLabelDidChange(sender: UITextField) {
+	@IBAction func schedLabelDidChange(_ sender: UITextField) {
 		
 		// Set the schedLabel with its textfield
-		schedLabel = sender.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		schedLabel = sender.text!.trimmingCharacters(in: CharacterSet.whitespaces)
 		
 	}
 	
-	func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+	func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
 		
 		// Hide the flightDatePicker if beginning to edit the textfield
 		if pickerHidden == false {
@@ -237,19 +237,19 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func textFieldShouldReturn(textField: UITextField) -> Bool {
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		
 		textField.resignFirstResponder()
 		
 		if textField == mainLabelTextfield {
 			
 			// Set the mainLabel with its textfield
-			mainLabel = textField.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+			mainLabel = textField.text!.trimmingCharacters(in: CharacterSet.whitespaces)
 			
 		} else if textField == schedLabelTextfield {
 			
 			// Set the schedLabel with its textfield
-			schedLabel = textField.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+			schedLabel = textField.text!.trimmingCharacters(in: CharacterSet.whitespaces)
 			
 		}
 		
@@ -260,10 +260,10 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	// MARK: - Text view delegate and action
 	
-	func textViewDidChange(textView: UITextView) {
+	func textViewDidChange(_ textView: UITextView) {
 		
 		// Set the notes with its textview
-		notes = textView.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		notes = textView.text.trimmingCharacters(in: CharacterSet.whitespaces)
 		
 		if notes == nil || notes == "" {
 			
@@ -277,7 +277,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+	func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
 		
 		// Hide the flightDatePicker if beginning to edit the textview
 		if pickerHidden == false {
@@ -290,18 +290,18 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func textViewShouldEndEditing(textView: UITextView) -> Bool {
+	func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
 		
 		textView.resignFirstResponder()
 		
 		// Set the notes with its textview
-		notes = textView.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		notes = textView.text.trimmingCharacters(in: CharacterSet.whitespaces)
 		
 		return true
 		
 	}
 	
-	override func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+	override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
 			
 		notesTextview.resignFirstResponder()
 		
@@ -310,7 +310,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	// MARK: - Table view data source
 	
-	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
 		if section == 0 {
 			
@@ -344,15 +344,15 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		if indexPath.section == 0 && indexPath.row == 3{
+		if (indexPath as NSIndexPath).section == 0 && (indexPath as NSIndexPath).row == 3{
 				
 			togglePicker()
 			
-		} else if indexPath.section == 1 && (indexPath.row == 1 || indexPath.row == 2) {
+		} else if (indexPath as NSIndexPath).section == 1 && ((indexPath as NSIndexPath).row == 1 || (indexPath as NSIndexPath).row == 2) {
 			
-			loadSearchControllerWithTitle((tableView.cellForRowAtIndexPath(indexPath)?.contentView.subviews[1] as! UILabel).text, mapView: self.mapView)
+			loadSearchControllerWithTitle((tableView.cellForRow(at: indexPath)?.contentView.subviews[1] as! UILabel).text, mapView: self.mapView)
 			
 		}
 		
@@ -361,13 +361,13 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	// MARK: - Picker view data source and delegate
 	
-	func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+	func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		
 		return 3
 		
 	}
 	
-	func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		
 		if component == 0 {
 			
@@ -385,7 +385,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		
 		if component == 0 {
 			
@@ -419,7 +419,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		
 		if component == 0 {
 			
@@ -440,7 +440,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func pickerView(pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+	func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
 		
 		if component == 1 {
 			
@@ -469,14 +469,14 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 			intervalTimePicker.selectRow(timeValueHours, inComponent: 0, animated: false)
 			intervalTimePicker.selectRow(timeValueMins, inComponent: 2, animated: false)
-			self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 4, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
+			self.tableView.insertRows(at: [IndexPath(row: 4, section: 0)], with: UITableViewRowAnimation.fade)
 			mainLabelTextfield.resignFirstResponder()
 			schedLabelTextfield.resignFirstResponder()
 			notesTextview.resignFirstResponder()
 			
 		} else {
 			
-			self.tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: 4, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
+			self.tableView.deleteRows(at: [IndexPath(row: 4, section: 0)], with: UITableViewRowAnimation.fade)
 			
 		}
 	
@@ -484,43 +484,43 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		self.tableView.endUpdates()
 		
-		self.tableView.deselectRowAtIndexPath(NSIndexPath(forRow: 3, inSection: 0), animated: true)
+		self.tableView.deselectRow(at: IndexPath(row: 3, section: 0), animated: true)
 		
 	}
 	
 	
 	// MARK: - Location management
 	
-	@IBAction func useLocationSwitchFlipped(sender: UISwitch) {
+	@IBAction func useLocationSwitchFlipped(_ sender: UISwitch) {
 		
-		if sender.on {
+		if sender.isOn {
 			checkForLocationPermission()
 		} else {
 			locationManager?.stopUpdatingLocation()
 		}
 		useLocationPrev = useLocation
-		useLocation = sender.on
+		useLocation = sender.isOn
 		toggleUseLocation()
 		
 	}
 	
-	private func checkForLocationPermission() {
+	fileprivate func checkForLocationPermission() {
 		
 		if CLLocationManager.locationServicesEnabled() {
 			
 			switch CLLocationManager.authorizationStatus() {
 				
-			case .AuthorizedAlways:
+			case .authorizedAlways:
 				createLocationManager(true)
 				
-			case .AuthorizedWhenInUse:
+			case .authorizedWhenInUse:
 				createLocationManager(true)
 				
-			case .Denied:
-				useLocationSwitch.on = false
+			case .denied:
+				useLocationSwitch.isOn = false
 				displayAlertWithTitle("Denied", message: "Location services are not allowed for this app")
 				
-			case .NotDetermined:
+			case .notDetermined:
 				createLocationManager(false)
 				guard let locationManager = self.locationManager else {
 					displayAlertWithTitle("Error Starting Location Services", message: "Please try again later")
@@ -528,8 +528,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				}
 				locationManager.requestWhenInUseAuthorization()
 				
-			case .Restricted:
-				useLocationSwitch.on = false
+			case .restricted:
+				useLocationSwitch.isOn = false
 				displayAlertWithTitle("Restricted", message: "Location services are not allowed for this app")
 				
 			}
@@ -542,17 +542,17 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	private func displayAlertWithTitle(title: String?, message: String?) {
+	fileprivate func displayAlertWithTitle(_ title: String?, message: String?) {
 		
-		let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-		let dismissAction = UIAlertAction(title: "Dismiss", style: .Default, handler: nil)
+		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
 		alertController.addAction(dismissAction)
 		
-		presentViewController(alertController, animated: true, completion: nil)
+		present(alertController, animated: true, completion: nil)
 		
 	}
 	
-	private func createLocationManager(startImmediately: Bool) {
+	fileprivate func createLocationManager(_ startImmediately: Bool) {
 		
 		if locationManager == nil {
 			locationManager = CLLocationManager()
@@ -572,54 +572,73 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
 		
 		switch status {
 			
-		case .AuthorizedAlways:
+		case .authorizedAlways:
 			mapView.showsUserLocation = true
 			
-		case .AuthorizedWhenInUse:
+		case .authorizedWhenInUse:
 			mapView.showsUserLocation = true
 			
-		case .Denied:
-			useLocationSwitch.enabled = false
+		case .denied:
+			useLocationSwitch.isEnabled = false
 			
-		case .Restricted:
-			useLocationSwitch.enabled = false
+		case .restricted:
+			useLocationSwitch.isEnabled = false
 			
-		case .NotDetermined:
+		case .notDetermined:
 			checkForLocationPermission()
 			
 		}
 		
 	}
 	
-	func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
 		
 //		print("Location manager failed: (\(manager))\n\(error)")
 		
-		if error as? CLError != CLError.LocationUnknown {
+		guard let err = error as? CLError else {
 			
-			let alertController = UIAlertController(title: "Error \(error.code)", message: "Location manager failed: \(error) -- Please contact support via the App Store with a screenshot of this error.", preferredStyle: UIAlertControllerStyle.Alert)
-			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default) { (action: UIAlertAction) -> Void in
+			let alertController = UIAlertController(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", preferredStyle: UIAlertControllerStyle.alert)
+			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
 				
 				manager.stopUpdatingLocation()
 				self.useLocationSwitch.setOn(false, animated: true)
 				self.useLocationPrev = self.useLocation
-				self.useLocation = self.useLocationSwitch.on
+				self.useLocation = self.useLocationSwitch.isOn
 				self.toggleUseLocation()
 				
 			}
 			alertController.addAction(dismissBtn)
 			
-			self.presentViewController(alertController, animated: true, completion: nil)
+			self.present(alertController, animated: true, completion: nil)
+			
+			return
+		}
+		
+		if err.code != CLError.Code.locationUnknown {
+			
+			let alertController = UIAlertController(title: "Error \(err.code)", message: "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", preferredStyle: UIAlertControllerStyle.alert)
+			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
+				
+				manager.stopUpdatingLocation()
+				self.useLocationSwitch.setOn(false, animated: true)
+				self.useLocationPrev = self.useLocation
+				self.useLocation = self.useLocationSwitch.isOn
+				self.toggleUseLocation()
+				
+			}
+			alertController.addAction(dismissBtn)
+			
+			self.present(alertController, animated: true, completion: nil)
 			
 		}
 		
 	}
 	
-	func mapView(mapView: MKMapView, didUpdateUserLocation userLocation: MKUserLocation) {
+	func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
 		
 		if mapView.annotations.count < 3 {
 			
@@ -632,7 +651,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+	func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
 		
 		let renderer = MKPolylineRenderer(overlay: overlay)
 		renderer.strokeColor = UIColor(red: 8/255, green: 156/255, blue: 1.0, alpha: 1.0)
@@ -642,11 +661,11 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	private func showRoute(response: MKDirectionsResponse) {
+	fileprivate func showRoute(_ response: MKDirectionsResponse) {
 		
 		for route in response.routes {
 			
-			mapView.addOverlay(route.polyline, level: MKOverlayLevel.AboveRoads)
+			mapView.add(route.polyline, level: MKOverlayLevel.aboveRoads)
 			directionsOverlay = (mapView.overlays )[0]
 			
 			let timeInInt = Int((route.expectedTravelTime))
@@ -659,7 +678,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func mapView(mapView: MKMapView, didAddOverlayRenderers renderers: [MKOverlayRenderer]) {
+	func mapView(_ mapView: MKMapView, didAdd renderers: [MKOverlayRenderer]) {
 		
 		var zoomRect = MKMapRectNull
 		
@@ -676,35 +695,35 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	@IBAction func openRouteInMaps(sender: UIButton) {
+	@IBAction func openRouteInMaps(_ sender: UIButton) {
 		
-		guard let startLocation = startLocation, endLocation = endLocation else {
+		guard let startLocation = startLocation, let endLocation = endLocation else {
 			displayAlertWithTitle("Can't Open Route", message: "Make sure there are locations for both Start and End")
 			return
 		}
 		
 		let launchOptions = [
 			MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving,
-			MKLaunchOptionsMapTypeKey : MKMapType.Standard.rawValue,
+			MKLaunchOptionsMapTypeKey : MKMapType.standard.rawValue,
 			MKLaunchOptionsShowsTrafficKey : true,
-			MKLaunchOptionsMapCenterKey : NSValue(MKCoordinate: self.mapView.region.center),
-			MKLaunchOptionsMapSpanKey : NSValue(MKCoordinateSpan: self.mapView.region.span)
-		]
+			MKLaunchOptionsMapCenterKey : NSValue(mkCoordinate: self.mapView.region.center),
+			MKLaunchOptionsMapSpanKey : NSValue(mkCoordinateSpan: self.mapView.region.span)
+		] as [String : Any]
 		
-		MKMapItem.openMapsWithItems([startLocation, endLocation], launchOptions: launchOptions)
+		MKMapItem.openMaps(with: [startLocation, endLocation], launchOptions: launchOptions)
 		
 	}
 	
 	
 	// MARK: - Location-based fields show/hide
 	
-	private func toggleUseLocation() {
+	fileprivate func toggleUseLocation() {
 		
 		let rowsToChange = [
 			
-			NSIndexPath(forRow: 1, inSection: 1),
-			NSIndexPath(forRow: 2, inSection: 1),
-			NSIndexPath(forRow: 3, inSection: 1)
+			IndexPath(row: 1, section: 1),
+			IndexPath(row: 2, section: 1),
+			IndexPath(row: 3, section: 1)
 			
 		]
 		
@@ -713,14 +732,14 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		if useLocation == true && useLocationPrev == false {
 			
 			mapView.delegate = self
-			self.tableView.insertRowsAtIndexPaths(rowsToChange, withRowAnimation: UITableViewRowAnimation.Fade)
+			self.tableView.insertRows(at: rowsToChange, with: UITableViewRowAnimation.fade)
 			mainLabelTextfield.resignFirstResponder()
 			schedLabelTextfield.resignFirstResponder()
 			notesTextview.resignFirstResponder()
 			
 		} else if useLocation == false && useLocationPrev == true {
 			
-			self.tableView.deleteRowsAtIndexPaths(rowsToChange, withRowAnimation: UITableViewRowAnimation.Fade)
+			self.tableView.deleteRows(at: rowsToChange, with: UITableViewRowAnimation.fade)
 			
 		}
 		
@@ -728,9 +747,9 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	private func loadSearchControllerWithTitle(title: String?, mapView: MKMapView) {
+	fileprivate func loadSearchControllerWithTitle(_ title: String?, mapView: MKMapView) {
 		
-		let searchNavVC = self.storyboard?.instantiateViewControllerWithIdentifier("searchNavVC") as! UINavigationController
+		let searchNavVC = self.storyboard?.instantiateViewController(withIdentifier: "searchNavVC") as! UINavigationController
 		let searchVC = searchNavVC.viewControllers[0] as! SearchViewController
 		searchVC.delegate = self
 		
@@ -771,9 +790,9 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		if mapView.userLocation.location != nil {
 			
-			CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location!, completionHandler: { (placemarks, error: NSError?) -> Void in
+			CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location!, completionHandler: { (placemarks, error) in
 				
-				guard let placemarks = placemarks where placemarks.count > 0 else {
+				guard let placemarks = placemarks , placemarks.count > 0 else {
 					
 					// Deprecated as of 1.1.6
 //					self.displayAlertWithTitle("Location Error", message: "Connection to the server was not responsive.\nPlease try again later.")
@@ -792,26 +811,26 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 		}
 		
-		searchVC.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
-		self.presentViewController(searchNavVC, animated: true, completion: nil)
+		searchVC.modalTransitionStyle = UIModalTransitionStyle.coverVertical
+		self.present(searchNavVC, animated: true, completion: nil)
 		
 	}
 	
 	
 	// MARK: - Navigation
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		
 		// Check and save the currentEntry's properities to CoreData
 		if mainLabelTextfield.text!.isEmpty || mainLabelTextfield.text == nil {
 			
 			// Alert the user that an entry cannot be saved if it does not have a mainLabel
-			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Main Label field was empty.", preferredStyle: UIAlertControllerStyle.Alert)
-			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {(alert: UIAlertAction) in
-				alertVC.dismissViewControllerAnimated(true, completion: nil)
+			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Main Label field was empty.", preferredStyle: UIAlertControllerStyle.alert)
+			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
+				alertVC.dismiss(animated: true, completion: nil)
 			})
 			alertVC.addAction(okBtn)
-			parentViewController?.presentViewController(alertVC, animated: true, completion: nil)
+			parent?.present(alertVC, animated: true, completion: nil)
 			
 		} else {
 			
@@ -856,7 +875,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 		}
 		self.entries[indexPath.row] = currentEntry
-		currentTrip.entries = self.entries
+		currentTrip.entries = self.entries as NSArray
 		
 		guard let moc = self.moc else {
 			return

@@ -20,7 +20,7 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 	var moc: NSManagedObjectContext?
 	var allTrips = [Trip]()
 	var tripName: String!
-	var flightDate = NSDate()
+	var flightDate = Date()
 	
 	// Current VC variables
 	var defaultEntries = [
@@ -31,7 +31,7 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		Interval(mainLabel: "Boarding to Departure", scheduleLabel: "Board Plane", timeValueHours: 0, timeValueMins: 30)
 		
 	]
-	let dateFormatter = NSDateFormatter()
+	let dateFormatter = DateFormatter()
 	var pickerHidden = true
 	
 	override func viewDidLoad() {
@@ -39,28 +39,28 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		
 		// Set the view's background image
 		let backgroundImageView = UIImageView(image: UIImage(named: "lookout"))
-		backgroundImageView.contentMode = UIViewContentMode.ScaleAspectFill
+		backgroundImageView.contentMode = UIViewContentMode.scaleAspectFill
 		self.tableView.backgroundView = backgroundImageView
 		
 		// Get the app's managedObjectContext
-		moc = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 		
 		// Set up tripNameTextfield
 		tripNameTextfield.delegate = self
 		
 		// Set up dateFormatter and assign a default tripName
-		dateFormatter.dateStyle = .ShortStyle
-		dateFormatter.timeStyle = .MediumStyle
-		tripName = "TripOn_\(dateFormatter.stringFromDate(flightDate))"
+		dateFormatter.dateStyle = .short
+		dateFormatter.timeStyle = .medium
+		tripName = "TripOn_\(dateFormatter.string(from: flightDate))"
 		
 		// Get current date but with seconds set to 0
-		let components = NSCalendar.currentCalendar().componentsInTimeZone(NSTimeZone.systemTimeZone(), fromDate: flightDate)
+		var components = Calendar.current.dateComponents(in: TimeZone.current, from: flightDate)
 		components.second = 0
-		flightDate = NSCalendar.currentCalendar().dateFromComponents(components)!
+		flightDate = Calendar.current.date(from: components)!
 		
 		// Set up dateFormatter for use generating label for the flightDatePicker
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
-		dateCell.detailTextLabel?.text = dateFormatter.stringFromDate(flightDate)
+		dateCell.detailTextLabel?.text = dateFormatter.string(from: flightDate)
 		
 	}
 	
@@ -68,32 +68,32 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		super.didReceiveMemoryWarning()
 	}
 	
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		
 		// Fetch all of the managed objects from the persistent store and update the table view
-		let fetchAll = NSFetchRequest()
-		fetchAll.entity = NSEntityDescription.entityForName("Trip", inManagedObjectContext: moc!)
-		allTrips = (try! moc!.executeFetchRequest(fetchAll)) as! [Trip]
+		let fetchAll = NSFetchRequest<Trip>()
+		fetchAll.entity = NSEntityDescription.entity(forEntityName: "Trip", in: moc!)
+		allTrips = (try! moc!.fetch(fetchAll))
 		
 		// Handle a case of 0 currently saved trips
 		if allTrips.count > 0 && self.navigationItem.leftBarButtonItem == nil {
 			
-			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: #selector(cancelNewTrip))
+			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(cancelNewTrip))
 			let theTripName = allTrips[allTrips.count - 1].tripName
-			NSUserDefaults.standardUserDefaults().setObject(theTripName, forKey: "currentTripName")
+			UserDefaults.standard.set(theTripName, forKey: "currentTripName")
 			
 		}
 		
 	}
 	
-	@IBAction func tripNameDidChange(sender: UITextField) {
+	@IBAction func tripNameDidChange(_ sender: UITextField) {
 		
 		// Update the tripName varaible with the contents of the textfield
-		tripName = sender.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		tripName = sender.text!.trimmingCharacters(in: CharacterSet.whitespaces)
 		
 	}
 	
-	func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+	func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
 		
 		// Hide the flightDatePicker if beginning to edit the textfield
 		if pickerHidden == false {
@@ -106,10 +106,10 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		
 	}
 	
-	func textFieldShouldReturn(textField: UITextField) -> Bool {
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		
 		// Update the tripName varaible with the contents of the textfield
-		tripName = textField.text!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+		tripName = textField.text!.trimmingCharacters(in: CharacterSet.whitespaces)
 		
 		textField.resignFirstResponder()
 		
@@ -117,24 +117,24 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		
 	}
 	
-	@IBAction func flightDateChanged(sender: UIDatePicker) {
+	@IBAction func flightDateChanged(_ sender: UIDatePicker) {
 		
 		// Update the flight time and its display
 		flightDate = sender.date
-		dateCell.detailTextLabel?.text = dateFormatter.stringFromDate(flightDatePicker.date)
+		dateCell.detailTextLabel?.text = dateFormatter.string(from: flightDatePicker.date)
 		
 	}
 	
-	func cancelNewTripFromSettings(sender: UIBarButtonItem) {
+	func cancelNewTripFromSettings(_ sender: UIBarButtonItem) {
 		
 		// If the view came from button call in the Setting Tab, dismiss the view
-		dismissViewControllerAnimated(true, completion: nil)
+		dismiss(animated: true, completion: nil)
 		
 	}
 	
 	// MARK: - Table view data source
 	
-	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
 		if pickerHidden {
 			
@@ -148,9 +148,9 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		
 	}
 	
-	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		if indexPath.row == 1 {
+		if (indexPath as NSIndexPath).row == 1 {
 			
 			togglePicker()
 			
@@ -158,7 +158,7 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		
 	}
 	
-	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		
 		if pickerHidden {
 			
@@ -166,7 +166,7 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 			
 		} else {
 			
-			if indexPath.row == 2 {
+			if (indexPath as NSIndexPath).row == 2 {
 				
 				return flightDatePicker.frame.height
 				
@@ -190,14 +190,14 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		if pickerHidden {
 			
 			flightDatePicker.setDate(flightDate, animated: true)
-			self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 2, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
+			self.tableView.insertRows(at: [IndexPath(row: 2, section: 0)], with: UITableViewRowAnimation.fade)
 			tripNameTextfield.resignFirstResponder()
-			tableView.scrollEnabled = false
+			tableView.isScrollEnabled = false
 			
 		} else {
 			
-			self.tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: 2, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
-			tableView.scrollEnabled = true
+			self.tableView.deleteRows(at: [IndexPath(row: 2, section: 0)], with: UITableViewRowAnimation.fade)
+			tableView.isScrollEnabled = true
 			
 		}
 		
@@ -205,23 +205,23 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		
 		self.tableView.endUpdates()
 		
-		self.tableView.deselectRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0), animated: true)
+		self.tableView.deselectRow(at: IndexPath(row: 1, section: 0), animated: true)
 		
 	}
 	
 	
 	// MARK: - Navigation
 	
-	func cancelNewTrip(sender: UIBarButtonItem) {
+	func cancelNewTrip(_ sender: UIBarButtonItem) {
 		
 		// Allow the user to cancel out of creating a new trip if there are previous and this is the first screen presented
-		let mainVC = self.storyboard?.instantiateViewControllerWithIdentifier("mainTabVC") as! UITabBarController
-		mainVC.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-		presentViewController(mainVC, animated: true, completion: nil)
+		let mainVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as! UITabBarController
+		mainVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+		present(mainVC, animated: true, completion: nil)
 		
 	}
 	
-	@IBAction func createNewTrip(sender: UIBarButtonItem) {
+	@IBAction func createNewTrip(_ sender: UIBarButtonItem) {
 		
 		// Test to see if the potential tripName is the same as any of the other tripNames
 		var nameIsUnique = true
@@ -239,10 +239,10 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 		if nameIsUnique {
 			
 			// Follow normal procedure to create the trip and display the schedule
-			let newTrip = NSEntityDescription.insertNewObjectForEntityForName("Trip", inManagedObjectContext: moc!) as! Trip
+			let newTrip = NSEntityDescription.insertNewObject(forEntityName: "Trip", into: moc!) as! Trip
 			newTrip.tripName = self.tripName
 			newTrip.flightDate = self.flightDate
-			newTrip.entries = self.defaultEntries
+			newTrip.entries = self.defaultEntries as NSArray
 			guard let moc = self.moc else {
 				return
 			}
@@ -257,28 +257,28 @@ class FlightTimeTableViewController: UITableViewController, UITextFieldDelegate 
 				
 			}
 			
-			NSUserDefaults.standardUserDefaults().setObject(self.tripName, forKey: "currentTripName")
+			UserDefaults.standard.set(self.tripName, forKey: "currentTripName")
 			
-			let mainVC = self.storyboard?.instantiateViewControllerWithIdentifier("mainTabVC") as! UITabBarController
-			mainVC.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-			presentViewController(mainVC, animated: true, completion: nil)
+			let mainVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as! UITabBarController
+			mainVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+			present(mainVC, animated: true, completion: nil)
 				
 		} else {
 			
 			// Do nothing except display an alert controller
-			let nameAlertController = UIAlertController(title: "Cannot Save Trip", message: "There is already a trip with the same name.", preferredStyle: UIAlertControllerStyle.Alert)
-			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: { (alert: UIAlertAction) in
-				nameAlertController.dismissViewControllerAnimated(true, completion: nil)
+			let nameAlertController = UIAlertController(title: "Cannot Save Trip", message: "There is already a trip with the same name.", preferredStyle: UIAlertControllerStyle.alert)
+			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: { (alert: UIAlertAction) in
+				nameAlertController.dismiss(animated: true, completion: nil)
 			})
 			nameAlertController.addAction(dismissAction)
 			
-			self.presentViewController(nameAlertController, animated: true, completion: nil)
+			self.present(nameAlertController, animated: true, completion: nil)
 			
 		}
 		
 	}
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		
 		tripNameTextfield.resignFirstResponder()
 		
