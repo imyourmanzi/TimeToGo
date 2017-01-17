@@ -151,8 +151,6 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-//		print("a: \(indexPath)")
-		
 		// Update currentTripName to the chosen tripName
 		var theTripName: String!
 		
@@ -172,8 +170,6 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 	}
 	
 	override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-		
-//		print("b: \(indexPath)")
 		
 		self.indexPathForSaved = indexPath
 		
@@ -205,34 +201,24 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 		
 	}
 	
-	
-	
 	override func viewWillDisappear(_ animated: Bool) {
-		
-//		print("will disappear")
 		
 		// Prepare the following screen if a previous trip's cell was selected to be viewed
 		guard let indexPath = indexPathForSaved else {
-//			print("b again: \(indexPathForSaved)")
 			return
 		}
 		
 		guard let savedTripVC = destinationVC as? SavedTripViewController else {
-//			print("z: no saved trip vc")
 			return
 		}
 		
 		let selectedTrip = allTrips[(indexPath as NSIndexPath).row]
-		
-//		print("c: \(allTrips)")
-//		print("d: \(selectedTrip)")
 		
 		savedTripVC.title = selectedTrip.tripName
 		savedTripVC.tripName = selectedTrip.tripName
 		savedTripVC.flightDate = selectedTrip.flightDate
 		savedTripVC.entries = selectedTrip.entries as! [Interval]
 		
-	}
-	
+    }
 
 }

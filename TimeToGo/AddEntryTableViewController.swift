@@ -604,9 +604,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		
-//		print("Location manager failed: (\(manager))\n\(error)")
-		
+        
 		guard let err = error as? CLError else {
 			
 			let alertController = UIAlertController(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", preferredStyle: UIAlertControllerStyle.alert)
@@ -790,8 +788,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 				
 				guard let placemarks = placemarks , placemarks.count > 0 else {
 					
-					// Deprecated as of 1.1.6
-//					self.displayAlertWithTitle("Location Error", message: "Connection to the server was not responsive.\nPlease try again later.")
 					self.displayAlertWithTitle("Location Error", message: "Unable to confirm your current location. Please try again later.")
 					return
 					
@@ -799,8 +795,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 				
 				let userCurrentLocation = placemarks[0]
 				searchVC.userCurrentLocation = MKMapItem(placemark: MKPlacemark(placemark: userCurrentLocation))
-//				print("1a.")
-//				print(userCurrentLocation)
 				searchVC.tableView.reloadData()
 				
 			})

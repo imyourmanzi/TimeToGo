@@ -77,17 +77,12 @@ class EntriesViewController: UITableViewController {
 		
 		cell.textLabel?.text = entry.mainLabel
 		
-//		print(entry.scheduleLabel)
-		
 		if entry.scheduleLabel == nil || entry.scheduleLabel.isEmpty {
 		
 			cell.detailTextLabel?.text = entry.stringFromTimeValue()
 		
 		} else {
-			
-//			print("\(entry.scheduleLabel)")
 			cell.detailTextLabel?.text = "\(entry.stringFromTimeValue()) - " + entry.scheduleLabel
-			
 		}
 		
 		return cell

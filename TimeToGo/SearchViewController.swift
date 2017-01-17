@@ -48,9 +48,6 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		self.tableView.reloadData()
 		
-//		print("2.")
-//		print(userCurrentLocation)
-		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -84,16 +81,11 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 			
 			
 			guard let response = response , response.mapItems.count > 0 else {
-			
-//				print("There were no search results found")
 				return
-				
 			}
 			
 			for item in response.mapItems {
-				
 				self.mapSearchResults.append(item)
-				
 			}
 			
 			self.tableView.reloadData()
@@ -133,9 +125,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	// MARK: - Table view data source
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		
-//		print("\"\(searchResultsController.searchBar.text!)\"")	// nil value when view loads
-		
+
 		guard let searchResultsController = searchResultsController else {
 			
 			return 1
@@ -195,10 +185,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		} else {
 			
 			cell?.textLabel?.text = "Current Location"
-			
-//			print("3.")
-//			print(userCurrentLocation)
-			
+
 			if userCurrentLocation?.placemark.coordinate == nil {
 				
 				cell?.detailTextLabel?.text = "(Not found)"

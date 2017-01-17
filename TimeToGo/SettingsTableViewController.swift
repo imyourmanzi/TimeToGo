@@ -91,9 +91,6 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			do {
 				try self.moc!.save()
 			} catch {
-				
-//				print("Failed to delete the trip.\nError = \(error)")
-				
 			}
 			
 			if self.allTrips.count >= 1 {

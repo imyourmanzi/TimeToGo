@@ -200,15 +200,8 @@ class ShareToCalTableViewController: UITableViewController {
 		event.alarms = [alarm]
 		
 		do {
-			
 			try eventStore.save(event, span: EKSpan.thisEvent)
-//			return true
-			
-		} catch {
-			
-//			print("Could not save event.\nError: \(error)")
-//			return false
-			
+        } catch {
 		}
 		
 	}

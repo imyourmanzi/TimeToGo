@@ -853,9 +853,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 			do {
 				try moc.save()
-//				print("Did save")
 			} catch {
-//				print("Did not save")
 			}
 			
 		}
