@@ -72,7 +72,7 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
 			
 		} else {
 			
-			cell.detailTextLabel?.text = "\(entry.stringFromTimeValue()) - \(entry.scheduleLabel)"
+			cell.detailTextLabel?.text = "\(entry.stringFromTimeValue()) - " + entry.scheduleLabel
 			
 		}
 		

@@ -208,7 +208,7 @@
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0800;
-				ORGANIZATIONNAME = "VMM Software";
+				ORGANIZATIONNAME = "MRM Software";
 				TargetAttributes = {
 					98418DA51B4847AA00ADC2D8 = {
 						CreatedOnToolsVersion = 6.4;

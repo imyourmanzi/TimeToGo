@@ -79,11 +79,11 @@ class Interval: NSObject, NSCoding {
 		
 		if timeValueMins > 9 {
 		
-			timeString = "\(timeValueHours):\(timeValueMins)"
+			timeString = "\(timeValueHours!):\(timeValueMins!)"
 			
 		} else {
 			
-			timeString = "\(timeValueHours):0\(timeValueMins)"
+			timeString = "\(timeValueHours!):0\(timeValueMins!)"
 			
 		}
 		timeValueStr = timeString
@@ -176,16 +176,6 @@ class Interval: NSObject, NSCoding {
 		dateLabel.numberOfLines = 1
 		dateLabel.font = UIFont.systemFont(ofSize: 16.0)
 		view.addSubview(dateLabel)
-		
-		/*
-		let leftConstraint = NSLayoutConstraint(item: dateLabel,
-			attribute: NSLayoutAttribute.Left,
-			relatedBy: NSLayoutRelation.GreaterThanOrEqual,
-			toItem: entryLabel,
-			attribute: NSLayoutAttribute.Right,
-			multiplier: 1.0,
-			constant: 5.0)
-		*/
 		
 		let topConstraint = NSLayoutConstraint(item: dateLabel,
 			attribute: NSLayoutAttribute.top,

@@ -101,21 +101,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		mapView.delegate = self
 		self.useLocation = currentEntry.useLocation
 		
-		/*
-		// Deprecated as of 1.1.6
-		guard let useLocation = self.useLocation else {
-			self.useLocation = false
-			return
-		}
-		
-		if useLocation == true {
-			
-			self.startLocation = MKMapItem(placemark: currentEntry.startLocation!)
-			self.endLocation = MKMapItem(placemark: currentEntry.endLocation!)
-			
-		}
-		*/
-		
 	}
 	
 	func backFromSearch(_ mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int) {
@@ -187,8 +172,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			directionsRequest.transportType = MKDirectionsTransportType.automobile
 			
 			let directions = MKDirections(request: directionsRequest)
-			directions.calculate(completionHandler: {
-				(response: MKDirectionsResponse?, error: NSError?) -> Void in
+			
+			directions.calculate(completionHandler: { (response: MKDirectionsResponse?, error: Error?) in
 				
 				guard let response = response else {
 					self.displayAlertWithTitle("Error in Route", message: "Could not find a route from Start to End locations")
@@ -196,8 +181,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				}
 				
 				self.showRoute(response)
-				
-			} as! MKDirectionsHandler)
+			})
 			
 		}
 		
@@ -435,8 +419,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 		}
 		
-		intervalLabelCell.detailTextLabel?.text = currentEntry.stringFromTimeValue()
 		intervalTimeStr = currentEntry.stringFromTimeValue()
+		intervalLabelCell.detailTextLabel?.text = intervalTimeStr
 		
 	}
 	
@@ -596,8 +580,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	}
 	
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		
-//		print("Location manager failed: (\(manager))\n\(error)")
 		
 		guard let err = error as? CLError else {
 			
@@ -778,24 +760,12 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		searchVC.mapView = mapView
 		
-		/*
-		// Deprecated as of 1.1.6
-		guard let ulocation = mapView.userLocation.location else {
-			
-			displayAlertWithTitle("Still Loading", message: "Please try again in a few moments")
-			
-			return
-		}
-		*/
-		
 		if mapView.userLocation.location != nil {
 			
 			CLGeocoder().reverseGeocodeLocation(mapView.userLocation.location!, completionHandler: { (placemarks, error) in
 				
 				guard let placemarks = placemarks , placemarks.count > 0 else {
-					
-					// Deprecated as of 1.1.6
-//					self.displayAlertWithTitle("Location Error", message: "Connection to the server was not responsive.\nPlease try again later.")
+
 					self.displayAlertWithTitle("Location Error", message: "Unable to confirm your current location. Please try again later.")
 					return
 					
@@ -803,8 +773,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				
 				let userCurrentLocation = placemarks[0]
 				searchVC.userCurrentLocation = MKMapItem(placemark: MKPlacemark(placemark: userCurrentLocation))
-//				print("1b.")
-//				print(userCurrentLocation)
 				searchVC.tableView.reloadData()
 				
 			})
@@ -880,21 +848,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		guard let moc = self.moc else {
 			return
 		}
-		
-		/*
-		print(currentEntry.timeValueHours, terminator: "")
-		print("\t\(self.timeValueHours)")
-		print(currentEntry.timeValueMins, terminator: "")
-		print("\t\(self.timeValueMins)")
-		print(currentEntry.timeValueStr, terminator: "")
-		print("\t\(self.intervalTimeStr)")
-		print(currentEntry.useLocation, terminator: "")
-		print("\t\(self.useLocation)")
-		print(currentEntry.startLocation)
-		print("\t\(self.startLocation)")
-		print(currentEntry.endLocation)
-		print("\t\(self.endLocation)")
-		*/
 		
 		if moc.hasChanges {
 			

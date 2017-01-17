@@ -139,14 +139,14 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			
 			let directions = MKDirections(request: directionsRequest)
 			directions.calculate(completionHandler: {
-				(response: MKDirectionsResponse?, error: NSError?) -> Void in
+				(response: MKDirectionsResponse?, error: Error?) -> Void in
 				
 				guard let response = response else {
 					return
 				}
 				self.showRoute(response)
 				
-			} as! MKDirectionsHandler)
+			})
 			
 		}
 		
@@ -447,7 +447,8 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			
 		}
 		
-		intervalLabelCell.detailTextLabel?.text = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
+		intervalTimeStr = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
+		intervalLabelCell.detailTextLabel?.text = intervalTimeStr
 		
 	}
 	
