@@ -64,14 +64,13 @@ class ScheduleViewController: UIViewController {
 		self.entries = currentTrip.entries as! [Interval]
 		self.flightDate = currentTrip.flightDate as Date!
 		
-		// Set up the dateFormatter for the flightDate title display
-		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
-		self.navigationItem.title = "Flight: \(dateFormatter.string(from: flightDate))"
+        //  Set the title display to the currentTripName
+		self.navigationItem.title = currentTripName
 		
 		// Set up labels
 		setupLabels()
 		
-		// Reset dateFormatter for setting interval times
+		// Set up the dateFormatter for setting interval times
 		dateFormatter.dateFormat = "h:mm a"
 		intervalDate = (flightDate as NSDate).copy() as! Date
 		
@@ -187,7 +186,7 @@ class ScheduleViewController: UIViewController {
 			
 		case .notDetermined:
 			eventStore.requestAccess(to: EKEntityType.event, completion: {
-				(granted: Bool, error: NSError?) -> Void in
+				(granted: Bool, error: Error?) -> Void in
 				if granted {
 					
 					self.present(shareCalVC, animated: true, completion: nil)
@@ -197,7 +196,7 @@ class ScheduleViewController: UIViewController {
 					self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
 					
 				}
-			} as! EKEventStoreRequestAccessCompletionHandler)
+			})
 			
 		case .restricted:
 			self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was restricted.")

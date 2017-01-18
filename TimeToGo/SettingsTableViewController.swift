@@ -67,7 +67,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	@IBAction func clickedDeleteTrip(_ sender: UIButton) {
 		
 		// Present an action sheet to confirm deletion of currentTrip and handle the situations that can follow
-		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(currentTripName)?", preferredStyle: .actionSheet)
+		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(currentTripName!)?", preferredStyle: .actionSheet)
 		let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {(action: UIAlertAction) in
 			deleteAlertController.dismiss(animated: true, completion: nil)
 		})

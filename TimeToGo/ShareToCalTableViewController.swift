@@ -177,7 +177,7 @@ class ShareToCalTableViewController: UITableViewController {
 		if entry.notesStr != nil && entry.notesStr != "" {
 			notes = entry.notesStr!
 		}
-		notes += "\n\(entry.mainLabel)\nFor \(currentTrip.tripName)\n\nOrganized and Automatically Added by It's Time To Go"
+		notes += "\n\(entry.mainLabel!)\nFor \(currentTrip.tripName)\n\nOrganized and Automatically Added by It's Time To Go"
 		if entry.endLocation != nil {
 			let endLoc = MKMapItem(placemark: entry.endLocation!)
 			endLocStr = "\(endLoc.name!) \(Interval.getAddressFromMapItem(endLoc))"
