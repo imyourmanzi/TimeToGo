@@ -158,7 +158,7 @@
         <!--New Trip-->
         <scene sceneID="9Uv-bn-9bm">
             <objects>
-                <tableViewController id="qzh-9M-B2G" customClass="FlightTimeTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="qzh-9M-B2G" customClass="NewEventTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="rGp-wB-fXl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -178,7 +178,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                     <connections>
-                                                        <action selector="tripNameDidChange:" destination="qzh-9M-B2G" eventType="editingChanged" id="XhZ-LM-3y0"/>
+                                                        <action selector="eventNameDidChange:" destination="qzh-9M-B2G" eventType="editingChanged" id="BNI-76-aPw"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -218,24 +218,38 @@
                                         <rect key="frame" x="0.0" y="123" width="375" height="200"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0IZ-94-ONw" id="Ijo-o9-lS8">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="199.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="199"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="T5q-XK-YKZ">
-                                                    <rect key="frame" x="8" y="8" width="359" height="183"/>
+                                                    <rect key="frame" x="8" y="8" width="359" height="183.5"/>
                                                     <date key="date" timeIntervalSinceReferenceDate="457229991.29718202">
                                                         <!--2015-06-29 00:19:51 +0000-->
                                                     </date>
                                                     <connections>
-                                                        <action selector="flightDateChanged:" destination="qzh-9M-B2G" eventType="valueChanged" id="j0V-aF-l38"/>
+                                                        <action selector="eventDateChanged:" destination="qzh-9M-B2G" eventType="valueChanged" id="P63-rI-WB9"/>
                                                     </connections>
                                                 </datePicker>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uls-bV-WZw">
+                                                    <rect key="frame" x="305" y="8" width="62" height="28"/>
+                                                    <color key="backgroundColor" red="0.93513065730969525" green="0.93513065730969525" blue="0.93513065730969525" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="62" id="7ef-zv-jO9"/>
+                                                        <constraint firstAttribute="height" constant="28" id="Viw-Hi-vBb"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Today"/>
+                                                    <connections>
+                                                        <action selector="setEventDateToday:" destination="qzh-9M-B2G" eventType="touchUpInside" id="euW-kV-i80"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="uls-bV-WZw" firstAttribute="trailing" secondItem="T5q-XK-YKZ" secondAttribute="trailing" id="0UB-zK-nFk"/>
                                                 <constraint firstItem="T5q-XK-YKZ" firstAttribute="leading" secondItem="Ijo-o9-lS8" secondAttribute="leadingMargin" id="FHG-Vq-27r"/>
                                                 <constraint firstItem="T5q-XK-YKZ" firstAttribute="top" secondItem="Ijo-o9-lS8" secondAttribute="topMargin" id="L38-HP-vXT"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="T5q-XK-YKZ" secondAttribute="trailing" id="Lh8-SO-jtB"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="T5q-XK-YKZ" secondAttribute="bottom" id="nGK-OH-reW"/>
+                                                <constraint firstItem="uls-bV-WZw" firstAttribute="top" secondItem="T5q-XK-YKZ" secondAttribute="top" id="rgf-rg-IWd"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -250,19 +264,20 @@
                     <navigationItem key="navigationItem" title="New Trip" id="GOG-Hs-bBq">
                         <barButtonItem key="rightBarButtonItem" title="Create" style="done" id="pMy-EV-yJG">
                             <connections>
-                                <action selector="createNewTrip:" destination="qzh-9M-B2G" id="dJv-hj-yl5"/>
+                                <action selector="createNewEvent:" destination="qzh-9M-B2G" id="PJE-EI-3eH"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="dateCell" destination="36o-NN-SIh" id="1Az-QU-4hX"/>
-                        <outlet property="flightDatePicker" destination="T5q-XK-YKZ" id="ym4-wT-HKL"/>
-                        <outlet property="tripNameTextfield" destination="cFp-KO-LmM" id="26Z-qF-BmI"/>
+                        <outlet property="eventDatePicker" destination="T5q-XK-YKZ" id="Z9d-nA-WBp"/>
+                        <outlet property="eventNameTextfield" destination="cFp-KO-LmM" id="ye7-si-UHr"/>
+                        <outlet property="setTodayButton" destination="uls-bV-WZw" id="slM-NV-7zx"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gUO-Rc-od8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-822" y="366"/>
+            <point key="canvasLocation" x="-823.20000000000005" y="365.66716641679164"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
@@ -534,7 +549,7 @@
         <!--Flight Date and Time-->
         <scene sceneID="Xyw-6P-Bym">
             <objects>
-                <tableViewController id="aV5-8P-QI0" customClass="EditFlightTimeTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="aV5-8P-QI0" customClass="EditEventTimeTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Ni3-Hf-VdV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -579,15 +594,29 @@
                                                         <!--2015-06-29 00:19:51 +0000-->
                                                     </date>
                                                     <connections>
-                                                        <action selector="flightDateChanged:" destination="aV5-8P-QI0" eventType="valueChanged" id="RF1-eO-jeP"/>
+                                                        <action selector="eventDateChanged:" destination="aV5-8P-QI0" eventType="valueChanged" id="qog-Z9-bW3"/>
                                                     </connections>
                                                 </datePicker>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wjm-dp-rcA">
+                                                    <rect key="frame" x="305" y="8" width="62" height="28"/>
+                                                    <color key="backgroundColor" red="0.9351306573" green="0.9351306573" blue="0.9351306573" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="28" id="d0G-lA-Hbf"/>
+                                                        <constraint firstAttribute="width" constant="62" id="x0k-B0-rg9"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Today"/>
+                                                    <connections>
+                                                        <action selector="setEventDateToday:" destination="aV5-8P-QI0" eventType="touchUpInside" id="u3L-wn-x8Y"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailingMargin" secondItem="RO8-os-gbN" secondAttribute="trailing" id="D05-cc-A6A"/>
                                                 <constraint firstItem="RO8-os-gbN" firstAttribute="leading" secondItem="Qhj-oZ-VPK" secondAttribute="leadingMargin" id="LcX-i5-b2z"/>
+                                                <constraint firstItem="wjm-dp-rcA" firstAttribute="trailing" secondItem="RO8-os-gbN" secondAttribute="trailing" id="Oqv-zK-e4F"/>
                                                 <constraint firstItem="RO8-os-gbN" firstAttribute="top" secondItem="Qhj-oZ-VPK" secondAttribute="topMargin" id="P7z-iA-sAH"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="RO8-os-gbN" secondAttribute="bottom" id="Twh-he-dsH"/>
+                                                <constraint firstItem="wjm-dp-rcA" firstAttribute="top" secondItem="RO8-os-gbN" secondAttribute="top" id="t2O-z0-BjV"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -601,8 +630,9 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Flight Date and Time" id="sI6-jt-4em"/>
                     <connections>
-                        <outlet property="flightDateCell" destination="qlL-wc-Q51" id="3kG-4N-IwQ"/>
-                        <outlet property="flightDatePicker" destination="RO8-os-gbN" id="b56-pU-AdT"/>
+                        <outlet property="dateCell" destination="qlL-wc-Q51" id="9Me-8X-5sJ"/>
+                        <outlet property="eventDatePicker" destination="RO8-os-gbN" id="Lr8-2c-0wb"/>
+                        <outlet property="setTodayButton" destination="wjm-dp-rcA" id="ybl-ZN-s1G"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ndx-5C-JX0" userLabel="First Responder" sceneMemberID="firstResponder"/>

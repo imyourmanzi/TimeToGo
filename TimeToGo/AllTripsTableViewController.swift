@@ -140,7 +140,7 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 		if allTrips.count <= 0 {
 			
 			let semiDestVC = self.storyboard?.instantiateViewController(withIdentifier: "newTripNavVC") as! UINavigationController
-			let destVC = semiDestVC.viewControllers[0] as! FlightTimeTableViewController
+			let destVC = semiDestVC.viewControllers[0] as! NewEventTableViewController
 			destVC.hidesBottomBarWhenPushed = true
 			destVC.navigationItem.hidesBackButton = true
 			show(destVC, sender: self)

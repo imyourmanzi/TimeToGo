@@ -17,15 +17,15 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.8</string>
+	<string>2.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>391</string>
+	<string>430</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Enabling will allow It's Time To Go to create events for each of you tasks in your calendar.</string>
+	<string>Enabling this will allow It's Time To Go to create events for each of your tasks.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location services are used to display your current location on a map, as well as route directions to and from your currrent location.</string>
 	<key>UILaunchStoryboardName</key>

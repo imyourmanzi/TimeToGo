@@ -103,7 +103,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			} else if self.allTrips.count <= 0 {
 				
 				let semiDestVC = self.storyboard?.instantiateViewController(withIdentifier: "newTripNavVC") as! UINavigationController
-				let destVC = semiDestVC.viewControllers[0] as! FlightTimeTableViewController
+				let destVC = semiDestVC.viewControllers[0] as! NewEventTableViewController
 				destVC.hidesBottomBarWhenPushed = true
 				destVC.navigationItem.hidesBackButton = true
 				self.show(destVC, sender: self)
@@ -210,11 +210,11 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		
 		// Prepare the possible views that may appear by pre-setting properties
-		if let timeVC = segue.destination as? EditFlightTimeTableViewController {
+		if let timeVC = segue.destination as? EditEventTimeTableViewController {
 			
-			timeVC.currentTripName = self.currentTripName
-			timeVC.flightDate = self.flightDate
-			timeVC.currentTrip = self.currentTrip
+//			timeVC.currentEventName = self.currentTripName
+			timeVC.eventDate = self.flightDate
+			timeVC.currentEvent = self.currentTrip
 			
 		} else if let nameVC = segue.destination as? EditTripNameTableViewController {
 			
@@ -224,11 +224,11 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			
 		} else if let newTripNavVC = segue.destination as? UINavigationController {
 			
-			guard let newTripVC = newTripNavVC.viewControllers[0] as? FlightTimeTableViewController else {
+			guard let newTripVC = newTripNavVC.viewControllers[0] as? NewEventTableViewController else {
 				return
 			}
 			
-			newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: newTripVC, action: #selector(newTripVC.cancelNewTripFromSettings))
+			newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: newTripVC, action: #selector(newTripVC.cancelNewEventFromSettings))
 			
 		}
 		
