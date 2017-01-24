@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8A2A3AD91E341CEE00D30F24 /* EventTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2A3AD81E341CEE00D30F24 /* EventTypes.swift */; };
-		8A2A3ADB1E341E8900D30F24 /* EventCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2A3ADA1E341E8900D30F24 /* EventCategories.swift */; };
 		8A44A8391E36709B00B1CB09 /* EventTypeData.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A44A8381E36709B00B1CB09 /* EventTypeData.csv */; };
 		8A44A83B1E36811200B1CB09 /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */; };
 		8A44A83F1E36964500B1CB09 /* EventTypeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */; };
 		8A44A8411E369AAA00B1CB09 /* TypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A8401E369AAA00B1CB09 /* TypeCollectionViewCell.swift */; };
+		8A44A8481E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A8471E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift */; };
 		8A8F8D4C1E32D837006C30F0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */; };
 		98418DAC1B4847AA00ADC2D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */; };
 		98418DAF1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAD1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld */; };
@@ -49,12 +48,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8A2A3AD81E341CEE00D30F24 /* EventTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTypes.swift; sourceTree = "<group>"; };
-		8A2A3ADA1E341E8900D30F24 /* EventCategories.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCategories.swift; sourceTree = "<group>"; };
 		8A44A8381E36709B00B1CB09 /* EventTypeData.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = EventTypeData.csv; sourceTree = "<group>"; };
 		8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTypeCollectionViewController.swift; sourceTree = "<group>"; };
 		8A44A8401E369AAA00B1CB09 /* TypeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeCollectionViewCell.swift; sourceTree = "<group>"; };
+		8A44A8441E37BC8900B1CB09 /* TimeToGo2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TimeToGo2.xcdatamodel; sourceTree = "<group>"; };
+		8A44A8471E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataExtrasProtocol.swift; sourceTree = "<group>"; };
 		8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		98418DA61B4847AA00ADC2D8 /* TimeToGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeToGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98418DAA1B4847AA00ADC2D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -143,12 +142,11 @@
 				98418DCE1B48487A00ADC2D8 /* AddEntryTableViewController.swift */,
 				98418DCF1B48487A00ADC2D8 /* AllTripsTableViewController.swift */,
 				8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */,
+				8A44A8471E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift */,
 				98418DD01B48487A00ADC2D8 /* EditEventTimeTableViewController.swift */,
 				98418DD11B48487A00ADC2D8 /* EditTripNameTableViewController.swift */,
 				98418DD21B48487A00ADC2D8 /* EntriesViewController.swift */,
-				8A2A3ADA1E341E8900D30F24 /* EventCategories.swift */,
 				8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */,
-				8A2A3AD81E341CEE00D30F24 /* EventTypes.swift */,
 				8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */,
 				98418DD41B48487A00ADC2D8 /* Interval.swift */,
 				98418DD51B48487A00ADC2D8 /* IntervalTransformer.swift */,
@@ -327,12 +325,11 @@
 				98418DE11B48487A00ADC2D8 /* NewEventTableViewController.swift in Sources */,
 				98418DE51B48487A00ADC2D8 /* ScheduleViewController.swift in Sources */,
 				98418DE91B48487A00ADC2D8 /* Trip.swift in Sources */,
-				8A2A3ADB1E341E8900D30F24 /* EventCategories.swift in Sources */,
-				8A2A3AD91E341CEE00D30F24 /* EventTypes.swift in Sources */,
 				8A44A8411E369AAA00B1CB09 /* TypeCollectionViewCell.swift in Sources */,
 				8A44A83B1E36811200B1CB09 /* CategoryCollectionViewCell.swift in Sources */,
 				98418DE41B48487A00ADC2D8 /* SavedTripViewController.swift in Sources */,
 				98418DDD1B48487A00ADC2D8 /* AllTripsTableViewController.swift in Sources */,
+				8A44A8481E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift in Sources */,
 				98418DE71B48487A00ADC2D8 /* SettingsTableViewController.swift in Sources */,
 				8A44A83F1E36964500B1CB09 /* EventTypeCollectionViewController.swift in Sources */,
 				98418DDF1B48487A00ADC2D8 /* EditTripNameTableViewController.swift in Sources */,
@@ -569,9 +566,10 @@
 		98418DAD1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				8A44A8441E37BC8900B1CB09 /* TimeToGo2.xcdatamodel */,
 				98418DAE1B4847AA00ADC2D8 /* TimeToGo.xcdatamodel */,
 			);
-			currentVersion = 98418DAE1B4847AA00ADC2D8 /* TimeToGo.xcdatamodel */;
+			currentVersion = 8A44A8441E37BC8900B1CB09 /* TimeToGo2.xcdatamodel */;
 			path = TimeToGo.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

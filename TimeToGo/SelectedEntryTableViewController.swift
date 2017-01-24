@@ -10,10 +10,9 @@ import UIKit
 import CoreData
 import MapKit
 
-class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, UITextViewDelegate, CLLocationManagerDelegate, MKMapViewDelegate, communicationToMain {
+class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, UITextViewDelegate, CLLocationManagerDelegate, MKMapViewDelegate, communicationToMain, CoreDataHelper {
 
 	// Interface Builder variables
-	@IBOutlet var mainLabelTextfield: UITextField!
 	@IBOutlet var schedLabelTextfield: UITextField!
 	@IBOutlet var intervalLabelCell: UITableViewCell!
 	@IBOutlet var intervalTimePicker: UIPickerView!
@@ -38,7 +37,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	var currentEntry: Interval!
 	
 	// Current entry variables
-	var mainLabel: String!
 	var schedLabel: String!
 	var timeValueHours: Int!
 	var timeValueMins: Int!
@@ -77,9 +75,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		
 		// Customized setup of the Interface Builder variables
-		mainLabelTextfield.delegate = self
-		mainLabelTextfield.text = mainLabel
-		
 		schedLabelTextfield.delegate = self
 		schedLabelTextfield.text = schedLabel
 		
@@ -194,18 +189,13 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	// MARK: - Text field delegate and action
 	
-	@IBAction func mainLabelDidChange(_ sender: UITextField) {
-		
-		// Set the mainLabel with its textfield
-		mainLabel = sender.text!.trimmingCharacters(in: CharacterSet.whitespaces)
-		
-	}
-	
 	@IBAction func schedLabelDidChange(_ sender: UITextField) {
 		
 		// Set the schedLabel with its textfield
-		schedLabel = sender.text!.trimmingCharacters(in: CharacterSet.whitespaces)
-		
+        if !(schedLabelTextfield.text!.isEmpty || schedLabelTextfield.text == nil) {
+            schedLabel = sender.text!.trimmingCharacters(in: CharacterSet.whitespaces)
+        }
+        
 	}
 	
 	func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -224,19 +214,12 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		
 		textField.resignFirstResponder()
-		
-		if textField == mainLabelTextfield {
 			
-			// Set the mainLabel with its textfield
-			mainLabel = textField.text!.trimmingCharacters(in: CharacterSet.whitespaces)
-			
-		} else if textField == schedLabelTextfield {
-			
-			// Set the schedLabel with its textfield
-			schedLabel = textField.text!.trimmingCharacters(in: CharacterSet.whitespaces)
-			
-		}
-		
+        // Set the schedLabel with its textfield
+        if !(schedLabelTextfield.text!.isEmpty || schedLabelTextfield.text == nil) {
+            schedLabel = textField.text!.trimmingCharacters(in: CharacterSet.whitespaces)
+        }
+        
 		return true
 		
 	}
@@ -300,11 +283,11 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 			if pickerHidden {
 				
-				return 4
+				return 3
 				
 			} else {
 				
-				return 5
+				return 4
 				
 			}
 			
@@ -327,14 +310,17 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		}
 		
 	}
+    
+    
+    // MARK: - Table view delegate
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		if (indexPath as NSIndexPath).section == 0 && indexPath.row == 3{
+		if indexPath.section == 0 && indexPath.row == 2 {
 				
 			togglePicker()
 			
-		} else if (indexPath as NSIndexPath).section == 1 && (indexPath.row == 1 || indexPath.row == 2) {
+		} else if indexPath.section == 1 && (indexPath.row == 1 || indexPath.row == 2) {
 			
 			loadSearchControllerWithTitle((tableView.cellForRow(at: indexPath)?.contentView.subviews[1] as! UILabel).text, mapView: self.mapView)
 			
@@ -453,14 +439,13 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 			intervalTimePicker.selectRow(timeValueHours, inComponent: 0, animated: false)
 			intervalTimePicker.selectRow(timeValueMins, inComponent: 2, animated: false)
-			self.tableView.insertRows(at: [IndexPath(row: 4, section: 0)], with: UITableViewRowAnimation.fade)
-			mainLabelTextfield.resignFirstResponder()
+			self.tableView.insertRows(at: [IndexPath(row: 3, section: 0)], with: UITableViewRowAnimation.fade)
 			schedLabelTextfield.resignFirstResponder()
 			notesTextview.resignFirstResponder()
 			
 		} else {
 			
-			self.tableView.deleteRows(at: [IndexPath(row: 4, section: 0)], with: UITableViewRowAnimation.fade)
+			self.tableView.deleteRows(at: [IndexPath(row: 3, section: 0)], with: UITableViewRowAnimation.fade)
 			
 		}
 	
@@ -468,7 +453,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		self.tableView.endUpdates()
 		
-		self.tableView.deselectRow(at: IndexPath(row: 3, section: 0), animated: true)
+		self.tableView.deselectRow(at: IndexPath(row: 2, section: 0), animated: true)
 		
 	}
 	
@@ -488,7 +473,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	fileprivate func checkForLocationPermission() {
+	private func checkForLocationPermission() {
 		
 		if CLLocationManager.locationServicesEnabled() {
 			
@@ -526,7 +511,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	fileprivate func displayAlertWithTitle(_ title: String?, message: String?) {
+	private func displayAlertWithTitle(_ title: String?, message: String?) {
 		
 		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
 		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
@@ -536,7 +521,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	fileprivate func createLocationManager(_ startImmediately: Bool) {
+	private func createLocationManager(_ startImmediately: Bool) {
 		
 		if locationManager == nil {
 			locationManager = CLLocationManager()
@@ -643,7 +628,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	fileprivate func showRoute(_ response: MKDirectionsResponse) {
+	private func showRoute(_ response: MKDirectionsResponse) {
 		
 		for route in response.routes {
 			
@@ -699,7 +684,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	// MARK: - Location-based fields show/hide
 	
-	fileprivate func toggleUseLocation() {
+	private func toggleUseLocation() {
 		
 		let rowsToChange = [
 			
@@ -715,7 +700,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 			mapView.delegate = self
 			self.tableView.insertRows(at: rowsToChange, with: UITableViewRowAnimation.fade)
-			mainLabelTextfield.resignFirstResponder()
 			schedLabelTextfield.resignFirstResponder()
 			notesTextview.resignFirstResponder()
 			
@@ -729,7 +713,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	fileprivate func loadSearchControllerWithTitle(_ title: String?, mapView: MKMapView) {
+	private func loadSearchControllerWithTitle(_ title: String?, mapView: MKMapView) {
 		
 		let searchNavVC = self.storyboard?.instantiateViewController(withIdentifier: "searchNavVC") as! UINavigationController
 		let searchVC = searchNavVC.viewControllers[0] as! SearchViewController
@@ -786,78 +770,54 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	
 	// MARK: - Navigation
-	
-	override func viewWillDisappear(_ animated: Bool) {
-		
-		// Check and save the currentEntry's properities to CoreData
-		if mainLabelTextfield.text!.isEmpty || mainLabelTextfield.text == nil {
-			
-			// Alert the user that an entry cannot be saved if it does not have a mainLabel
-			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Main Label field was empty.", preferredStyle: UIAlertControllerStyle.alert)
-			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
-				alertVC.dismiss(animated: true, completion: nil)
-			})
-			alertVC.addAction(okBtn)
-			parent?.present(alertVC, animated: true, completion: nil)
-			
-		} else {
-			
-			saveToContextAndUpdateCoreData()
-			
-		}
-		
-		mainLabelTextfield.resignFirstResponder()
-		schedLabelTextfield.resignFirstResponder()
-		notesTextview.resignFirstResponder()
-		
-	}
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        // Save the currentEntry's properities to CoreData
+        performUpdateOnCoreData()
+        
+        schedLabelTextfield.resignFirstResponder()
+        notesTextview.resignFirstResponder()
+        
+    }
 
-	func saveToContextAndUpdateCoreData() {
-		
-		currentEntry.mainLabel = self.mainLabel
-		if schedLabelTextfield.text!.isEmpty || schedLabelTextfield.text == nil {
-			
-			currentEntry.scheduleLabel = self.mainLabel
-			
-		} else {
-			
-			currentEntry.scheduleLabel = self.schedLabel
-			
-		}
-		currentEntry.timeValueHours = self.timeValueHours
-		currentEntry.timeValueMins = self.timeValueMins
-		currentEntry.timeValueStr = self.intervalTimeStr
-		currentEntry.notesStr = self.notes
-		
-		if useLocation == true && startLocation != nil && endLocation != nil {
-			
-			currentEntry.useLocation = self.useLocation
-			currentEntry.startLocation = self.startLocation?.placemark
-			currentEntry.endLocation = self.endLocation?.placemark
-			
-		} else {
-			
-			currentEntry.useLocation = false
-			currentEntry.startLocation = nil
-			currentEntry.endLocation = nil
-			
-		}
-		self.entries[indexPath.row] = currentEntry
-		currentTrip.entries = self.entries as NSArray
-		
-		guard let moc = self.moc else {
-			return
-		}
-		
-		if moc.hasChanges {
-			
-			do {
-				try moc.save()
-			} catch {
-			}
-			
-		}
-		
-	}
+    func performUpdateOnCoreData() {
+        
+        currentEntry.scheduleLabel = self.schedLabel
+        currentEntry.timeValueHours = self.timeValueHours
+        currentEntry.timeValueMins = self.timeValueMins
+        currentEntry.timeValueStr = self.intervalTimeStr
+        currentEntry.notesStr = self.notes
+        
+        if useLocation == true && startLocation != nil && endLocation != nil {
+            
+            currentEntry.useLocation = self.useLocation
+            currentEntry.startLocation = self.startLocation?.placemark
+            currentEntry.endLocation = self.endLocation?.placemark
+            
+        } else {
+            
+            currentEntry.useLocation = false
+            currentEntry.startLocation = nil
+            currentEntry.endLocation = nil
+            
+        }
+        self.entries[indexPath.row] = currentEntry
+        currentTrip.entries = self.entries as NSArray
+        
+        guard let moc = self.moc else {
+            return
+        }
+        
+        if moc.hasChanges {
+            
+            do {
+                try moc.save()
+            } catch {
+            }
+            
+        }
+        
+    }
 	
 }

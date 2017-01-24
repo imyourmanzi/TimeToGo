@@ -12,15 +12,19 @@ import MessageUI
 
 class SettingsTableViewController: UITableViewController, MFMailComposeViewControllerDelegate {
 
+    // Interface Builder variables
 	@IBOutlet var flightDateCell: UITableViewCell!
 	@IBOutlet var tripNameCell: UITableViewCell!
+    @IBOutlet var deleteAlertPopoverViewAnchor: UIView!
 	
+    // Core Data variables
 	var moc: NSManagedObjectContext?
 	var currentTripName: String!
 	var currentTrip: Trip!
 	var currentTripIndex: Int!
 	var allTrips = [Trip]()
 	
+    // Current VC variables
 	var flightDate: Date!
 	var tripName: String!
 	
@@ -31,11 +35,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 		
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-
+    
 	override func viewWillAppear(_ animated: Bool) {
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
@@ -56,7 +56,6 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		flightDateCell.detailTextLabel?.text = dateFormatter.string(from: self.flightDate)
 		
 		// Fetch all of the managed objects from the persistent store and update the table view
-//		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
 		let fetchAll = NSFetchRequest<Trip>(entityName: "Trip")
 		allTrips = (try! moc!.fetch(fetchAll))
 		
@@ -73,19 +72,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		})
 		let deleteAction = UIAlertAction(title: "Delete Trip", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction) in
 			
-			var index = 0
-			for trip in self.allTrips {
-				
-				if trip.tripName == self.currentTripName {
-					
-					self.currentTripIndex = index
-					
-				}
-				
-				index += 1
-				
-			}
-			
+            self.currentTripIndex = self.allTrips.index(of: self.currentTrip)
 			self.moc!.delete(self.allTrips.remove(at: self.currentTripIndex))
 			
 			do {
@@ -114,12 +101,14 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		
 		deleteAlertController.addAction(cancelAction)
 		deleteAlertController.addAction(deleteAction)
-		
-		present(deleteAlertController, animated: true, completion: nil)
+        
+        deleteAlertController.popoverPresentationController?.sourceView = deleteAlertPopoverViewAnchor
+        
+        present(deleteAlertController, animated: true, completion: nil)
 
 	}
 	
-	fileprivate func displayAlertWithTitle(_ title: String?, message: String?) {
+	private func displayAlertWithTitle(_ title: String?, message: String?) {
 		
 		let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
 		let dismiss = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
@@ -134,7 +123,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		if (indexPath as NSIndexPath).section == 1 {
+		if indexPath.section == 1 {
 			
 			if indexPath.row == 0 {
 				
@@ -157,7 +146,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	
 	// MARK: - Mail composer delegate
 	
-	fileprivate func newEmailToRecipients(_ recipients: [String], subject: String) {
+	private func newEmailToRecipients(_ recipients: [String], subject: String) {
 		
 		if MFMailComposeViewController.canSendMail() {
 			

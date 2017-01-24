@@ -87,7 +87,7 @@ class ScheduleViewController: UIViewController {
 	}
 	
 	// Set up and add the flight labels and the interval labels
-	fileprivate func setupLabels() {
+	private func setupLabels() {
 		
 		// Intervals
 		var i: CGFloat = 0.0
@@ -205,7 +205,7 @@ class ScheduleViewController: UIViewController {
 		
 	}
 	
-	fileprivate func displayAlertWithTitle(_ title: String?, message: String?) {
+	private func displayAlertWithTitle(_ title: String?, message: String?) {
 		
 		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
 		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)

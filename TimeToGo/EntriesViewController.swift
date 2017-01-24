@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MapKit
 
-class EntriesViewController: UITableViewController {
+class EntriesViewController: UITableViewController, CoreDataHelper {
 	
 	// CoreData variables
 	var moc: NSManagedObjectContext?
@@ -44,7 +44,7 @@ class EntriesViewController: UITableViewController {
 		currentTrip = trips[0]
 		self.entries = currentTrip.entries as! [Interval]
 		self.flightDate = currentTrip.flightDate as Date!
-		
+        
 		performUpdateOnCoreData()
 		tableView.reloadData()
 		
@@ -75,15 +75,12 @@ class EntriesViewController: UITableViewController {
 		var entry: Interval!
 		entry = entries[indexPath.row]
 		
-		cell.textLabel?.text = entry.mainLabel
-		
-		if entry.scheduleLabel == nil || entry.scheduleLabel.isEmpty {
-		
-			cell.detailTextLabel?.text = entry.stringFromTimeValue()
-		
-		} else {
-			cell.detailTextLabel?.text = "\(entry.stringFromTimeValue()) - " + entry.scheduleLabel
-		}
+		cell.textLabel?.text = entry.scheduleLabel
+        cell.detailTextLabel?.text = entry.stringFromTimeValue()
+        
+        if entry.mainLabel != nil {
+            entry.notesStr = "Main Label: \(entry.mainLabel)\n\n\(entry.notesStr)"
+        }
 		
 		return cell
 		
@@ -112,7 +109,7 @@ class EntriesViewController: UITableViewController {
 		
 	}
 	
-	fileprivate func performUpdateOnCoreData() {
+	func performUpdateOnCoreData() {
 		
 		currentTrip.entries = self.entries as NSArray
 		
@@ -146,7 +143,6 @@ class EntriesViewController: UITableViewController {
 		let selectedEntry = entries[indexPath.row]
 		
 		destVC.currentTripName = currentTripName
-		destVC.mainLabel = selectedEntry.mainLabel
 		destVC.schedLabel = selectedEntry.scheduleLabel
 		destVC.timeValueHours = selectedEntry.timeValueHours
 		destVC.timeValueMins = selectedEntry.timeValueMins

@@ -10,10 +10,9 @@ import UIKit
 import CoreData
 import MapKit
 
-class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, UITextViewDelegate, CLLocationManagerDelegate, MKMapViewDelegate, communicationToMain {
+class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, UITextViewDelegate, CLLocationManagerDelegate, MKMapViewDelegate, communicationToMain, CoreDataHelper {
 	
 	// Interface Builder outlets
-	@IBOutlet var mainLabelTextfield: UITextField!
 	@IBOutlet var schedLabelTextfield: UITextField!
 	@IBOutlet var intervalLabelCell: UITableViewCell!
 	@IBOutlet var intervalTimePicker: UIPickerView!
@@ -33,7 +32,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	var entries = [Interval]()
 	
 	// Current VC variables
-	var mainLabel: String!
 	var schedLabel: String!
 	var timeValueHours: Int = 0
 	var timeValueMins: Int = 15
@@ -67,9 +65,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		
 		// Customized setup of the Interface Builder variables
-		mainLabelTextfield.delegate = self
-		mainLabelTextfield.text = mainLabel
-		
 		schedLabelTextfield.delegate = self
 		schedLabelTextfield.text = schedLabel
 		
@@ -158,30 +153,24 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	override func viewDidAppear(_ animated: Bool) {
 		
-		// Show the keyboard for the mainLabelTextfield when the view has appeared if it is empty
-		if mainLabelTextfield.text!.isEmpty {
-			mainLabelTextfield.becomeFirstResponder()
+		// Show the keyboard for the scheduleLabelTextfield when the view has appeared if it is empty
+		if schedLabelTextfield.text!.isEmpty {
+			schedLabelTextfield.becomeFirstResponder()
 		}
 		
 	}
 	
 	@IBAction func saveEntry(_ sender: UIBarButtonItem) {
 		
-		if mainLabelTextfield.text!.isEmpty || mainLabelTextfield.text == nil {
+		if schedLabelTextfield.text!.isEmpty || schedLabelTextfield.text == nil {
 			
-			// Alert the user that an entry cannot be saved if it does not have a mainLabel
-			displayAlertWithTitle("Empty Field!", message: "Cannot leave Main Label empty")
+			// Alert the user that an entry cannot be saved if it does not have a scheduleLabel
+			displayAlertWithTitle("Empty Field!", message: "Cannot leave Schedule Label empty")
 			
-		} else {
-			
-			// Fill in any empty values, save to the persistent store, and close the view controller
-			if schedLabelTextfield.text!.isEmpty || schedLabelTextfield.text == nil {
-				
-				schedLabel = mainLabel
-			}
+        } else {
 			
 			// Save entry information (and location information if it's present) and dismiss the view
-			entries.append(Interval(mainLabel: mainLabel, scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, notesStr: notes, usesLocation: useLocation, startLoc: startLocation?.placemark, endLoc: endLocation?.placemark))
+//			entries.append(Interval(mainLabel: mainLabel, scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, notesStr: notes, usesLocation: useLocation, startLoc: startLocation?.placemark, endLoc: endLocation?.placemark))
 			performUpdateOnCoreData()
 			
 			dismiss(animated: true, completion: nil)
@@ -199,13 +188,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	
 	// MARK: - Text field delegate and action
-	
-	@IBAction func mainLabelDidChange(_ sender: UITextField) {
-
-		// Set the mainLabel with its textfield
-		mainLabel = sender.text!.trimmingCharacters(in: CharacterSet.whitespaces)
-		
-	}
 	
 	@IBAction func schedLabelDidChange(_ sender: UITextField) {
 		
@@ -230,25 +212,16 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		
 		textField.resignFirstResponder()
-		
-		if textField == mainLabelTextfield {
-			
-			// Set the mainLabel with it's textfield
-			mainLabel = textField.text
-			
-		} else if textField == schedLabelTextfield {
-			
-			// Set the schedLabel with it's textfield
-			schedLabel = textField.text
-			
-		}
-		
+        
+        // Set the schedLabel with it's textfield
+        schedLabel = textField.text
+        
 		return true
 		
 	}
 	
 	// Update the new entry in the currentTrip
-	fileprivate func performUpdateOnCoreData() {
+	func performUpdateOnCoreData() {
 		
 		currentTrip.entries = self.entries as NSArray
 		guard let moc = self.moc else {
@@ -260,7 +233,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			do {
 				try moc.save()
 			} catch {
-				
 			}
 			
 		}
@@ -326,11 +298,11 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			
 			if pickerHidden {
 				
-				return 4
+				return 3
 				
 			} else {
 				
-				return 5
+				return 4
 				
 			}
 			
@@ -354,17 +326,20 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
+    
+    // MARK: - Table view delegate
+    
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		if (indexPath as NSIndexPath).section == 0 {
+		if indexPath.section == 0 {
 			
-			if indexPath.row == 3 {
+			if indexPath.row == 2 {
 				
 				togglePicker()
 				
 			}
 			
-		} else if (indexPath as NSIndexPath).section == 1 && (indexPath.row == 1 || indexPath.row == 2) {
+		} else if indexPath.section == 1 && (indexPath.row == 1 || indexPath.row == 2) {
 			
 			loadSearchControllerWithTitle((tableView.cellForRow(at: indexPath)?.contentView.subviews[1] as! UILabel).text, mapView: self.mapView)
 			
@@ -481,14 +456,13 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			
 			intervalTimePicker.selectRow(timeValueHours, inComponent: 0, animated: false)
 			intervalTimePicker.selectRow(timeValueMins, inComponent: 2, animated: false)
-			self.tableView.insertRows(at: [IndexPath(row: 4, section: 0)], with: UITableViewRowAnimation.fade)
-			mainLabelTextfield.resignFirstResponder()
+			self.tableView.insertRows(at: [IndexPath(row: 3, section: 0)], with: UITableViewRowAnimation.fade)
 			schedLabelTextfield.resignFirstResponder()
 			notesTextview.resignFirstResponder()
 			
 		} else {
 			
-			self.tableView.deleteRows(at: [IndexPath(row: 4, section: 0)], with: UITableViewRowAnimation.fade)
+			self.tableView.deleteRows(at: [IndexPath(row: 3, section: 0)], with: UITableViewRowAnimation.fade)
 			
 		}
 		
@@ -496,7 +470,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		self.tableView.endUpdates()
 		
-		self.tableView.deselectRow(at: IndexPath(row: 3, section: 0), animated: true)
+		self.tableView.deselectRow(at: IndexPath(row: 2, section: 0), animated: true)
 		
 	}
 	
@@ -516,7 +490,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
-	fileprivate func checkForLocationPermission() {
+	private func checkForLocationPermission() {
 		
 		if CLLocationManager.locationServicesEnabled() {
 			
@@ -550,7 +524,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
-	fileprivate func displayAlertWithTitle(_ title: String?, message: String?) {
+	private func displayAlertWithTitle(_ title: String?, message: String?) {
 		
 		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
 		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
@@ -560,7 +534,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
-	fileprivate func createLocationManager(_ startImmediately: Bool) {
+	private func createLocationManager(_ startImmediately: Bool) {
 		
 		if locationManager == nil {
 			locationManager = CLLocationManager()
@@ -667,7 +641,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
-	fileprivate func showRoute(_ response: MKDirectionsResponse) {
+	private func showRoute(_ response: MKDirectionsResponse) {
 		
 		for route in response.routes {
 			
@@ -722,7 +696,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	// MARK: - Location-based fields show/hide
 	
-	fileprivate func toggleUseLocation() {
+	private func toggleUseLocation() {
 		
 		let rowsToChange = [
 			
@@ -738,7 +712,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			
 			mapView.delegate = self
 			self.tableView.insertRows(at: rowsToChange, with: UITableViewRowAnimation.fade)
-			mainLabelTextfield.resignFirstResponder()
 			schedLabelTextfield.resignFirstResponder()
 			notesTextview.resignFirstResponder()
 			
@@ -752,7 +725,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
-	fileprivate func loadSearchControllerWithTitle(_ title: String?, mapView: MKMapView) {
+	private func loadSearchControllerWithTitle(_ title: String?, mapView: MKMapView) {
 		
 		let searchNavVC = self.storyboard?.instantiateViewController(withIdentifier: "searchNavVC") as! UINavigationController
 		let searchVC = searchNavVC.viewControllers[0] as! SearchViewController
@@ -812,7 +785,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	override func viewWillDisappear(_ animated: Bool) {
 		
 		// Make sure that the keyboards are all away
-		mainLabelTextfield.resignFirstResponder()
 		schedLabelTextfield.resignFirstResponder()
 		notesTextview.resignFirstResponder()
 		

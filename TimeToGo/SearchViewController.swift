@@ -174,7 +174,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as UITableViewCell!
 		
-		if (indexPath as NSIndexPath).section == 1 {
+		if indexPath.section == 1 {
 			
 			let mapItem = mapSearchResults[indexPath.row]
 			let streetAddress = Interval.getAddressFromMapItem(mapItem)
@@ -210,7 +210,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		var mapItem: MKMapItem?
 		var streetAddress = ""
 		
-		if (indexPath as NSIndexPath).section == 1 {
+		if indexPath.section == 1 {
 			
 			mapItem = mapSearchResults[indexPath.row]
 			streetAddress = Interval.getAddressFromMapItem(mapItem!)

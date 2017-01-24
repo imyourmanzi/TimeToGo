@@ -71,7 +71,7 @@ class ShareToCalTableViewController: UITableViewController {
     }
 	
 	// Get all calendars that allow modifications
-	fileprivate func extractEventEntityCalendarsOutOfSotre(_ eventStore: EKEventStore) {
+	private func extractEventEntityCalendarsOutOfSotre(_ eventStore: EKEventStore) {
 		
 		let calendars = eventStore.calendars(for: EKEntityType.event) 
 		
@@ -168,7 +168,7 @@ class ShareToCalTableViewController: UITableViewController {
 	
 	// MARK: - Interval to calendar event
 	
-	fileprivate func addInterval(_ entry: Interval, toCalendar calendar: EKCalendar) {
+	private func addInterval(_ entry: Interval, toCalendar calendar: EKCalendar) {
 		
 		let durationOfInterval = entry.timeIntervalByConvertingTimeValue()
 		let endDate = entry.startDate.addingTimeInterval(durationOfInterval)
@@ -177,7 +177,7 @@ class ShareToCalTableViewController: UITableViewController {
 		if entry.notesStr != nil && entry.notesStr != "" {
 			notes = entry.notesStr!
 		}
-		notes += "\n\(entry.mainLabel!)\nFor \(currentTrip.tripName)\n\nOrganized and Automatically Added by It's Time To Go"
+		notes += "\nFor \(currentTrip.tripName)\n\nOrganized and Automatically Added by It's Time To Go"
 		if entry.endLocation != nil {
 			let endLoc = MKMapItem(placemark: entry.endLocation!)
 			endLocStr = "\(endLoc.name!) \(Interval.getAddressFromMapItem(endLoc))"
@@ -186,7 +186,7 @@ class ShareToCalTableViewController: UITableViewController {
 		
 	}
 	
-	fileprivate func createEventWithTitle(_ title: String, startDate: Date, endDate: Date, location: String?, inCalendar calendar: EKCalendar, inEventStore eventStore: EKEventStore, withNotes notes: String) {
+	private func createEventWithTitle(_ title: String, startDate: Date, endDate: Date, location: String?, inCalendar calendar: EKCalendar, inEventStore eventStore: EKEventStore, withNotes notes: String) {
 		
 		let event = EKEvent(eventStore: eventStore)
 		event.calendar = calendar

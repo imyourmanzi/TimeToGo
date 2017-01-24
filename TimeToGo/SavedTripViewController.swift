@@ -64,32 +64,30 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
 		var entry: Interval!
 		entry = entries[indexPath.row]
 		
-		cell.textLabel?.text = entry.mainLabel
-		
-		if entry.scheduleLabel == nil || entry.scheduleLabel.isEmpty {
-			
-			cell.detailTextLabel?.text = entry.stringFromTimeValue()
-			
-		} else {
-			
-			cell.detailTextLabel?.text = "\(entry.stringFromTimeValue()) - " + entry.scheduleLabel
-			
-		}
+		cell.textLabel?.text = entry.scheduleLabel
+        cell.detailTextLabel?.text = entry.stringFromTimeValue()
 		
 		return cell
 		
 	}
 	
-	@IBAction func loadTrip(_ sender: UIBarButtonItem) {
-		
-		// Update currentTripName to the chosen tripName
-		UserDefaults.standard.set(self.tripName, forKey: "currentTripName")
-		
-		// Transition to the Scheudle VC
-		let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as! UITabBarController
-		mainTabVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-		self.present(mainTabVC, animated: true, completion: nil)
-		
-	}
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        // Update currentTripName to the chosen tripName
+        UserDefaults.standard.set(self.tripName, forKey: "currentTripName")
+        
+    }
+    
+//	@IBAction func loadTrip(_ sender: UIBarButtonItem) {
+//		
+//		// Update currentTripName to the chosen tripName
+//		UserDefaults.standard.set(self.tripName, forKey: "currentTripName")
+//		
+//		// Transition to the Scheudle VC
+//		let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as! UITabBarController
+//		mainTabVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+//		self.present(mainTabVC, animated: true, completion: nil)
+//		
+//	}
 	
 }

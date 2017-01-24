@@ -3,19 +3,16 @@
     {
       "idiom" : "universal",
       "filename" : "lookout.jpg",
-      "compression-type" : "lossy",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
       "filename" : "lookout@2x.jpg",
-      "compression-type" : "lossy",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
       "filename" : "lookout@3x.jpg",
-      "compression-type" : "lossy",
       "scale" : "3x"
     }
   ],
