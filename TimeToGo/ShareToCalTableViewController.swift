@@ -116,7 +116,7 @@ class ShareToCalTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "calendarCell", for: indexPath) 
 		
-		cell.textLabel?.text = calendarsToList[(indexPath as NSIndexPath).row].title
+		cell.textLabel?.text = calendarsToList[indexPath.row].title
 		
 		if calendarToUseIndex == indexPath {
 			

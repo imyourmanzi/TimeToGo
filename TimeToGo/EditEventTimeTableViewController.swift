@@ -98,7 +98,7 @@ class EditEventTimeTableViewController: UITableViewController {
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		if (indexPath as NSIndexPath).row == 0 {
+		if indexPath.row == 0 {
 			togglePicker()
 		}
 		
@@ -110,7 +110,7 @@ class EditEventTimeTableViewController: UITableViewController {
 			return tableView.rowHeight
 		} else {
 			
-			if (indexPath as NSIndexPath).row == 1 {
+			if indexPath.row == 1 {
 				return eventDatePicker.frame.height
 			} else {
 				return tableView.rowHeight

@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class AllTripsTableViewController: UITableViewController, UISearchResultsUpdating {
-
+    
 	// CoreData variables
 	var moc: NSManagedObjectContext?
 	var allTrips = [Trip]()
@@ -88,9 +88,9 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 		var trip: Trip!
 		
 		if searchResultsController.isActive {
-			 trip = filteredTrips[(indexPath as NSIndexPath).row]
+			 trip = filteredTrips[indexPath.row]
 		} else {
-			trip = allTrips[(indexPath as NSIndexPath).row]
+			trip = allTrips[indexPath.row]
 		}
 		
 		let dateFormatter = DateFormatter()
@@ -108,7 +108,7 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
         if editingStyle == .delete {
 			
 			// Update the current trip if the current one has been deleted
-			if allTrips[(indexPath as NSIndexPath).row].tripName == currentTripName && allTrips.count > 1 {
+			if allTrips[indexPath.row].tripName == currentTripName && allTrips.count > 1 {
 				
 				currentTripName = allTrips[allTrips.count - 2].tripName
 				UserDefaults.standard.set(currentTripName, forKey: "currentTripName")
@@ -116,7 +116,7 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 			}
 			
             // Delete the row from the data sources and the table view
-			moc!.delete(allTrips.remove(at: (indexPath as NSIndexPath).row))
+			moc!.delete(allTrips.remove(at: indexPath.row))
             tableView.deleteRows(at: [indexPath], with: .fade)
 			
         }
@@ -155,9 +155,9 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 		var theTripName: String!
 		
 		if searchResultsController.isActive {
-			theTripName = self.filteredTrips[(indexPath as NSIndexPath).row].tripName
+			theTripName = self.filteredTrips[indexPath.row].tripName
 		} else {
-			theTripName = self.allTrips[(indexPath as NSIndexPath).row].tripName
+			theTripName = self.allTrips[indexPath.row].tripName
 		}
 		
 		UserDefaults.standard.set(theTripName, forKey: "currentTripName")
@@ -192,7 +192,7 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 	
 	
 	// MARK: - Navigation
-	
+    
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		
 		searchResultsController.isActive = false
@@ -212,7 +212,7 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 			return
 		}
 		
-		let selectedTrip = allTrips[(indexPath as NSIndexPath).row]
+		let selectedTrip = allTrips[indexPath.row]
 		
 		savedTripVC.title = selectedTrip.tripName
 		savedTripVC.tripName = selectedTrip.tripName

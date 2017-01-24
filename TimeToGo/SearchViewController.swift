@@ -176,7 +176,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if (indexPath as NSIndexPath).section == 1 {
 			
-			let mapItem = mapSearchResults[(indexPath as NSIndexPath).row]
+			let mapItem = mapSearchResults[indexPath.row]
 			let streetAddress = Interval.getAddressFromMapItem(mapItem)
 			
 			cell?.textLabel?.text = mapItem.name
@@ -212,7 +212,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		if (indexPath as NSIndexPath).section == 1 {
 			
-			mapItem = mapSearchResults[(indexPath as NSIndexPath).row]
+			mapItem = mapSearchResults[indexPath.row]
 			streetAddress = Interval.getAddressFromMapItem(mapItem!)
 				
 			selectedLocation = mapItem

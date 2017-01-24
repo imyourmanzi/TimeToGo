@@ -132,27 +132,15 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	
 	// MARK: - Table view data source
 	
-	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-		
-		if section == 1 {
-			
-			return "Saved Trips: \(allTrips.count)"
-			
-		}
-		
-		return nil
-		
-	}
-	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		if (indexPath as NSIndexPath).section == 2 {
+		if (indexPath as NSIndexPath).section == 1 {
 			
-			if (indexPath as NSIndexPath).row == 0 {
+			if indexPath.row == 0 {
 				
 				newEmailToRecipients(["timetogosupport@narwhalsandcode.com"], subject: "Question/Comment/Concern with It's Time To Go")
 				
-			} else if (indexPath as NSIndexPath).row == 1 {
+			} else if indexPath.row == 1 {
 			
 				if let homepage = URL(string: "https://www.narwhalsandcode.com/apps/#time-to-go") {
 					UIApplication.shared.openURL(homepage)
@@ -211,14 +199,12 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		
 		// Prepare the possible views that may appear by pre-setting properties
 		if let timeVC = segue.destination as? EditEventTimeTableViewController {
-			
-//			timeVC.currentEventName = self.currentTripName
+            
 			timeVC.eventDate = self.flightDate
 			timeVC.currentEvent = self.currentTrip
 			
 		} else if let nameVC = segue.destination as? EditTripNameTableViewController {
 			
-			nameVC.currentTripName = self.currentTripName
 			nameVC.tripName = self.tripName
 			nameVC.currentTrip = self.currentTrip
 			
@@ -228,7 +214,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 				return
 			}
 			
-			newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: newTripVC, action: #selector(newTripVC.cancelNewEventFromSettings))
+			newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: newTripVC, action: #selector(newTripVC.cancelNewEvent))
 			
 		}
 		

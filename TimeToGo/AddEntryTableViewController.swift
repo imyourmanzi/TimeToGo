@@ -358,13 +358,13 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		if (indexPath as NSIndexPath).section == 0 {
 			
-			if (indexPath as NSIndexPath).row == 3 {
+			if indexPath.row == 3 {
 				
 				togglePicker()
 				
 			}
 			
-		} else if (indexPath as NSIndexPath).section == 1 && ((indexPath as NSIndexPath).row == 1 || (indexPath as NSIndexPath).row == 2) {
+		} else if (indexPath as NSIndexPath).section == 1 && (indexPath.row == 1 || indexPath.row == 2) {
 			
 			loadSearchControllerWithTitle((tableView.cellForRow(at: indexPath)?.contentView.subviews[1] as! UILabel).text, mapView: self.mapView)
 			

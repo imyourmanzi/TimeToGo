@@ -16,7 +16,6 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 
 	// CoreData variables
 	var moc: NSManagedObjectContext?
-	var currentTripName: String!
 	var currentTrip: Trip!
 	
 	// Current VC variables

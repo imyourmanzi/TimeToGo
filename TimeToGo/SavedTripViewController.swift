@@ -62,7 +62,7 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "entryCell", for: indexPath)
 		
 		var entry: Interval!
-		entry = entries[(indexPath as NSIndexPath).row]
+		entry = entries[indexPath.row]
 		
 		cell.textLabel?.text = entry.mainLabel
 		

@@ -73,7 +73,7 @@ class EntriesViewController: UITableViewController {
 		let cell = self.tableView.dequeueReusableCell(withIdentifier: "EntryCell", for: indexPath) 
 		
 		var entry: Interval!
-		entry = entries[(indexPath as NSIndexPath).row]
+		entry = entries[indexPath.row]
 		
 		cell.textLabel?.text = entry.mainLabel
 		
@@ -93,14 +93,14 @@ class EntriesViewController: UITableViewController {
 		
 		if editingStyle == UITableViewCellEditingStyle.delete {
 			
-			entries.remove(at: (indexPath as NSIndexPath).row)
+			entries.remove(at: indexPath.row)
 			
 			tableView.deleteRows(at: [indexPath], with: .fade)
 			
 			performUpdateOnCoreData()
 			
 		}
-		
+        
 	}
 	
 	override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {

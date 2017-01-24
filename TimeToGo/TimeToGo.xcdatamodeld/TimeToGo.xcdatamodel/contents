@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14E46" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Trip" representedClassName="Trip" syncable="YES">
         <attribute name="entries" optional="YES" attributeType="Transformable" valueTransformerName="IntervalTransformer" syncable="YES"/>
-        <attribute name="flightDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="flightDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="tripName" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>

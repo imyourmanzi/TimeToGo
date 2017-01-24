@@ -152,13 +152,6 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
         dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDatePicker.date)
         
     }
-    
-	func cancelNewEventFromSettings(_ sender: UIBarButtonItem) {
-		
-		// If the view came from button call in the Setting Tab, dismiss the view
-		dismiss(animated: true, completion: nil)
-		
-	}
 	
 	// MARK: - Table view data source
 	
@@ -174,7 +167,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		if (indexPath as NSIndexPath).row == 1 {
+		if indexPath.row == 1 {
 			togglePicker()
 		}
 		
@@ -186,7 +179,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
 			return tableView.rowHeight
 		} else {
 			
-			if (indexPath as NSIndexPath).row == 2 {
+			if indexPath.row == 2 {
 				return eventDatePicker.frame.height
 			} else {
 				return tableView.rowHeight
@@ -233,9 +226,10 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
 	func cancelNewEvent(_ sender: UIBarButtonItem) {
 		
 		// Allow the user to cancel out of creating a new trip if there are previous and this is the first screen presented
-		let mainVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as! UITabBarController
-		mainVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-		present(mainVC, animated: true, completion: nil)
+//		let mainVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as! UITabBarController
+//		mainVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+//		present(mainVC, animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
 		
 	}
 	
