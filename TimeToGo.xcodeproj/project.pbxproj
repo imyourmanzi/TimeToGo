@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8A44A8391E36709B00B1CB09 /* EventTypeData.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A44A8381E36709B00B1CB09 /* EventTypeData.csv */; };
 		8A44A83B1E36811200B1CB09 /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */; };
 		8A44A83F1E36964500B1CB09 /* EventTypeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */; };
 		8A44A8411E369AAA00B1CB09 /* TypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A8401E369AAA00B1CB09 /* TypeCollectionViewCell.swift */; };
 		8A44A8481E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A8471E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift */; };
+		8A5D1D041E3911C500D0CD95 /* EventTypeData.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */; };
+		8A5D1D061E3911D100D0CD95 /* Plane.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D051E3911D100D0CD95 /* Plane.csv */; };
 		8A8F8D4C1E32D837006C30F0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */; };
 		98418DAC1B4847AA00ADC2D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */; };
 		98418DAF1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAD1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld */; };
@@ -48,12 +49,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8A44A8381E36709B00B1CB09 /* EventTypeData.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = EventTypeData.csv; sourceTree = "<group>"; };
 		8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTypeCollectionViewController.swift; sourceTree = "<group>"; };
 		8A44A8401E369AAA00B1CB09 /* TypeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		8A44A8441E37BC8900B1CB09 /* TimeToGo2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TimeToGo2.xcdatamodel; sourceTree = "<group>"; };
 		8A44A8471E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataExtrasProtocol.swift; sourceTree = "<group>"; };
+		8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = EventTypeData.csv; path = csv_data/EventTypeData.csv; sourceTree = "<group>"; };
+		8A5D1D051E3911D100D0CD95 /* Plane.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Plane.csv; path = csv_data/Plane.csv; sourceTree = "<group>"; };
 		8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		98418DA61B4847AA00ADC2D8 /* TimeToGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeToGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98418DAA1B4847AA00ADC2D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -104,7 +106,7 @@
 		8A44A8421E37AD8700B1CB09 /* Event Categories and Types */ = {
 			isa = PBXGroup;
 			children = (
-				8A44A8381E36709B00B1CB09 /* EventTypeData.csv */,
+				8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */,
 				8A44A8431E37B38500B1CB09 /* Travel Types Defaults */,
 			);
 			name = "Event Categories and Types";
@@ -113,6 +115,7 @@
 		8A44A8431E37B38500B1CB09 /* Travel Types Defaults */ = {
 			isa = PBXGroup;
 			children = (
+				8A5D1D051E3911D100D0CD95 /* Plane.csv */,
 			);
 			name = "Travel Types Defaults";
 			sourceTree = "<group>";
@@ -282,8 +285,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				98418DB41B4847AB00ADC2D8 /* Main.storyboard in Resources */,
-				8A44A8391E36709B00B1CB09 /* EventTypeData.csv in Resources */,
+				8A5D1D041E3911C500D0CD95 /* EventTypeData.csv in Resources */,
 				98418DB91B4847AB00ADC2D8 /* LaunchScreen.xib in Resources */,
+				8A5D1D061E3911D100D0CD95 /* Plane.csv in Resources */,
 				98418DB61B4847AB00ADC2D8 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

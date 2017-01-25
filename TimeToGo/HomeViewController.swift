@@ -60,7 +60,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         var categories: [String] = []
         
-        var rows = data.components(separatedBy: "\r")
+        var rows = data.components(separatedBy: "\n")
         if rows.last == "" {
             rows.removeLast()
         }
@@ -90,7 +90,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         var types: [String] = []
         
-        var rows = data.components(separatedBy: "\r")
+        var rows = data.components(separatedBy: "\n")
         if rows.last == "" {
             rows.removeLast()
         }

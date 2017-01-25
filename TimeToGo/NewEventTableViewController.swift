@@ -19,42 +19,36 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
 	
 	// CoreData variables
 	var moc: NSManagedObjectContext?
-	var allEvents = [Trip]()
+    var allEvents: [Trip] = []
 	var eventName: String!
 	var eventDate = Date()
 	
 	// Current VC variables
-    var defaultEntries: [Interval] = [
-		
-//		Interval(mainLabel: "Getting Ready", scheduleLabel: "Wake Up", timeValueHours: 0, timeValueMins: 45),
-//		Interval(mainLabel: "Driving To Airport", scheduleLabel: "Leave for Airport", timeValueHours: 0, timeValueMins: 30),
-//		Interval(mainLabel: "Arrival to Boarding", scheduleLabel: "Arrive at Airport", timeValueHours: 0, timeValueMins: 45),
-//		Interval(mainLabel: "Boarding to Departure", scheduleLabel: "Board Plane", timeValueHours: 0, timeValueMins: 30)
-		
-	]
+    var eventType: String = ""
+    var defaultEntries: [Interval] = []
 	let dateFormatter = DateFormatter()
 	var pickerHidden = true
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		// Set the view's background image
-		let backgroundImageView = UIImageView(image: UIImage(named: "lookout"))
-		backgroundImageView.contentMode = UIViewContentMode.scaleAspectFill
-		self.tableView.backgroundView = backgroundImageView
+//		// Set the view's background image
+//		let backgroundImageView = UIImageView(image: UIImage(named: "lookout"))
+//		backgroundImageView.contentMode = UIViewContentMode.scaleAspectFill
+//		self.tableView.backgroundView = backgroundImageView
 		
 		// Get the app's managedObjectContext
 		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
-		
+        
 		// Set up tripNameTextfield
 		eventNameTextfield.delegate = self
 		
 		// Set up dateFormatter and assign a default tripName
 		dateFormatter.dateStyle = .short
 		dateFormatter.timeStyle = .medium
-		eventName = "TripOn_\(dateFormatter.string(from: eventDate))"
+		eventName = "EventOn_\(dateFormatter.string(from: eventDate))"
 		
-		// Get current date but with seconds set to 0
+		// Get current date but with seconds set to 0 and set date to current time zone
 		var components = Calendar.current.dateComponents(in: TimeZone.current, from: eventDate)
 		components.second = 0
 		eventDate = Calendar.current.date(from: components)!
@@ -64,13 +58,19 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
 		dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
 		
 	}
-	
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-	}
-	
+    
 	override func viewWillAppear(_ animated: Bool) {
 		
+        // Set up the default entries
+//        print("eventType:", eventType)
+        if let fileData = readData(fromCSV: eventType) {
+//            print("fileData:", fileData)
+            defaultEntries = getEntries(from: fileData)
+        }
+//        for entry in defaultEntries {
+//            print("_Entries_\n", entry.scheduleLabel, entry.stringFromTimeValue())
+//        }
+        
 		// Fetch all of the managed objects from the persistent store and update the table view
 		let fetchAll = NSFetchRequest<Trip>()
 		fetchAll.entity = NSEntityDescription.entity(forEntityName: "Trip", in: moc!)
@@ -87,6 +87,47 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
 		
 	}
 	
+    
+    // MARK: - Manage CSV of default entries
+    
+    func readData(fromCSV file: String) -> String! {
+        
+        guard let filePath = Bundle.main.path(forResource: file, ofType: "csv") else {
+            return nil
+        }
+        
+        do {
+            
+            let contents = try String(contentsOfFile: filePath)
+            return contents
+            
+        } catch {
+            return nil
+        }
+        
+    }
+    
+    func getEntries(from data: String) -> [Interval] {
+        
+        var entries: [Interval] = []
+        
+        var rows = data.components(separatedBy: "\n")
+//        print("Rows:", rows)
+        if rows.last == "" {
+            rows.removeLast()
+        }
+        
+        for row in rows {
+            entries.append(Interval(args: row.components(separatedBy: ",")))
+        }
+        
+        return entries
+        
+    }
+
+    
+    // MARK: - Text and date input delegate
+    
 	@IBAction func eventNameDidChange(_ sender: UITextField) {
 		
 		// Update the tripName varaible with the contents of the textfield
@@ -153,6 +194,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
         
     }
 	
+    
 	// MARK: - Table view data source
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -275,7 +317,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
 		} else {
 			
 			// Do nothing except display an alert controller
-			let nameAlertController = UIAlertController(title: "Cannot Save Trip", message: "There is already a trip with the same name.", preferredStyle: UIAlertControllerStyle.alert)
+			let nameAlertController = UIAlertController(title: "Cannot Save Event", message: "There is already an event with the same name.", preferredStyle: UIAlertControllerStyle.alert)
 			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: { (alert: UIAlertAction) in
 				nameAlertController.dismiss(animated: true, completion: nil)
 			})

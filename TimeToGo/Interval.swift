@@ -59,9 +59,9 @@ class Interval: NSObject, NSCoding {
 	
 	init(scheduleLabel: String, timeValueHours: Int, timeValueMins: Int, notesStr: String?, usesLocation: Bool, startLoc: MKPlacemark?, endLoc: MKPlacemark?) {
 		
+        self.scheduleLabel = scheduleLabel
 		self.timeValueHours = timeValueHours
 		self.timeValueMins = timeValueMins
-		self.scheduleLabel = scheduleLabel
         if self.mainLabel != nil {
             self.notesStr = "Main Label: \(self.mainLabel)\n\n\(notesStr)"
         } else {
@@ -76,6 +76,24 @@ class Interval: NSObject, NSCoding {
 		}
 		
 	}
+    
+    init(args: [String]) {
+        
+        self.scheduleLabel = args[0]
+        
+        if let hours = Int(args[1]) {
+            self.timeValueHours = hours
+        } else {
+            self.timeValueHours = 0
+        }
+        
+        if let mins = Int(args[2]) {
+            self.timeValueMins = mins
+        } else {
+            self.timeValueMins = 0
+        }
+        
+    }
     
     
     // MARK: - Formatting time values

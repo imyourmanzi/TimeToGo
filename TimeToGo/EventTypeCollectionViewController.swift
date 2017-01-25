@@ -12,12 +12,12 @@ private let reuseIdentifier = "typeCell"
 
 class EventTypeCollectionViewController: UICollectionViewController {
 
+    // Current VC variables
     var eventTypes: [String] = ["1","2","3"]
+    var typeIndexPath: IndexPath = IndexPath()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         
     }
     
@@ -52,6 +52,8 @@ class EventTypeCollectionViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         
+        typeIndexPath = indexPath
+        
         collectionView.deselectItem(at: indexPath, animated: true)
         
         return true
@@ -85,7 +87,9 @@ class EventTypeCollectionViewController: UICollectionViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
-        
+        if let newEventVC = segue.destination as? NewEventTableViewController {
+            newEventVC.eventType = (eventTypes[typeIndexPath.item]).components(separatedBy: "^")[1]
+        }
         
     }
 
