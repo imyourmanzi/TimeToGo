@@ -11,15 +11,16 @@ import EventKit
 import CoreData
 import MapKit
 
-class ShareToCalTableViewController: UITableViewController {
+class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 	
 	// EventKit variables
 	let eventStore = EKEventStore()
 	var calendarsToList = [EKCalendar]()
 	var calendarToUse: EKCalendar!
-	var calendarToUseIndex: IndexPath?
+	var calendarToUseIndexPath = IndexPath()
 	
 	// CoreData vairables
+    var moc: NSManagedObjectContext?
 	var currentTrip: Trip!
 	
     override func viewDidLoad() {
@@ -56,7 +57,7 @@ class ShareToCalTableViewController: UITableViewController {
 		}
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
-		let moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		moc = getContext()
 		let currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
 		let fetch = NSFetchRequest<Trip>()
 		fetch.entity = NSEntityDescription.entity(forEntityName: "Trip", in: moc!)
@@ -64,10 +65,6 @@ class ShareToCalTableViewController: UITableViewController {
 		let trips = (try! moc!.fetch(fetch))
 		currentTrip = trips[0]
 		
-    }
-	
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
 	
 	// Get all calendars that allow modifications
@@ -93,7 +90,7 @@ class ShareToCalTableViewController: UITableViewController {
 			
 			if calendar.title == calendarToUse.title && calendar.source == calendarToUse.source {
 				
-				calendarToUseIndex = IndexPath(row: index, section: 0)
+				calendarToUseIndexPath = IndexPath(row: index, section: 0)
 				
 			}
 			
@@ -118,7 +115,7 @@ class ShareToCalTableViewController: UITableViewController {
 		
 		cell.textLabel?.text = calendarsToList[indexPath.row].title
 		
-		if calendarToUseIndex == indexPath {
+		if calendarToUseIndexPath == indexPath {
 			
 			cell.accessoryType = UITableViewCellAccessoryType.checkmark
 			
@@ -130,10 +127,13 @@ class ShareToCalTableViewController: UITableViewController {
 		
         return cell
     }
+    
+    
+    // MARK: - Table view delegate
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		calendarToUseIndex = indexPath
+		calendarToUseIndexPath = indexPath
 		
 		tableView.reloadData()
 		
@@ -150,7 +150,7 @@ class ShareToCalTableViewController: UITableViewController {
 	
 	@IBAction func saveTripToCal(_ sender: UIBarButtonItem) {
 		
-		guard let calendarIndex = (calendarToUseIndex as NSIndexPath?)?.row else {
+		guard let calendarIndex = (calendarToUseIndexPath as NSIndexPath?)?.row else {
 			return
 		}
 		

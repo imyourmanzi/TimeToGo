@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MessageUI
 
-class SettingsTableViewController: UITableViewController, MFMailComposeViewControllerDelegate {
+class SettingsTableViewController: UITableViewController, MFMailComposeViewControllerDelegate, CoreDataHelper {
 
     // Interface Builder variables
 	@IBOutlet var flightDateCell: UITableViewCell!
@@ -32,7 +32,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         super.viewDidLoad()
 
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		moc = getContext()
 		
     }
     
@@ -197,15 +197,17 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			nameVC.tripName = self.tripName
 			nameVC.currentTrip = self.currentTrip
 			
-		} else if let newTripNavVC = segue.destination as? UINavigationController {
-			
-			guard let newTripVC = newTripNavVC.viewControllers[0] as? NewEventTableViewController else {
-				return
-			}
-			
-			newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: newTripVC, action: #selector(newTripVC.cancelNewEvent))
-			
 		}
+        
+//        else if let newTripNavVC = segue.destination as? UINavigationController {
+//			
+//			if let newTripVC = newTripNavVC.viewControllers[0] as? NewEventTableViewController {
+//				
+//                newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: newTripVC, action: #selector(newTripVC.cancelNewEvent))
+//                
+//			}
+//			
+//		}
 		
 	}
 	

@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import EventKit
 
-class ScheduleViewController: UIViewController {
+class ScheduleViewController: UIViewController, CoreDataHelper {
 	
 	// EventKit variables
 	let eventStore = EKEventStore()
@@ -37,7 +37,7 @@ class ScheduleViewController: UIViewController {
         super.viewDidLoad()
 		
 		// Get the app's managedObjectContext
-		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		moc = getContext()
 		
 		let lessHeight = self.tabBarController!.tabBar.frame.height + 64.0 + 44.0
 		scheduleScroll = UIScrollView(frame: CGRect(x: 0.0, y: 64.0, width: view.frame.width, height: view.frame.height - lessHeight))
@@ -47,11 +47,6 @@ class ScheduleViewController: UIViewController {
 		scheduleScroll.contentInset = UIEdgeInsets.zero
 		
     }
-	
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
-	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		

@@ -53,7 +53,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		super.viewDidLoad()
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
-		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		moc = getContext()
 		currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
 		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
@@ -147,10 +147,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-	}
-	
 	override func viewDidAppear(_ animated: Bool) {
 		
 		// Show the keyboard for the scheduleLabelTextfield when the view has appeared if it is empty
@@ -171,6 +167,8 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			
 			// Save entry information (and location information if it's present) and dismiss the view
 //			entries.append(Interval(mainLabel: mainLabel, scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, notesStr: notes, usesLocation: useLocation, startLoc: startLocation?.placemark, endLoc: endLocation?.placemark))
+            let newEntry = Interval(scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, notesStr: notes, usesLocation: useLocation, startLoc: startLocation?.placemark, endLoc: endLocation?.placemark)
+            entries.append(newEntry)
 			performUpdateOnCoreData()
 			
 			dismiss(animated: true, completion: nil)
@@ -219,25 +217,33 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		return true
 		
 	}
+    
+    
+    // MARK: - Core Data helper
 	
 	// Update the new entry in the currentTrip
-	func performUpdateOnCoreData() {
-		
-		currentTrip.entries = self.entries as NSArray
-		guard let moc = self.moc else {
-			return
-		}
-		
-		if moc.hasChanges {
-			
-			do {
-				try moc.save()
-			} catch {
-			}
-			
-		}
-		
-	}
+    func prepareForUpdateOnCoreData() {
+        
+        currentTrip.entries = self.entries as NSArray
+        
+    }
+    
+//	func performUpdateOnCoreData() {
+//		
+//		guard let moc = self.moc else {
+//			return
+//		}
+//		
+//		if moc.hasChanges {
+//			
+//			do {
+//				try moc.save()
+//			} catch {
+//			}
+//			
+//		}
+//		
+//	}
 	
 	
 	// MARK: - Text view delegate and action

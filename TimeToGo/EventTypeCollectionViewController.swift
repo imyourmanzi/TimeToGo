@@ -14,12 +14,7 @@ class EventTypeCollectionViewController: UICollectionViewController {
 
     // Current VC variables
     var eventTypes: [String] = ["1","2","3"]
-    var typeIndexPath: IndexPath = IndexPath()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
+    var typeIndexPath = IndexPath()
     
 
     // MARK: - Collection View data source
@@ -29,7 +24,6 @@ class EventTypeCollectionViewController: UICollectionViewController {
         return 1
         
     }
-
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         

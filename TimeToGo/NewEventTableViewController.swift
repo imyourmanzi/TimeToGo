@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
+class NewEventTableViewController: UITableViewController, UITextFieldDelegate, CoreDataHelper {
 	
 	// Interface Builder variables
 	@IBOutlet var eventNameTextfield: UITextField!
@@ -38,7 +38,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
 //		self.tableView.backgroundView = backgroundImageView
 		
 		// Get the app's managedObjectContext
-		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		moc = getContext()
         
 		// Set up tripNameTextfield
 		eventNameTextfield.delegate = self
@@ -263,6 +263,20 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
 	}
 	
 	
+    // MARK: - Core Data helper
+    
+    func prepareForUpdateOnCoreData() {
+        
+        // Follow normal procedure to create the trip and display the schedule
+        let newEvent = NSEntityDescription.insertNewObject(forEntityName: "Trip", into: moc!) as! Trip
+        newEvent.tripName = self.eventName
+        newEvent.flightDate = self.eventDate
+        newEvent.eventType = self.eventType
+        newEvent.entries = self.defaultEntries as NSArray
+        
+    }
+    
+    
 	// MARK: - Navigation
 	
 	func cancelNewEvent(_ sender: UIBarButtonItem) {
@@ -290,23 +304,20 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate {
 		
 		if nameIsUnique {
 			
-			// Follow normal procedure to create the trip and display the schedule
-			let newEvent = NSEntityDescription.insertNewObject(forEntityName: "Trip", into: moc!) as! Trip
-			newEvent.tripName = self.eventName
-			newEvent.flightDate = self.eventDate
-			newEvent.entries = self.defaultEntries as NSArray
-			guard let moc = self.moc else {
-				return
-			}
-			
-			if moc.hasChanges {
-				
-				do {
-					try moc.save()
-				} catch {
-				}
-				
-			}
+            performUpdateOnCoreData()
+            
+//			guard let moc = self.moc else {
+//				return
+//			}
+//			
+//			if moc.hasChanges {
+//				
+//				do {
+//					try moc.save()
+//				} catch {
+//				}
+//				
+//			}
 			
 			UserDefaults.standard.set(self.eventName, forKey: "currentTripName")
 			

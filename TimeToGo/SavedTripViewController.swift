@@ -37,11 +37,7 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
 		
 	}
 	
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-	
-	
+    
 	// MARK: - Table view data source
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -61,9 +57,7 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
 		
 		let cell = tableView.dequeueReusableCell(withIdentifier: "entryCell", for: indexPath)
 		
-		var entry: Interval!
-		entry = entries[indexPath.row]
-		
+		let entry = entries[indexPath.row]
 		cell.textLabel?.text = entry.scheduleLabel
         cell.detailTextLabel?.text = entry.stringFromTimeValue()
 		

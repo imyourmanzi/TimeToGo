@@ -7,20 +7,30 @@
 //
 
 import UIKit
+import CoreData
 
 private let reuseIdentifier = "categoryCell"
 
-class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CoreDataHelper {
+    
+    // CoreData variables
+    var moc: NSManagedObjectContext?
+    var allTrips: [Trip] = []
+    var trip: Trip!
+    var entries: [Interval] = []
     
     // Current VC variables
     let titleImageView = UIImageView(image: UIImage(named: "title"))
     var categoriesFileData: String = ""
     var eventCategories: [String] = ["A","B","C"]
-    var categoryIndexPath: IndexPath = IndexPath()
+    var categoryIndexPath = IndexPath()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Assign the moc CoreData variable by referencing the AppDelegate's
+        moc = getContext()
+        
         // Set the custom title for the navigation bar
         self.navigationItem.titleView = titleImageView
 
@@ -29,6 +39,57 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             eventCategories = getEventCategories(from: fileData)
         }
 //        print("eventCategories in viewDidLoad \(eventCategories)")
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        // If not done already, move all the main labels' contents into their respective notes and set them nil
+        if !(UserDefaults.standard.bool(forKey: "movedMainLabel")) {
+        
+            let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
+            allTrips = (try! moc!.fetch(fetchRequest))
+            
+            var i = 0
+            for trip in allTrips {
+                
+    //            print("trip", i, trip.tripName)
+                
+                self.entries = trip.entries as! [Interval]
+                
+                var j = 0
+                for entry in self.entries {
+                
+    //                print("entry", j, entry.description)
+                
+                    if let mainLabel = entry.mainLabel {
+                        
+    //                    print("mainLabel exists in entry", j)
+                        
+                        if let notes = entry.notesStr {
+                            entry.notesStr = "Main Label: \(mainLabel)\n\n\(notes)"
+                        } else {
+                            entry.notesStr = "Main Label: \(mainLabel)"
+                        }
+                        
+                        entry.mainLabel = nil
+                        
+                    }
+                    
+                    self.entries[j] = entry
+                    j += 1
+                    
+                }
+                
+                allTrips[i].entries = self.entries as NSArray
+                i += 1
+                
+            }
+            
+            // Update the database
+            UserDefaults.standard.set(true, forKey: "movedMainLabel")
+            
+        }
         
     }
     
@@ -172,19 +233,42 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     
+    // MARK: - Core Data helper
+    
+//    func performUpdateOnCoreData() {
+//        
+//        print("performing update")
+//
+//        guard let moc = self.moc else {
+//            return
+//        }
+//        
+//        if moc.hasChanges {
+//            
+//            do {
+//                print("saving")
+//                try moc.save()
+//            } catch {
+//            }
+//            
+//        }
+//        
+//    }
+    
+    
     // MARK: - Navigation
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        performUpdateOnCoreData()
+        
+    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-//        if let newEventVC = segue.destination as? NewEventTableViewController {
-//            
-//            newEventVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: newEventVC, action: #selector(newEventVC.cancelNewEvent))
-//            
-//        }
-        
         if let eventTypeVC = segue.destination as? EventTypeCollectionViewController {
             
-            eventTypeVC.navigationItem.title = (eventCategories[categoryIndexPath.item]).replacingOccurrences(of: "^", with: " ")
+            eventTypeVC.navigationItem.title = (eventCategories[categoryIndexPath.item]).components(separatedBy: "^")[1]
             eventTypeVC.eventTypes = getEventTypes(from: categoriesFileData, ofCategory: eventCategories[categoryIndexPath.item])
             
         }

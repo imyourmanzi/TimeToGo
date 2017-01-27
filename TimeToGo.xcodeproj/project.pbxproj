@@ -13,7 +13,38 @@
 		8A44A8481E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A8471E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift */; };
 		8A5D1D041E3911C500D0CD95 /* EventTypeData.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */; };
 		8A5D1D061E3911D100D0CD95 /* Plane.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D051E3911D100D0CD95 /* Plane.csv */; };
+		8A5D1D081E3913B400D0CD95 /* Train.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D071E3913B400D0CD95 /* Train.csv */; };
 		8A8F8D4C1E32D837006C30F0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */; };
+		8A9C81261E3A52A100A83043 /* Car.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81251E3A52A100A83043 /* Car.csv */; };
+		8A9C81281E3A52B100A83043 /* Bus.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81271E3A52B100A83043 /* Bus.csv */; };
+		8A9C812A1E3A52C000A83043 /* Boat.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81291E3A52C000A83043 /* Boat.csv */; };
+		8A9C812D1E3A52FF00A83043 /* Hockey.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C812C1E3A52FF00A83043 /* Hockey.csv */; };
+		8A9C813D1E3A552800A83043 /* Baseball.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C812E1E3A552800A83043 /* Baseball.csv */; };
+		8A9C813E1E3A552800A83043 /* Basketball.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C812F1E3A552800A83043 /* Basketball.csv */; };
+		8A9C813F1E3A552800A83043 /* Cheer.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81301E3A552800A83043 /* Cheer.csv */; };
+		8A9C81401E3A552800A83043 /* Dance.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81311E3A552800A83043 /* Dance.csv */; };
+		8A9C81411E3A552800A83043 /* Field Hockey.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81321E3A552800A83043 /* Field Hockey.csv */; };
+		8A9C81421E3A552800A83043 /* Football.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81331E3A552800A83043 /* Football.csv */; };
+		8A9C81431E3A552800A83043 /* Golf.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81341E3A552800A83043 /* Golf.csv */; };
+		8A9C81441E3A552800A83043 /* Gymnastics.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81351E3A552800A83043 /* Gymnastics.csv */; };
+		8A9C81451E3A552800A83043 /* Lacrosse.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81361E3A552800A83043 /* Lacrosse.csv */; };
+		8A9C81461E3A552800A83043 /* Martial Arts.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81371E3A552800A83043 /* Martial Arts.csv */; };
+		8A9C81471E3A552800A83043 /* Soccer.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81381E3A552800A83043 /* Soccer.csv */; };
+		8A9C81481E3A552800A83043 /* Swimming.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81391E3A552800A83043 /* Swimming.csv */; };
+		8A9C81491E3A552800A83043 /* Tennis.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C813A1E3A552800A83043 /* Tennis.csv */; };
+		8A9C814A1E3A552800A83043 /* Track & Field.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C813B1E3A552800A83043 /* Track & Field.csv */; };
+		8A9C814B1E3A552800A83043 /* Volleyball.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C813C1E3A552800A83043 /* Volleyball.csv */; };
+		8A9C81511E3A55A200A83043 /* Date.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C814D1E3A55A200A83043 /* Date.csv */; };
+		8A9C81521E3A55A200A83043 /* Party.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C814E1E3A55A200A83043 /* Party.csv */; };
+		8A9C81531E3A55A200A83043 /* School Dance.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C814F1E3A55A200A83043 /* School Dance.csv */; };
+		8A9C81541E3A55A200A83043 /* Wedding.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81501E3A55A200A83043 /* Wedding.csv */; };
+		8A9C81591E3A55EF00A83043 /* Club.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81561E3A55EF00A83043 /* Club.csv */; };
+		8A9C815A1E3A55EF00A83043 /* Music.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81571E3A55EF00A83043 /* Music.csv */; };
+		8A9C815B1E3A55EF00A83043 /* Theater.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81581E3A55EF00A83043 /* Theater.csv */; };
+		8A9C81601E3A564700A83043 /* School.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815D1E3A564700A83043 /* School.csv */; };
+		8A9C81611E3A564700A83043 /* Work.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815E1E3A564700A83043 /* Work.csv */; };
+		8A9C81621E3A564700A83043 /* Worship.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815F1E3A564700A83043 /* Worship.csv */; };
+		8A9C81641E3A569600A83043 /* Custom.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81631E3A569600A83043 /* Custom.csv */; };
 		98418DAC1B4847AA00ADC2D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */; };
 		98418DAF1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAD1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld */; };
 		98418DB41B4847AB00ADC2D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98418DB21B4847AB00ADC2D8 /* Main.storyboard */; };
@@ -56,7 +87,38 @@
 		8A44A8471E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataExtrasProtocol.swift; sourceTree = "<group>"; };
 		8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = EventTypeData.csv; path = csv_data/EventTypeData.csv; sourceTree = "<group>"; };
 		8A5D1D051E3911D100D0CD95 /* Plane.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Plane.csv; path = csv_data/Plane.csv; sourceTree = "<group>"; };
+		8A5D1D071E3913B400D0CD95 /* Train.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Train.csv; path = csv_data/Train.csv; sourceTree = "<group>"; };
 		8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		8A9C81251E3A52A100A83043 /* Car.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Car.csv; path = csv_data/Car.csv; sourceTree = "<group>"; };
+		8A9C81271E3A52B100A83043 /* Bus.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Bus.csv; path = csv_data/Bus.csv; sourceTree = "<group>"; };
+		8A9C81291E3A52C000A83043 /* Boat.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Boat.csv; path = csv_data/Boat.csv; sourceTree = "<group>"; };
+		8A9C812C1E3A52FF00A83043 /* Hockey.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Hockey.csv; path = csv_data/Hockey.csv; sourceTree = "<group>"; };
+		8A9C812E1E3A552800A83043 /* Baseball.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Baseball.csv; path = csv_data/Baseball.csv; sourceTree = "<group>"; };
+		8A9C812F1E3A552800A83043 /* Basketball.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Basketball.csv; path = csv_data/Basketball.csv; sourceTree = "<group>"; };
+		8A9C81301E3A552800A83043 /* Cheer.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Cheer.csv; path = csv_data/Cheer.csv; sourceTree = "<group>"; };
+		8A9C81311E3A552800A83043 /* Dance.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Dance.csv; path = csv_data/Dance.csv; sourceTree = "<group>"; };
+		8A9C81321E3A552800A83043 /* Field Hockey.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "Field Hockey.csv"; path = "csv_data/Field Hockey.csv"; sourceTree = "<group>"; };
+		8A9C81331E3A552800A83043 /* Football.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Football.csv; path = csv_data/Football.csv; sourceTree = "<group>"; };
+		8A9C81341E3A552800A83043 /* Golf.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Golf.csv; path = csv_data/Golf.csv; sourceTree = "<group>"; };
+		8A9C81351E3A552800A83043 /* Gymnastics.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Gymnastics.csv; path = csv_data/Gymnastics.csv; sourceTree = "<group>"; };
+		8A9C81361E3A552800A83043 /* Lacrosse.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Lacrosse.csv; path = csv_data/Lacrosse.csv; sourceTree = "<group>"; };
+		8A9C81371E3A552800A83043 /* Martial Arts.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "Martial Arts.csv"; path = "csv_data/Martial Arts.csv"; sourceTree = "<group>"; };
+		8A9C81381E3A552800A83043 /* Soccer.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Soccer.csv; path = csv_data/Soccer.csv; sourceTree = "<group>"; };
+		8A9C81391E3A552800A83043 /* Swimming.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Swimming.csv; path = csv_data/Swimming.csv; sourceTree = "<group>"; };
+		8A9C813A1E3A552800A83043 /* Tennis.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Tennis.csv; path = csv_data/Tennis.csv; sourceTree = "<group>"; };
+		8A9C813B1E3A552800A83043 /* Track & Field.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "Track & Field.csv"; path = "csv_data/Track & Field.csv"; sourceTree = "<group>"; };
+		8A9C813C1E3A552800A83043 /* Volleyball.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Volleyball.csv; path = csv_data/Volleyball.csv; sourceTree = "<group>"; };
+		8A9C814D1E3A55A200A83043 /* Date.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Date.csv; path = csv_data/Date.csv; sourceTree = "<group>"; };
+		8A9C814E1E3A55A200A83043 /* Party.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Party.csv; path = csv_data/Party.csv; sourceTree = "<group>"; };
+		8A9C814F1E3A55A200A83043 /* School Dance.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "School Dance.csv"; path = "csv_data/School Dance.csv"; sourceTree = "<group>"; };
+		8A9C81501E3A55A200A83043 /* Wedding.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wedding.csv; path = csv_data/Wedding.csv; sourceTree = "<group>"; };
+		8A9C81561E3A55EF00A83043 /* Club.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Club.csv; path = csv_data/Club.csv; sourceTree = "<group>"; };
+		8A9C81571E3A55EF00A83043 /* Music.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Music.csv; path = csv_data/Music.csv; sourceTree = "<group>"; };
+		8A9C81581E3A55EF00A83043 /* Theater.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Theater.csv; path = csv_data/Theater.csv; sourceTree = "<group>"; };
+		8A9C815D1E3A564700A83043 /* School.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = School.csv; path = csv_data/School.csv; sourceTree = "<group>"; };
+		8A9C815E1E3A564700A83043 /* Work.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Work.csv; path = csv_data/Work.csv; sourceTree = "<group>"; };
+		8A9C815F1E3A564700A83043 /* Worship.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Worship.csv; path = csv_data/Worship.csv; sourceTree = "<group>"; };
+		8A9C81631E3A569600A83043 /* Custom.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Custom.csv; path = csv_data/Custom.csv; sourceTree = "<group>"; };
 		98418DA61B4847AA00ADC2D8 /* TimeToGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeToGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98418DAA1B4847AA00ADC2D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -108,6 +170,11 @@
 			children = (
 				8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */,
 				8A44A8431E37B38500B1CB09 /* Travel Types Defaults */,
+				8A9C812B1E3A52C800A83043 /* Sports Types Defaults */,
+				8A9C814C1E3A555B00A83043 /* Social Activities Types Defaults */,
+				8A9C81551E3A55B300A83043 /* Extracurriculars Types Defaults */,
+				8A9C815C1E3A55FF00A83043 /* Responsibilities Types Defaults */,
+				8A9C81631E3A569600A83043 /* Custom.csv */,
 			);
 			name = "Event Categories and Types";
 			sourceTree = "<group>";
@@ -115,9 +182,67 @@
 		8A44A8431E37B38500B1CB09 /* Travel Types Defaults */ = {
 			isa = PBXGroup;
 			children = (
+				8A9C81291E3A52C000A83043 /* Boat.csv */,
+				8A9C81271E3A52B100A83043 /* Bus.csv */,
+				8A9C81251E3A52A100A83043 /* Car.csv */,
 				8A5D1D051E3911D100D0CD95 /* Plane.csv */,
+				8A5D1D071E3913B400D0CD95 /* Train.csv */,
 			);
 			name = "Travel Types Defaults";
+			sourceTree = "<group>";
+		};
+		8A9C812B1E3A52C800A83043 /* Sports Types Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				8A9C812E1E3A552800A83043 /* Baseball.csv */,
+				8A9C812F1E3A552800A83043 /* Basketball.csv */,
+				8A9C81301E3A552800A83043 /* Cheer.csv */,
+				8A9C81311E3A552800A83043 /* Dance.csv */,
+				8A9C81321E3A552800A83043 /* Field Hockey.csv */,
+				8A9C81331E3A552800A83043 /* Football.csv */,
+				8A9C81341E3A552800A83043 /* Golf.csv */,
+				8A9C81351E3A552800A83043 /* Gymnastics.csv */,
+				8A9C812C1E3A52FF00A83043 /* Hockey.csv */,
+				8A9C81361E3A552800A83043 /* Lacrosse.csv */,
+				8A9C81371E3A552800A83043 /* Martial Arts.csv */,
+				8A9C81381E3A552800A83043 /* Soccer.csv */,
+				8A9C81391E3A552800A83043 /* Swimming.csv */,
+				8A9C813A1E3A552800A83043 /* Tennis.csv */,
+				8A9C813B1E3A552800A83043 /* Track & Field.csv */,
+				8A9C813C1E3A552800A83043 /* Volleyball.csv */,
+			);
+			name = "Sports Types Defaults";
+			sourceTree = "<group>";
+		};
+		8A9C814C1E3A555B00A83043 /* Social Activities Types Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				8A9C814D1E3A55A200A83043 /* Date.csv */,
+				8A9C814E1E3A55A200A83043 /* Party.csv */,
+				8A9C814F1E3A55A200A83043 /* School Dance.csv */,
+				8A9C81501E3A55A200A83043 /* Wedding.csv */,
+			);
+			name = "Social Activities Types Defaults";
+			sourceTree = "<group>";
+		};
+		8A9C81551E3A55B300A83043 /* Extracurriculars Types Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				8A9C81561E3A55EF00A83043 /* Club.csv */,
+				8A9C81571E3A55EF00A83043 /* Music.csv */,
+				8A9C81581E3A55EF00A83043 /* Theater.csv */,
+			);
+			name = "Extracurriculars Types Defaults";
+			sourceTree = "<group>";
+		};
+		8A9C815C1E3A55FF00A83043 /* Responsibilities Types Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				8A9C815D1E3A564700A83043 /* School.csv */,
+				8A9C815E1E3A564700A83043 /* Work.csv */,
+				8A9C815F1E3A564700A83043 /* Worship.csv */,
+			);
+			name = "Responsibilities Types Defaults";
 			sourceTree = "<group>";
 		};
 		98418D9D1B4847AA00ADC2D8 = {
@@ -285,8 +410,39 @@
 			buildActionMask = 2147483647;
 			files = (
 				98418DB41B4847AB00ADC2D8 /* Main.storyboard in Resources */,
+				8A9C81481E3A552800A83043 /* Swimming.csv in Resources */,
+				8A9C81621E3A564700A83043 /* Worship.csv in Resources */,
+				8A9C81641E3A569600A83043 /* Custom.csv in Resources */,
+				8A9C81261E3A52A100A83043 /* Car.csv in Resources */,
+				8A9C814B1E3A552800A83043 /* Volleyball.csv in Resources */,
+				8A9C81511E3A55A200A83043 /* Date.csv in Resources */,
+				8A9C81531E3A55A200A83043 /* School Dance.csv in Resources */,
+				8A9C81461E3A552800A83043 /* Martial Arts.csv in Resources */,
+				8A9C813D1E3A552800A83043 /* Baseball.csv in Resources */,
 				8A5D1D041E3911C500D0CD95 /* EventTypeData.csv in Resources */,
+				8A9C81281E3A52B100A83043 /* Bus.csv in Resources */,
+				8A9C81471E3A552800A83043 /* Soccer.csv in Resources */,
+				8A9C813E1E3A552800A83043 /* Basketball.csv in Resources */,
+				8A9C81441E3A552800A83043 /* Gymnastics.csv in Resources */,
+				8A9C81521E3A55A200A83043 /* Party.csv in Resources */,
+				8A9C814A1E3A552800A83043 /* Track & Field.csv in Resources */,
+				8A9C81401E3A552800A83043 /* Dance.csv in Resources */,
+				8A9C81541E3A55A200A83043 /* Wedding.csv in Resources */,
+				8A9C81601E3A564700A83043 /* School.csv in Resources */,
 				98418DB91B4847AB00ADC2D8 /* LaunchScreen.xib in Resources */,
+				8A9C815B1E3A55EF00A83043 /* Theater.csv in Resources */,
+				8A9C81591E3A55EF00A83043 /* Club.csv in Resources */,
+				8A5D1D081E3913B400D0CD95 /* Train.csv in Resources */,
+				8A9C81491E3A552800A83043 /* Tennis.csv in Resources */,
+				8A9C81421E3A552800A83043 /* Football.csv in Resources */,
+				8A9C81431E3A552800A83043 /* Golf.csv in Resources */,
+				8A9C81611E3A564700A83043 /* Work.csv in Resources */,
+				8A9C81411E3A552800A83043 /* Field Hockey.csv in Resources */,
+				8A9C812A1E3A52C000A83043 /* Boat.csv in Resources */,
+				8A9C81451E3A552800A83043 /* Lacrosse.csv in Resources */,
+				8A9C813F1E3A552800A83043 /* Cheer.csv in Resources */,
+				8A9C812D1E3A52FF00A83043 /* Hockey.csv in Resources */,
+				8A9C815A1E3A55EF00A83043 /* Music.csv in Resources */,
 				8A5D1D061E3911D100D0CD95 /* Plane.csv in Resources */,
 				98418DB61B4847AB00ADC2D8 /* Images.xcassets in Resources */,
 			);

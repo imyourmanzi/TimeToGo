@@ -29,9 +29,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UINavigationBar.appearance().barTintColor = UIColor(red: 46/255, green: 172/255, blue: 240/255, alpha: 1.0)
 		UINavigationBar.appearance().tintColor = UIColor.white
 		
-        // Register a default for the currentTripName
+        // Register a default for:
+        // - the currentTripName
+        // - whether or not the mainLabel was moved
 		let defaults = UserDefaults.standard
 		defaults.register(defaults: ["currentTripName": ""])
+        defaults.register(defaults: ["movedMainLabel": false])
 		
 		return true
 	}
@@ -73,6 +76,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	    // The directory the application uses to store the Core Data store file. This code uses a directory named "com.VMM.TimeToGo" in the application's documents Application Support directory.
 	    let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
 	    
+//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!)
+        
         return urls[urls.count-1]
         
 	}()

@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class AllTripsTableViewController: UITableViewController, UISearchResultsUpdating {
+class AllTripsTableViewController: UITableViewController, UISearchResultsUpdating, CoreDataHelper {
     
 	// CoreData variables
 	var moc: NSManagedObjectContext?
@@ -18,8 +18,8 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 	var currentTripName: String!
 	
 	// Current VC variables
-	var indexPathForSaved: IndexPath?
-	var destinationVC: UIViewController?
+	var savedTripIndexPath = IndexPath()
+//	var destinationVC: UIViewController?
 	var searchResultsController = UISearchController()
 	
     override func viewDidLoad() {
@@ -29,10 +29,12 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
         self.navigationItem.rightBarButtonItem = self.editButtonItem
 		
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		moc = getContext()
 		
 		// Set up the search controller
-		if #available(iOS 9.0, *) {
+        if #available(iOS 10.0, *) {
+            searchResultsController.loadViewIfNeeded()
+        } else if #available(iOS 9.0, *) {
 			searchResultsController.loadViewIfNeeded()
 		} else {
 			searchResultsController.loadView()
@@ -51,10 +53,6 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 		tableView.reloadData()
 		
 	}
-	
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
 
 	override func viewWillAppear(_ animated: Bool) {
 		
@@ -122,19 +120,19 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
         }
 		
 		// Save the state of the persistent store
-		guard let moc = self.moc else {
-			return
-		}
-		
-		if moc.hasChanges {
-			
-			do {
-				try moc.save()
-			} catch {
-				
-			}
-			
-		}
+        performUpdateOnCoreData()
+//		guard let moc = self.moc else {
+//			return
+//		}
+//		
+//		if moc.hasChanges {
+//			
+//			do {
+//				try moc.save()
+//			} catch {
+//			}
+//			
+//		}
 		
 		// Check for more existing trips, if there are not, redirect the user back to the new trip screen
 		if allTrips.count <= 0 {
@@ -171,7 +169,7 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 	
 	override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
 		
-		self.indexPathForSaved = indexPath
+		savedTripIndexPath = indexPath
 		
 	}
 	
@@ -197,28 +195,17 @@ class AllTripsTableViewController: UITableViewController, UISearchResultsUpdatin
 		
 		searchResultsController.isActive = false
 		
-		destinationVC = segue.destination
+        if let savedTripVC = segue.destination as? SavedTripViewController {
+            
+            let selectedTrip = allTrips[savedTripIndexPath.row]
+            
+            savedTripVC.title = selectedTrip.tripName
+            savedTripVC.tripName = selectedTrip.tripName
+            savedTripVC.flightDate = selectedTrip.flightDate
+            savedTripVC.entries = selectedTrip.entries as! [Interval]
+            
+        }
 		
 	}
-	
-	override func viewWillDisappear(_ animated: Bool) {
-		
-		// Prepare the following screen if a previous trip's cell was selected to be viewed
-		guard let indexPath = indexPathForSaved else {
-			return
-		}
-		
-		guard let savedTripVC = destinationVC as? SavedTripViewController else {
-			return
-		}
-		
-		let selectedTrip = allTrips[indexPath.row]
-		
-		savedTripVC.title = selectedTrip.tripName
-		savedTripVC.tripName = selectedTrip.tripName
-		savedTripVC.flightDate = selectedTrip.flightDate
-		savedTripVC.entries = selectedTrip.entries as! [Interval]
-		
-    }
-
+    
 }

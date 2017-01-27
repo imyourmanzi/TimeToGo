@@ -32,11 +32,11 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	var entries = [Interval]()
 	
 	// Current trip variables
-	var parentVC: EntriesViewController!
-	var indexPath: IndexPath!
-	var currentEntry: Interval!
+//	var parentVC: EntriesViewController!
 	
 	// Current entry variables
+    var currentEntryIndexPath: IndexPath!
+    var currentEntry: Interval!
 	var schedLabel: String!
 	var timeValueHours: Int!
 	var timeValueMins: Int!
@@ -60,16 +60,16 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		super.viewDidLoad()
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
-		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		moc = getContext()
 		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
 		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
 		let trips = (try! moc!.fetch(fetchRequest))
 		currentTrip = trips[0]
 		self.entries = currentTrip.entries as! [Interval]
 		
-		parentVC = self.navigationController?.viewControllers[0] as! EntriesViewController
-		indexPath = parentVC.tableView.indexPathForSelectedRow
-		currentEntry = self.entries[indexPath.row]
+//		parentVC = self.navigationController?.viewControllers[0] as! EntriesViewController
+//		indexPath = parentVC.tableView.indexPathForSelectedRow
+//		currentEntry = self.entries[indexPath.row]
 		
 		// Setting the row heights for the table view
 		self.tableView.rowHeight = UITableViewAutomaticDimension
@@ -768,20 +768,10 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	
-	// MARK: - Navigation
     
-    override func viewWillDisappear(_ animated: Bool) {
-        
-        // Save the currentEntry's properities to CoreData
-        performUpdateOnCoreData()
-        
-        schedLabelTextfield.resignFirstResponder()
-        notesTextview.resignFirstResponder()
-        
-    }
-
-    func performUpdateOnCoreData() {
+    // MARK: - Core Data helper
+    
+    func prepareForUpdateOnCoreData() {
         
         currentEntry.scheduleLabel = self.schedLabel
         currentEntry.timeValueHours = self.timeValueHours
@@ -802,22 +792,39 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
             currentEntry.endLocation = nil
             
         }
-        self.entries[indexPath.row] = currentEntry
+        self.entries[currentEntryIndexPath.row] = currentEntry
         currentTrip.entries = self.entries as NSArray
         
-        guard let moc = self.moc else {
-            return
-        }
+    }
+    
+	
+	// MARK: - Navigation
+    
+    override func viewWillDisappear(_ animated: Bool) {
         
-        if moc.hasChanges {
-            
-            do {
-                try moc.save()
-            } catch {
-            }
-            
-        }
+        // Save the currentEntry's properities to CoreData
+        performUpdateOnCoreData()
+        
+        schedLabelTextfield.resignFirstResponder()
+        notesTextview.resignFirstResponder()
         
     }
+
+//    func performUpdateOnCoreData() {
+//        
+//        guard let moc = self.moc else {
+//            return
+//        }
+//        
+//        if moc.hasChanges {
+//            
+//            do {
+//                try moc.save()
+//            } catch {
+//            }
+//            
+//        }
+//        
+//    }
 	
 }

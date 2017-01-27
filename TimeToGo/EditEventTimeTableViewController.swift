@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class EditEventTimeTableViewController: UITableViewController {
+class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
 	
 	// Interface Builder variables
 	@IBOutlet var eventDatePicker: UIDatePicker!
@@ -30,7 +30,7 @@ class EditEventTimeTableViewController: UITableViewController {
         super.viewDidLoad()
 		
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		moc = getContext()
 		
         // Set the time zone
         let components = Calendar.current.dateComponents(in: TimeZone.current, from: eventDate)
@@ -41,10 +41,6 @@ class EditEventTimeTableViewController: UITableViewController {
 		dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
 		
 	}
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
 	
 	@IBAction func eventDateChanged(_ sender: UIDatePicker) {
 		
@@ -150,25 +146,34 @@ class EditEventTimeTableViewController: UITableViewController {
 		
 	}
 	
+    
+    // MARK: - Core Data helper
+    
+    func prepareForUpdateOnCoreData() {
+        
+        currentEvent.flightDate = self.eventDate
+        
+    }
+    
 	
 	// MARK: - Navigation
 	
 	override func viewWillDisappear(_ animated: Bool) {
-		
-		currentEvent.flightDate = self.eventDate
-		
-		guard let moc = self.moc else {
-			return
-		}
-		
-		if moc.hasChanges {
-			
-			do {
-				try moc.save()
-			} catch {
-			}
-			
-		}
+
+        performUpdateOnCoreData()
+        
+//		guard let moc = self.moc else {
+//			return
+//		}
+//		
+//		if moc.hasChanges {
+//			
+//			do {
+//				try moc.save()
+//			} catch {
+//			}
+//			
+//		}
 
 	}
 

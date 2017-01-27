@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class EditTripNameTableViewController: UITableViewController, UITextFieldDelegate {
+class EditTripNameTableViewController: UITableViewController, UITextFieldDelegate, CoreDataHelper {
 
 	// Interface Builder variables
 	@IBOutlet var tripNameTextfield: UITextField!
@@ -25,17 +25,13 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
         super.viewDidLoad()
 
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		moc = getContext()
 		
 		// Set up the tripNameTextfield
 		tripNameTextfield.delegate = self
 		tripNameTextfield.text = tripName
 		
 	}
-	
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
 
 	@IBAction func tripNameDidChange(_ sender: UITextField) {
 		
@@ -56,6 +52,15 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 	}
 
 	
+    // MARK: - Core Data helper
+    
+    func prepareForUpdateOnCoreData() {
+        
+        currentTrip.tripName = self.tripName
+        
+    }
+    
+    
 	// MARK: - Navigation
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -63,7 +68,7 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 		if tripNameTextfield.text!.isEmpty || tripNameTextfield.text == nil {
 			
 			// Alert the user that an entry cannot be saved if it does not have a tripLabel
-			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Trip Name field was empty.", preferredStyle: UIAlertControllerStyle.alert)
+			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Event Name field was empty.", preferredStyle: UIAlertControllerStyle.alert)
 			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
 				alertVC.dismiss(animated: true, completion: nil)
 			})
@@ -72,21 +77,21 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 			
 		} else {
 			
-			currentTrip.tripName = self.tripName
+			performUpdateOnCoreData()
 			
-			guard let moc = self.moc else {
-				return
-			}
-			
-			if moc.hasChanges {
-				
-				do {
-					try moc.save()
-				} catch {
-					
-				}
-				
-			}
+//			guard let moc = self.moc else {
+//				return
+//			}
+//			
+//			if moc.hasChanges {
+//				
+//				do {
+//					try moc.save()
+//				} catch {
+//					
+//				}
+//				
+//			}
 		
 			// Update the currentTripName so that other views will reference the updated name
 			UserDefaults.standard.set(self.tripName, forKey: "currentTripName")

@@ -19,6 +19,9 @@ class EntriesViewController: UITableViewController, CoreDataHelper {
 	var entries = [Interval]()
 	var flightDate: Date!
 	
+    // Current VC variables
+    var selectedEntryIndexPath = IndexPath()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 		
@@ -26,14 +29,10 @@ class EntriesViewController: UITableViewController, CoreDataHelper {
 		self.navigationItem.leftBarButtonItem = self.editButtonItem
 		
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+		moc = getContext()
 		
     }
 
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-	}
-	
 	override func viewWillAppear(_ animated: Bool) {
 		
 		// Fetch the current trip from the persistent store and assign the CoreData variables
@@ -48,6 +47,10 @@ class EntriesViewController: UITableViewController, CoreDataHelper {
 		performUpdateOnCoreData()
 		tableView.reloadData()
 		
+//        for entry in entries {
+//            print(entry.description)
+//        }
+        
 	}
 	
 	
@@ -78,13 +81,12 @@ class EntriesViewController: UITableViewController, CoreDataHelper {
 		cell.textLabel?.text = entry.scheduleLabel
         cell.detailTextLabel?.text = entry.stringFromTimeValue()
         
-        if entry.mainLabel != nil {
-            entry.notesStr = "Main Label: \(entry.mainLabel)\n\n\(entry.notesStr)"
-        }
-		
 		return cell
 		
 	}
+    
+    
+    // MARK: - Table view delegate
 	
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		
@@ -102,32 +104,47 @@ class EntriesViewController: UITableViewController, CoreDataHelper {
 	
 	override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
 		
-		let movedEntry = entries.remove(at: (sourceIndexPath as NSIndexPath).row)
-		entries.insert(movedEntry, at: (destinationIndexPath as NSIndexPath).row)
+		let movedEntry = entries.remove(at: sourceIndexPath.row)
+		entries.insert(movedEntry, at: destinationIndexPath.row)
 		
 		performUpdateOnCoreData()
 		
 	}
-	
-	func performUpdateOnCoreData() {
-		
-		currentTrip.entries = self.entries as NSArray
-		
-		guard let moc = self.moc else {
-			return
-		}
-		
-		if moc.hasChanges {
-			
-			do {
-				try moc.save()
-			} catch {
-				
-			}
-			
-		}
-		
-	}
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        
+        selectedEntryIndexPath = indexPath
+        
+        return indexPath
+        
+    }
+    
+    
+    // MARK: - Core Data helper
+    
+    func prepareForUpdateOnCoreData() {
+        
+        currentTrip.entries = self.entries as NSArray
+        
+    }
+    
+//	func performUpdateOnCoreData() {
+//		
+//		guard let moc = self.moc else {
+//			return
+//		}
+//		
+//		if moc.hasChanges {
+//			
+//			do {
+//				try moc.save()
+//			} catch {
+//				
+//			}
+//			
+//		}
+//		
+//	}
 		
 	
     // MARK: - Navigation
@@ -135,26 +152,27 @@ class EntriesViewController: UITableViewController, CoreDataHelper {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 		// Prepare a selection's view to have all of the information of the current selection's row and associated data
-		let indexPath: IndexPath! = tableView.indexPathForSelectedRow
-		
-		guard let destVC = segue.destination as? SelectedEntryTableViewController else {
-			return
+		if let destVC = segue.destination as? SelectedEntryTableViewController {
+            
+            let selectedEntry = entries[selectedEntryIndexPath.row]
+            
+            destVC.currentTripName = currentTripName
+            destVC.currentEntryIndexPath = selectedEntryIndexPath
+            destVC.currentEntry = selectedEntry
+            destVC.schedLabel = selectedEntry.scheduleLabel
+            destVC.timeValueHours = selectedEntry.timeValueHours
+            destVC.timeValueMins = selectedEntry.timeValueMins
+            destVC.intervalTimeStr = selectedEntry.stringFromTimeValue()
+            destVC.notes = selectedEntry.notesStr
+            if selectedEntry.useLocation == true && selectedEntry.startLocation != nil && selectedEntry.endLocation != nil {
+                
+                destVC.startLocation = MKMapItem(placemark: selectedEntry.startLocation!)
+                destVC.endLocation = MKMapItem(placemark: selectedEntry.endLocation!)
+                
+            }
+            
 		}
-		let selectedEntry = entries[indexPath.row]
-		
-		destVC.currentTripName = currentTripName
-		destVC.schedLabel = selectedEntry.scheduleLabel
-		destVC.timeValueHours = selectedEntry.timeValueHours
-		destVC.timeValueMins = selectedEntry.timeValueMins
-		destVC.intervalTimeStr = selectedEntry.stringFromTimeValue()
-		destVC.notes = selectedEntry.notesStr
-		if selectedEntry.useLocation == true && selectedEntry.startLocation != nil && selectedEntry.endLocation != nil {
-			
-			destVC.startLocation = MKMapItem(placemark: selectedEntry.startLocation!)
-			destVC.endLocation = MKMapItem(placemark: selectedEntry.endLocation!)
-			
-		}
-		
+        
     }
 
 }
