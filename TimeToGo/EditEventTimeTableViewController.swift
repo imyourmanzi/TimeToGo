@@ -17,9 +17,9 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
     @IBOutlet var setTodayButton: UIButton!
 
 	// CoreData variables
-	var moc: NSManagedObjectContext?
+//	var moc: NSManagedObjectContext?
 //	var currentEventName: String!       // Not used
-	var currentEvent: Trip!
+	var event: Trip!
 	
 	// Current VC variables
 	var pickerHidden = true
@@ -30,13 +30,15 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
         super.viewDidLoad()
 		
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = getContext()
+//		moc = getContext()
 		
         // Set the time zone
         let components = Calendar.current.dateComponents(in: TimeZone.current, from: eventDate)
         eventDate = Calendar.current.date(from: components)!
         
-		// Define the date format and apply it to the flight time display
+//        print(eventDatePicker.calendar.timeZone)
+        
+		// Define the date format and apply it to the event time display
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
 		dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
 		
@@ -44,38 +46,69 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
 	
 	@IBAction func eventDateChanged(_ sender: UIDatePicker) {
 		
-		// Update the flight time and its display
+		// Update the event time and its display
 		eventDate = sender.date
-		dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDatePicker.date)
+		dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
 		
 	}
 	
+    // Change the event date to today when tapped
     @IBAction func setEventDateToday(_ sender: UIButton) {
         
-        // Change the event date to today when tapped
-        var dateString = Date().description
-        var timeString = eventDate.description
-        let endDate = dateString.index(dateString.startIndex, offsetBy: 10)
-        dateString = dateString.substring(to: endDate)
-        timeString = timeString.substring(from: endDate)
-        
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        guard let theDate = formatter.date(from: dateString) else {
-            return
-        }
-        formatter.dateFormat = " HH:mm:ss Z"
-        guard let theTime = formatter.date(from: timeString) else {
-            return
-        }
-        formatter.dateFormat = "yyyy-MM-dd"
-        guard let exDate = formatter.date(from: "2000-01-01") else {
-            return
-        }
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         
-        eventDate = theDate.addingTimeInterval(theTime.timeIntervalSince(exDate))
+        // Get a string of:
+        // - the current date
+        // - the event's date
+        var dateString = formatter.string(from: Date())
+        var timeString = formatter.string(from: eventDate)
+        
+//        print("dateString before", dateString)
+//        print("timeString before", timeString)
+        
+        // Of the formatted strings:
+        // - get the date (day) from the current
+        // - get the time from event's date
+        // - Put the date and time together
+        let endDateIndex = dateString.index(dateString.startIndex, offsetBy: 10)
+        dateString = dateString.substring(to: endDateIndex)
+        timeString = timeString.substring(from: endDateIndex)
+        let todayString = dateString + timeString
+        
+//        print("dateString after", dateString)
+//        print("timeString after", timeString)
+//        print("todayString", todayString)
+        
+        // Turn the current day into a Date object,
+        // the event's time into a Date object,
+        // and the default date Jan 1, 2001 into a Date object
+//        formatter.dateFormat = "yyyy-MM-dd"
+//        guard let theDate = formatter.date(from: dateString) else {
+//            return
+//        }
+//        formatter.dateFormat = " HH:mm:ss Z"
+//        guard let theTime = formatter.date(from: timeString) else {
+//            return
+//        }
+//        formatter.dateFormat = "yyyy-MM-dd"
+//        guard let exDate = formatter.date(from: "2000-01-01") else {
+//            return
+//        }
+        
+        // Parse out the concatenated date and time
+        guard let todayDate = formatter.date(from: todayString) else {
+            return
+        }
+        eventDate = todayDate
+        
+        // Get the number of seconds (a TimeInterval) from Jan 1, 2001 12:00:00 AM until the event's time
+        // Then add that amound of time to current date (who's time is 12:00:00 AM)
+//        eventDate = theDate.addingTimeInterval(theTime.timeIntervalSince(exDate))
+        
+        // Set the UI
         eventDatePicker.setDate(eventDate, animated: true)
-        dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDatePicker.date)
+        dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
         
     }
 	
@@ -151,7 +184,7 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
     
     func prepareForUpdateOnCoreData() {
         
-        currentEvent.flightDate = self.eventDate
+        event.flightDate = self.eventDate
         
     }
     

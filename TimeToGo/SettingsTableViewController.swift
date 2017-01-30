@@ -13,81 +13,110 @@ import MessageUI
 class SettingsTableViewController: UITableViewController, MFMailComposeViewControllerDelegate, CoreDataHelper {
 
     // Interface Builder variables
-	@IBOutlet var flightDateCell: UITableViewCell!
-	@IBOutlet var tripNameCell: UITableViewCell!
+	@IBOutlet var eventDateCell: UITableViewCell!
+	@IBOutlet var eventNameCell: UITableViewCell!
     @IBOutlet var deleteAlertPopoverViewAnchor: UIView!
 	
     // Core Data variables
-	var moc: NSManagedObjectContext?
-	var currentTripName: String!
-	var currentTrip: Trip!
-	var currentTripIndex: Int!
-	var allTrips = [Trip]()
+//	var moc: NSManagedObjectContext?
+//	var eventName: String!
+	var event: Trip!
+//	var eventIndex: Int!
+    var allEvents: [Trip] = []
 	
     // Current VC variables
-	var flightDate: Date!
-	var tripName: String!
+	var eventDate: Date!
+//	var eventName: String!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = getContext()
+//		moc = getContext()
 		
     }
     
 	override func viewWillAppear(_ animated: Bool) {
 		
-		// Fetch the current trip from the persistent store and assign the CoreData variables
-		currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
-		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.fetch(fetchRequest))
-		currentTrip = trips[0]
+//		eventName = UserDefaults.standard.object(forKey: "currentTripName") as! String
+//		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
+//		fetchRequest.predicate = NSPredicate(format: "tripName == %@", eventName)
+//		let events = (try! moc!.fetch(fetchRequest))
+//		event = events[0]
+
+        // Fetch the current event from the persistent store and assign the CoreData variables
+        do {
+            
+            event = try fetchCurrentEvent()
+            eventDate = event.flightDate
+            
+            // Set up the dateFormatter for the eventDate title display
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+            eventDateCell.detailTextLabel?.text = dateFormatter.string(from: self.eventDate)
+            
+        } catch {
+            // TODO: implement alert vc saying couldn't find event
+        }
+        
+//		self.eventName = event.tripName
 		
-		self.tripName = currentTrip.tripName
-		self.flightDate = currentTrip.flightDate as Date!
+		eventNameCell.detailTextLabel?.text = eventName
 		
-		tripNameCell.detailTextLabel?.text = self.tripName
+//		let fetchAll = NSFetchRequest<Trip>(entityName: "Trip")
+//		allEvents = (try! moc!.fetch(fetchAll))
+        
+        // Fetch all of the managed objects from the persistent store and update the table view
+        do {
+            
+            allEvents = try fetchAllEvents()
+            tableView.reloadData()
+            
+        } catch {
+            // TODO: implement alert vc saying no events found
+        }
 		
-		// Set up the dateFormatter for the flightDate title display
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
-		flightDateCell.detailTextLabel?.text = dateFormatter.string(from: self.flightDate)
-		
-		// Fetch all of the managed objects from the persistent store and update the table view
-		let fetchAll = NSFetchRequest<Trip>(entityName: "Trip")
-		allTrips = (try! moc!.fetch(fetchAll))
-		
-		tableView.reloadData()
 		
 	}
 	
-	@IBAction func clickedDeleteTrip(_ sender: UIButton) {
+	@IBAction func clickedDeleteEvent(_ sender: UIButton) {
 		
-		// Present an action sheet to confirm deletion of currentTrip and handle the situations that can follow
-		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(currentTripName!)?", preferredStyle: .actionSheet)
+		// Present an action sheet to confirm deletion of the event and handle the situations that can follow
+		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(eventName!)?", preferredStyle: .actionSheet)
 		let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {(action: UIAlertAction) in
 			deleteAlertController.dismiss(animated: true, completion: nil)
 		})
-		let deleteAction = UIAlertAction(title: "Delete Trip", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction) in
+		let deleteAction = UIAlertAction(title: "Delete Event", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction) in
 			
-            self.currentTripIndex = self.allTrips.index(of: self.currentTrip)
-			self.moc!.delete(self.allTrips.remove(at: self.currentTripIndex))
+            guard let eventIndex = self.allEvents.index(of: self.event) else {
+                return
+            }
+            
+            let eventRemoved = self.allEvents.remove(at: eventIndex)
+            guard let theMoc = self.moc else {
+                
+                self.allEvents.insert(eventRemoved, at: eventIndex)
+                return
+                
+            }
+			theMoc.delete(eventRemoved)
+            self.performUpdateOnCoreData()
+//			do {
+//				try self.moc!.save()
+//			} catch {
+//			}
 			
-			do {
-				try self.moc!.save()
-			} catch {
-			}
-			
-			if self.allTrips.count >= 1 {
+			if self.allEvents.count >= 1 {
 				
-				self.currentTripName = self.allTrips[self.allTrips.count - 1].tripName
-				UserDefaults.standard.set(self.currentTripName, forKey: "currentTripName")
+                if let newEventName = self.allEvents.last?.tripName {
+                    
+                    UserDefaults.standard.set(newEventName, forKey: "currentTripName")
+                    self.viewWillAppear(true)
+                    
+                }
 				
-				self.viewWillAppear(true)
 				
-			} else if self.allTrips.count <= 0 {
+			} else if self.allEvents.count <= 0 {
 				
 				let semiDestVC = self.storyboard?.instantiateViewController(withIdentifier: "newTripNavVC") as! UINavigationController
 				let destVC = semiDestVC.viewControllers[0] as! NewEventTableViewController
@@ -189,13 +218,15 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		// Prepare the possible views that may appear by pre-setting properties
 		if let timeVC = segue.destination as? EditEventTimeTableViewController {
             
-			timeVC.eventDate = self.flightDate
-			timeVC.currentEvent = self.currentTrip
+			timeVC.eventDate = self.eventDate
+			timeVC.event = self.event
 			
-		} else if let nameVC = segue.destination as? EditTripNameTableViewController {
+		}
+        
+        if let nameVC = segue.destination as? EditEventNameTableViewController {
 			
-			nameVC.tripName = self.tripName
-			nameVC.currentTrip = self.currentTrip
+			nameVC.eventName = self.eventName
+			nameVC.event = self.event
 			
 		}
         

@@ -12,7 +12,7 @@ import MapKit
 
 class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, UITextViewDelegate, CLLocationManagerDelegate, MKMapViewDelegate, communicationToMain, CoreDataHelper {
 	
-	// Interface Builder outlets
+	// Interface Builder variables
 	@IBOutlet var schedLabelTextfield: UITextField!
 	@IBOutlet var intervalLabelCell: UITableViewCell!
 	@IBOutlet var intervalTimePicker: UIPickerView!
@@ -26,10 +26,10 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	@IBOutlet var mapView: MKMapView!				// Be careful using the MapView, it uses ~200 MB of RAM memory
 	
 	// CoreData variables
-	var moc: NSManagedObjectContext?
-	var currentTripName: String!
-	var currentTrip: Trip!
-	var entries = [Interval]()
+//	var moc: NSManagedObjectContext?
+//	var eventName: String!
+	var event: Trip!
+    var entries: [Interval] = []
 	
 	// Current VC variables
 	var schedLabel: String!
@@ -52,29 +52,50 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		// Fetch the current trip from the persistent store and assign the CoreData variables
-		moc = getContext()
-		currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
-		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.fetch(fetchRequest)) 
-		currentTrip = trips[0]
-		self.entries = currentTrip.entries as! [Interval]
+//		moc = getContext()
+//		eventName = UserDefaults.standard.object(forKey: "currentTripName") as! String
+//		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
+//		fetchRequest.predicate = NSPredicate(format: "tripName == %@", eventName!)
+//        do {
+//            let events = try moc!.fetch(fetchRequest)
+//            event = events[0]
+//        } catch {
+//            print("caught bad one")
+//        }
+        
+        // Fetch the current event from the persistent store and assign the CoreData variables
+        do {
+            
+            event = try fetchCurrentEvent()
+            if let theEntries = event.entries as? [Interval] {
+                entries = theEntries
+            } else {
+                parent?.dismiss(animated: true, completion: { 
+                    // TODO: implement a parent-displayed alert vc
+                })
+            }
+            
+        }  catch {
+//            print("caught one")
+            parent?.dismiss(animated: true, completion: {
+                // TODO: implement a parent-displayed alert vc
+            })
+        }
 		
 		// Setting the row heights for the table view
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		
 		// Customized setup of the Interface Builder variables
-		schedLabelTextfield.delegate = self
+//		schedLabelTextfield.delegate = self
 		schedLabelTextfield.text = schedLabel
 		
 		intervalTimeStr = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
 		intervalLabelCell.detailTextLabel?.text = intervalTimeStr
 		
-		intervalTimePicker.dataSource = self
-		intervalTimePicker.delegate = self
+//		intervalTimePicker.dataSource = self
+//		intervalTimePicker.delegate = self
 		
-		notesTextview.delegate = self
+//		notesTextview.delegate = self
 		notesTextview.text = notes
 		
 		if notes != nil && notes != "" {
@@ -196,7 +217,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
 		
-		// Hide the flightDatePicker if beginning to edit the textfield
+		// Hide the eventDatePicker if beginning to edit the textfield
 		if pickerHidden == false {
 			
 			togglePicker()
@@ -221,10 +242,10 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
     
     // MARK: - Core Data helper
 	
-	// Update the new entry in the currentTrip
+	// Update the new entry in the event
     func prepareForUpdateOnCoreData() {
         
-        currentTrip.entries = self.entries as NSArray
+        event.entries = self.entries as NSArray
         
     }
     
@@ -267,7 +288,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
 		
-		// Hide the flightDatePicker if beginning to edit the textview
+		// Hide the eventDatePicker if beginning to edit the textview
 		if pickerHidden == false {
 			
 			togglePicker()
@@ -716,7 +737,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		if useLocation && useLocationPrev == false {
 			
-			mapView.delegate = self
+//			mapView.delegate = self
 			self.tableView.insertRows(at: rowsToChange, with: UITableViewRowAnimation.fade)
 			schedLabelTextfield.resignFirstResponder()
 			notesTextview.resignFirstResponder()

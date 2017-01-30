@@ -10,7 +10,7 @@
 		8A44A83B1E36811200B1CB09 /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */; };
 		8A44A83F1E36964500B1CB09 /* EventTypeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */; };
 		8A44A8411E369AAA00B1CB09 /* TypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A8401E369AAA00B1CB09 /* TypeCollectionViewCell.swift */; };
-		8A44A8481E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A8471E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift */; };
+		8A44A8481E37E6B100B1CB09 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A8471E37E6B100B1CB09 /* CoreDataHelper.swift */; };
 		8A5D1D041E3911C500D0CD95 /* EventTypeData.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */; };
 		8A5D1D061E3911D100D0CD95 /* Plane.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D051E3911D100D0CD95 /* Plane.csv */; };
 		8A5D1D081E3913B400D0CD95 /* Train.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D071E3913B400D0CD95 /* Train.csv */; };
@@ -45,6 +45,7 @@
 		8A9C81611E3A564700A83043 /* Work.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815E1E3A564700A83043 /* Work.csv */; };
 		8A9C81621E3A564700A83043 /* Worship.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815F1E3A564700A83043 /* Worship.csv */; };
 		8A9C81641E3A569600A83043 /* Custom.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81631E3A569600A83043 /* Custom.csv */; };
+		8ACDE10F1E3FB45700FD8F01 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */; };
 		98418DAC1B4847AA00ADC2D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */; };
 		98418DAF1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAD1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld */; };
 		98418DB41B4847AB00ADC2D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98418DB21B4847AB00ADC2D8 /* Main.storyboard */; };
@@ -52,14 +53,14 @@
 		98418DB91B4847AB00ADC2D8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98418DB71B4847AB00ADC2D8 /* LaunchScreen.xib */; };
 		98418DC51B4847AB00ADC2D8 /* TimeToGoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DC41B4847AB00ADC2D8 /* TimeToGoTests.swift */; };
 		98418DDC1B48487A00ADC2D8 /* AddEntryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DCE1B48487A00ADC2D8 /* AddEntryTableViewController.swift */; };
-		98418DDD1B48487A00ADC2D8 /* AllTripsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DCF1B48487A00ADC2D8 /* AllTripsTableViewController.swift */; };
+		98418DDD1B48487A00ADC2D8 /* AllEventsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DCF1B48487A00ADC2D8 /* AllEventsTableViewController.swift */; };
 		98418DDE1B48487A00ADC2D8 /* EditEventTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD01B48487A00ADC2D8 /* EditEventTimeTableViewController.swift */; };
-		98418DDF1B48487A00ADC2D8 /* EditTripNameTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD11B48487A00ADC2D8 /* EditTripNameTableViewController.swift */; };
-		98418DE01B48487A00ADC2D8 /* EntriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD21B48487A00ADC2D8 /* EntriesViewController.swift */; };
+		98418DDF1B48487A00ADC2D8 /* EditEventNameTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD11B48487A00ADC2D8 /* EditEventNameTableViewController.swift */; };
+		98418DE01B48487A00ADC2D8 /* EntriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD21B48487A00ADC2D8 /* EntriesTableViewController.swift */; };
 		98418DE11B48487A00ADC2D8 /* NewEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD31B48487A00ADC2D8 /* NewEventTableViewController.swift */; };
 		98418DE21B48487A00ADC2D8 /* Interval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD41B48487A00ADC2D8 /* Interval.swift */; };
 		98418DE31B48487A00ADC2D8 /* IntervalTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD51B48487A00ADC2D8 /* IntervalTransformer.swift */; };
-		98418DE41B48487A00ADC2D8 /* SavedTripViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD61B48487A00ADC2D8 /* SavedTripViewController.swift */; };
+		98418DE41B48487A00ADC2D8 /* SavedEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD61B48487A00ADC2D8 /* SavedEventViewController.swift */; };
 		98418DE51B48487A00ADC2D8 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD71B48487A00ADC2D8 /* ScheduleViewController.swift */; };
 		98418DE61B48487A00ADC2D8 /* SelectedEntryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD81B48487A00ADC2D8 /* SelectedEntryTableViewController.swift */; };
 		98418DE71B48487A00ADC2D8 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD91B48487A00ADC2D8 /* SettingsTableViewController.swift */; };
@@ -84,7 +85,7 @@
 		8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTypeCollectionViewController.swift; sourceTree = "<group>"; };
 		8A44A8401E369AAA00B1CB09 /* TypeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		8A44A8441E37BC8900B1CB09 /* TimeToGo2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TimeToGo2.xcdatamodel; sourceTree = "<group>"; };
-		8A44A8471E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataExtrasProtocol.swift; sourceTree = "<group>"; };
+		8A44A8471E37E6B100B1CB09 /* CoreDataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = EventTypeData.csv; path = csv_data/EventTypeData.csv; sourceTree = "<group>"; };
 		8A5D1D051E3911D100D0CD95 /* Plane.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Plane.csv; path = csv_data/Plane.csv; sourceTree = "<group>"; };
 		8A5D1D071E3913B400D0CD95 /* Train.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Train.csv; path = csv_data/Train.csv; sourceTree = "<group>"; };
@@ -119,6 +120,7 @@
 		8A9C815E1E3A564700A83043 /* Work.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Work.csv; path = csv_data/Work.csv; sourceTree = "<group>"; };
 		8A9C815F1E3A564700A83043 /* Worship.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Worship.csv; path = csv_data/Worship.csv; sourceTree = "<group>"; };
 		8A9C81631E3A569600A83043 /* Custom.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Custom.csv; path = csv_data/Custom.csv; sourceTree = "<group>"; };
+		8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 		98418DA61B4847AA00ADC2D8 /* TimeToGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeToGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98418DAA1B4847AA00ADC2D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -130,14 +132,14 @@
 		98418DC31B4847AB00ADC2D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98418DC41B4847AB00ADC2D8 /* TimeToGoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeToGoTests.swift; sourceTree = "<group>"; };
 		98418DCE1B48487A00ADC2D8 /* AddEntryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddEntryTableViewController.swift; sourceTree = "<group>"; };
-		98418DCF1B48487A00ADC2D8 /* AllTripsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllTripsTableViewController.swift; sourceTree = "<group>"; };
+		98418DCF1B48487A00ADC2D8 /* AllEventsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllEventsTableViewController.swift; sourceTree = "<group>"; };
 		98418DD01B48487A00ADC2D8 /* EditEventTimeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEventTimeTableViewController.swift; sourceTree = "<group>"; };
-		98418DD11B48487A00ADC2D8 /* EditTripNameTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditTripNameTableViewController.swift; sourceTree = "<group>"; };
-		98418DD21B48487A00ADC2D8 /* EntriesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntriesViewController.swift; sourceTree = "<group>"; };
+		98418DD11B48487A00ADC2D8 /* EditEventNameTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEventNameTableViewController.swift; sourceTree = "<group>"; };
+		98418DD21B48487A00ADC2D8 /* EntriesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntriesTableViewController.swift; sourceTree = "<group>"; };
 		98418DD31B48487A00ADC2D8 /* NewEventTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewEventTableViewController.swift; sourceTree = "<group>"; };
 		98418DD41B48487A00ADC2D8 /* Interval.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Interval.swift; sourceTree = "<group>"; };
 		98418DD51B48487A00ADC2D8 /* IntervalTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntervalTransformer.swift; sourceTree = "<group>"; };
-		98418DD61B48487A00ADC2D8 /* SavedTripViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedTripViewController.swift; sourceTree = "<group>"; };
+		98418DD61B48487A00ADC2D8 /* SavedEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedEventViewController.swift; sourceTree = "<group>"; };
 		98418DD71B48487A00ADC2D8 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		98418DD81B48487A00ADC2D8 /* SelectedEntryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedEntryTableViewController.swift; sourceTree = "<group>"; };
 		98418DD91B48487A00ADC2D8 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -267,20 +269,21 @@
 			isa = PBXGroup;
 			children = (
 				98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */,
+				8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */,
 				98418DCE1B48487A00ADC2D8 /* AddEntryTableViewController.swift */,
-				98418DCF1B48487A00ADC2D8 /* AllTripsTableViewController.swift */,
+				98418DCF1B48487A00ADC2D8 /* AllEventsTableViewController.swift */,
 				8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */,
-				8A44A8471E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift */,
+				8A44A8471E37E6B100B1CB09 /* CoreDataHelper.swift */,
 				98418DD01B48487A00ADC2D8 /* EditEventTimeTableViewController.swift */,
-				98418DD11B48487A00ADC2D8 /* EditTripNameTableViewController.swift */,
-				98418DD21B48487A00ADC2D8 /* EntriesViewController.swift */,
+				98418DD11B48487A00ADC2D8 /* EditEventNameTableViewController.swift */,
+				98418DD21B48487A00ADC2D8 /* EntriesTableViewController.swift */,
 				8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */,
 				8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */,
 				98418DD41B48487A00ADC2D8 /* Interval.swift */,
 				98418DD51B48487A00ADC2D8 /* IntervalTransformer.swift */,
 				98FC89DA1B8161EC00ED9844 /* LocationAnnotation.swift */,
 				98418DD31B48487A00ADC2D8 /* NewEventTableViewController.swift */,
-				98418DD61B48487A00ADC2D8 /* SavedTripViewController.swift */,
+				98418DD61B48487A00ADC2D8 /* SavedEventViewController.swift */,
 				98418DD71B48487A00ADC2D8 /* ScheduleViewController.swift */,
 				98FC89DC1B8165AE00ED9844 /* SearchViewController.swift */,
 				98418DD81B48487A00ADC2D8 /* SelectedEntryTableViewController.swift */,
@@ -487,19 +490,20 @@
 				98418DE91B48487A00ADC2D8 /* Trip.swift in Sources */,
 				8A44A8411E369AAA00B1CB09 /* TypeCollectionViewCell.swift in Sources */,
 				8A44A83B1E36811200B1CB09 /* CategoryCollectionViewCell.swift in Sources */,
-				98418DE41B48487A00ADC2D8 /* SavedTripViewController.swift in Sources */,
-				98418DDD1B48487A00ADC2D8 /* AllTripsTableViewController.swift in Sources */,
-				8A44A8481E37E6B100B1CB09 /* CoreDataExtrasProtocol.swift in Sources */,
+				98418DE41B48487A00ADC2D8 /* SavedEventViewController.swift in Sources */,
+				98418DDD1B48487A00ADC2D8 /* AllEventsTableViewController.swift in Sources */,
+				8A44A8481E37E6B100B1CB09 /* CoreDataHelper.swift in Sources */,
 				98418DE71B48487A00ADC2D8 /* SettingsTableViewController.swift in Sources */,
 				8A44A83F1E36964500B1CB09 /* EventTypeCollectionViewController.swift in Sources */,
-				98418DDF1B48487A00ADC2D8 /* EditTripNameTableViewController.swift in Sources */,
+				98418DDF1B48487A00ADC2D8 /* EditEventNameTableViewController.swift in Sources */,
 				98418DE81B48487A00ADC2D8 /* ShareToCalTableViewController.swift in Sources */,
 				98418DE21B48487A00ADC2D8 /* Interval.swift in Sources */,
 				98418DE61B48487A00ADC2D8 /* SelectedEntryTableViewController.swift in Sources */,
 				98FC89DD1B8165AE00ED9844 /* SearchViewController.swift in Sources */,
 				98FC89DB1B8161EC00ED9844 /* LocationAnnotation.swift in Sources */,
 				98418DDE1B48487A00ADC2D8 /* EditEventTimeTableViewController.swift in Sources */,
-				98418DE01B48487A00ADC2D8 /* EntriesViewController.swift in Sources */,
+				8ACDE10F1E3FB45700FD8F01 /* UIViewControllerExtension.swift in Sources */,
+				98418DE01B48487A00ADC2D8 /* EntriesTableViewController.swift in Sources */,
 				98418DE31B48487A00ADC2D8 /* IntervalTransformer.swift in Sources */,
 				98418DAF1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld in Sources */,
 			);

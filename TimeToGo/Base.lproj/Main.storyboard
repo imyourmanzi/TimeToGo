@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -43,21 +43,20 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Choose Calendar" id="sVr-eY-KcZ">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="aBi-fl-QAB">
-                            <connections>
-                                <action selector="cancelAddToCal:" destination="bz6-lp-e2h" id="6e2-6j-nb1"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="save" id="3dv-V0-AWr">
                             <connections>
-                                <action selector="saveTripToCal:" destination="bz6-lp-e2h" id="xak-oN-EOk"/>
+                                <action selector="saveEventToCal:" destination="bz6-lp-e2h" id="lTe-bI-DvW"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="qZo-Cr-iLs" kind="unwind" identifier="unwindToScheudle" unwindAction="unwindToSchedule:" id="eBp-VB-Xds"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nnd-Xj-HOo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="qZo-Cr-iLs" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3644" y="-1110"/>
+            <point key="canvasLocation" x="2601" y="-1111"/>
         </scene>
         <!--Schedule View Controller-->
         <scene sceneID="hNz-n2-bh7">
@@ -82,7 +81,7 @@
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="addToCal:" destination="9pv-A4-QxB" eventType="touchUpInside" id="xbg-2s-erk"/>
+                                    <segue destination="bz6-lp-e2h" kind="show" identifier="toShareToCal" id="fme-F5-ghn"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -102,7 +101,7 @@
         <!--Modify Schedule-->
         <scene sceneID="dMN-hf-586">
             <objects>
-                <tableViewController id="oRX-XW-te0" customClass="EntriesViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="oRX-XW-te0" customClass="EntriesTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="cBu-Om-geq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -155,10 +154,10 @@
             </objects>
             <point key="canvasLocation" x="1550" y="366"/>
         </scene>
-        <!--New Trip-->
+        <!--New Event-->
         <scene sceneID="9Uv-bn-9bm">
             <objects>
-                <tableViewController id="qzh-9M-B2G" customClass="NewEventTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="newEventVC" id="qzh-9M-B2G" customClass="NewEventTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="rGp-wB-fXl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -173,12 +172,13 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Optional Trip Name" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="cFp-KO-LmM">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Optional Event Name" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="cFp-KO-LmM">
                                                     <rect key="frame" x="13" y="8" width="354" height="27"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                     <connections>
                                                         <action selector="eventNameDidChange:" destination="qzh-9M-B2G" eventType="editingChanged" id="BNI-76-aPw"/>
+                                                        <outlet property="delegate" destination="qzh-9M-B2G" id="0Vx-i5-vIb"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -197,8 +197,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Flight Date and Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="6r2-jh-iOB">
-                                                    <rect key="frame" x="15" y="12" width="150" height="19.5"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Event Date and Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="6r2-jh-iOB">
+                                                    <rect key="frame" x="15" y="12" width="150.5" height="19.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -261,7 +261,7 @@
                             <outlet property="delegate" destination="qzh-9M-B2G" id="Dze-II-CmJ"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="New Trip" id="GOG-Hs-bBq">
+                    <navigationItem key="navigationItem" title="New Event" id="GOG-Hs-bBq">
                         <barButtonItem key="rightBarButtonItem" title="Create" style="done" id="pMy-EV-yJG">
                             <connections>
                                 <action selector="createNewEvent:" destination="qzh-9M-B2G" id="PJE-EI-3eH"/>
@@ -366,8 +366,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Flight Date and Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="V2e-KU-V2A">
-                                                    <rect key="frame" x="15" y="12" width="150" height="19.5"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Event Date and Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="V2e-KU-V2A">
+                                                    <rect key="frame" x="15" y="12" width="150.5" height="19.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -393,8 +393,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Trip Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VOx-II-IMF">
-                                                    <rect key="frame" x="15" y="12" width="75" height="19.5"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Event Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VOx-II-IMF">
+                                                    <rect key="frame" x="15" y="12" width="87.5" height="19.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -421,17 +421,17 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4i8-Ts-kFf">
-                                                    <rect key="frame" x="184" y="33" width="23" height="11"/>
+                                                    <rect key="frame" x="190" y="33" width="11" height="11"/>
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7v4-dt-9cX">
-                                                    <rect key="frame" x="118" y="7" width="139" height="32"/>
+                                                    <rect key="frame" x="124" y="7" width="127" height="32"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <state key="normal" title="Delete Current Trip">
+                                                    <state key="normal" title="Delete This Event">
                                                         <color key="titleColor" red="1" green="0.0" blue="0.0096454260930000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="clickedDeleteTrip:" destination="Acq-tV-dsI" eventType="touchUpInside" id="BAp-qQ-4ob"/>
+                                                        <action selector="clickedDeleteEvent:" destination="Acq-tV-dsI" eventType="touchUpInside" id="igj-NG-CME"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -501,15 +501,15 @@
                     <navigationItem key="navigationItem" title="Settings" id="Chj-mk-hEC"/>
                     <connections>
                         <outlet property="deleteAlertPopoverViewAnchor" destination="4i8-Ts-kFf" id="qTv-qD-Cnf"/>
-                        <outlet property="flightDateCell" destination="VsG-Vb-O5t" id="Aiu-Sc-Nsw"/>
-                        <outlet property="tripNameCell" destination="0Lx-FW-JMk" id="GSy-ha-4ss"/>
+                        <outlet property="eventDateCell" destination="VsG-Vb-O5t" id="iYx-SK-CSU"/>
+                        <outlet property="eventNameCell" destination="0Lx-FW-JMk" id="beW-RH-KNZ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NgD-vW-6Me" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1549.5999999999999" y="1813.9430284857572"/>
         </scene>
-        <!--Flight Date and Time-->
+        <!--Event Date and Time-->
         <scene sceneID="Xyw-6P-Bym">
             <objects>
                 <tableViewController id="aV5-8P-QI0" customClass="EditEventTimeTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
@@ -518,7 +518,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <sections>
-                            <tableViewSection footerTitle="Tap to change the flight date or time." id="Oxr-21-eeG">
+                            <tableViewSection footerTitle="Tap to change the event date or time." id="Oxr-21-eeG">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="KLw-Uj-bHD" detailTextLabel="qfr-za-EKf" style="IBUITableViewCellStyleValue1" id="qlL-wc-Q51">
                                         <rect key="frame" x="0.0" y="35" width="375" height="44"/>
@@ -591,7 +591,7 @@
                             <outlet property="delegate" destination="aV5-8P-QI0" id="Kp7-oJ-sHX"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Flight Date and Time" id="sI6-jt-4em"/>
+                    <navigationItem key="navigationItem" title="Event Date and Time" id="sI6-jt-4em"/>
                     <connections>
                         <outlet property="dateCell" destination="qlL-wc-Q51" id="9Me-8X-5sJ"/>
                         <outlet property="eventDatePicker" destination="RO8-os-gbN" id="Lr8-2c-0wb"/>
@@ -602,16 +602,16 @@
             </objects>
             <point key="canvasLocation" x="2604" y="1131"/>
         </scene>
-        <!--Trip Name-->
+        <!--Event Name-->
         <scene sceneID="Z9a-wr-TMK">
             <objects>
-                <tableViewController id="YWe-dU-xkS" customClass="EditTripNameTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="YWe-dU-xkS" customClass="EditEventNameTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="qHf-pC-fkj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <sections>
-                            <tableViewSection footerTitle="Tap to change the trip name." id="2Xh-Hd-plh">
+                            <tableViewSection footerTitle="Tap to change the event name." id="2Xh-Hd-plh">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="V7M-E0-Htp">
                                         <rect key="frame" x="0.0" y="35" width="375" height="44"/>
@@ -620,12 +620,13 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Trip Name" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="GUd-rJ-85N">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Event Name" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="GUd-rJ-85N">
                                                     <rect key="frame" x="13" y="8" width="354" height="27"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                     <connections>
-                                                        <action selector="tripNameDidChange:" destination="YWe-dU-xkS" eventType="editingChanged" id="vT8-ox-Ait"/>
+                                                        <action selector="eventNameDidChange:" destination="YWe-dU-xkS" eventType="editingChanged" id="eDS-mP-c5D"/>
+                                                        <outlet property="delegate" destination="YWe-dU-xkS" id="Y1u-wB-EUI"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -645,9 +646,9 @@
                             <outlet property="delegate" destination="YWe-dU-xkS" id="kI0-Ig-1wV"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Trip Name" id="Gki-ng-r0G"/>
+                    <navigationItem key="navigationItem" title="Event Name" id="Gki-ng-r0G"/>
                     <connections>
-                        <outlet property="tripNameTextfield" destination="GUd-rJ-85N" id="VXm-oN-j78"/>
+                        <outlet property="eventNameTextfield" destination="GUd-rJ-85N" id="Bp4-ms-9cZ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zk6-wg-yPw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -678,6 +679,7 @@
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     <connections>
                                                         <action selector="schedLabelDidChange:" destination="Sgj-UZ-P1e" eventType="editingChanged" id="6U5-UW-xIY"/>
+                                                        <outlet property="delegate" destination="Sgj-UZ-P1e" id="r2M-Gc-5YU"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -709,6 +711,9 @@
                                                     <rect key="frame" x="13" y="8" width="354" height="103"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" enablesReturnKeyAutomatically="YES"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="Sgj-UZ-P1e" id="E0U-gb-jeJ"/>
+                                                    </connections>
                                                 </textView>
                                             </subviews>
                                             <constraints>
@@ -754,6 +759,10 @@
                                             <subviews>
                                                 <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m0y-jP-bLj">
                                                     <rect key="frame" x="8" y="9" width="359" height="180"/>
+                                                    <connections>
+                                                        <outlet property="dataSource" destination="Sgj-UZ-P1e" id="Je8-Ip-Prj"/>
+                                                        <outlet property="delegate" destination="Sgj-UZ-P1e" id="KrP-Xe-Ywu"/>
+                                                    </connections>
                                                 </pickerView>
                                             </subviews>
                                             <constraints>
@@ -866,6 +875,9 @@
                                             <subviews>
                                                 <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="M2m-71-R0p">
                                                     <rect key="frame" x="8" y="0.0" width="359" height="289"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="Sgj-UZ-P1e" id="GYY-me-0Am"/>
+                                                    </connections>
                                                 </mapView>
                                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zUS-lP-ffm">
                                                     <rect key="frame" x="8" y="0.0" width="110" height="30"/>
@@ -932,16 +944,16 @@
             </objects>
             <point key="canvasLocation" x="2604" y="366"/>
         </scene>
-        <!--All Trips-->
+        <!--All Events-->
         <scene sceneID="CeL-FM-DFW">
             <objects>
-                <tableViewController id="EWW-oh-Kfp" customClass="AllTripsTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="EWW-oh-Kfp" customClass="AllEventsTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="odD-p0-F3x">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="TripCell" textLabel="ywP-y7-F4h" detailTextLabel="ltx-DG-A7b" style="IBUITableViewCellStyleSubtitle" id="cgM-KX-HEC">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="eventCell" textLabel="ywP-y7-F4h" detailTextLabel="ltx-DG-A7b" style="IBUITableViewCellStyleSubtitle" id="cgM-KX-HEC">
                                 <rect key="frame" x="0.0" y="22" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cgM-KX-HEC" id="jIf-Nu-Wud">
@@ -965,7 +977,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="vsD-p8-hrc" kind="show" trigger="accessoryAction" id="gg4-bK-9Ra"/>
+                                    <segue destination="vsD-p8-hrc" kind="show" identifier="viewSavedEvent" trigger="accessoryAction" id="qmS-cj-aRK"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -974,16 +986,20 @@
                             <outlet property="delegate" destination="EWW-oh-Kfp" id="wjN-No-DYv"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="All Trips" id="VJa-7F-B3L"/>
+                    <navigationItem key="navigationItem" title="All Events" id="VJa-7F-B3L"/>
+                    <connections>
+                        <segue destination="hTk-va-MpV" kind="unwind" identifier="unwindToHome" unwindAction="unwindToHome:" id="Fcu-wr-jFr"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W17-Tf-FhB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="hTk-va-MpV" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2601" y="-2794"/>
         </scene>
-        <!--Saved Trip-->
+        <!--Saved Event-->
         <scene sceneID="neV-0G-2P2">
             <objects>
-                <viewController storyboardIdentifier="savedTripVC" automaticallyAdjustsScrollViewInsets="NO" id="vsD-p8-hrc" customClass="SavedTripViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="savedEventVC" automaticallyAdjustsScrollViewInsets="NO" id="vsD-p8-hrc" customClass="SavedEventViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6sz-2l-2eX"/>
                         <viewControllerLayoutGuide type="bottom" id="nbL-Yf-bWC"/>
@@ -992,19 +1008,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Flight Date and Time" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eI2-dI-WL7">
-                                <rect key="frame" x="16" y="339" width="343" height="259"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Date and Time" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eI2-dI-WL7">
+                                <rect key="frame" x="16" y="510" width="343" height="88"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="88" id="Hqc-km-zlD"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bTT-E5-Ac3">
-                                <rect key="frame" x="16" y="64" width="343" height="255"/>
+                                <rect key="frame" x="16" y="64" width="343" height="426"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="255" id="VQN-7C-CEy"/>
-                                </constraints>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="entryCell" textLabel="9iI-L3-L4G" detailTextLabel="5oN-nK-Ijv" style="IBUITableViewCellStyleSubtitle" id="TKF-LD-Sdj">
                                         <rect key="frame" x="0.0" y="28" width="343" height="44"/>
@@ -1040,28 +1056,26 @@
                         </subviews>
                         <color key="backgroundColor" red="0.89901113510131836" green="0.89901113510131836" blue="0.89901113510131836" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="eI2-dI-WL7" firstAttribute="centerX" secondItem="Gb9-6z-tlm" secondAttribute="centerX" id="6Vj-XP-tGc"/>
                             <constraint firstAttribute="leadingMargin" secondItem="bTT-E5-Ac3" secondAttribute="leading" id="GHb-6M-Kw5"/>
                             <constraint firstItem="nbL-Yf-bWC" firstAttribute="top" secondItem="eI2-dI-WL7" secondAttribute="bottom" constant="20" id="JMb-MC-GR0"/>
                             <constraint firstAttribute="trailingMargin" secondItem="eI2-dI-WL7" secondAttribute="trailing" id="YE9-DT-odC"/>
                             <constraint firstItem="eI2-dI-WL7" firstAttribute="top" secondItem="bTT-E5-Ac3" secondAttribute="bottom" constant="20" id="hqH-nP-QMM"/>
-                            <constraint firstItem="bTT-E5-Ac3" firstAttribute="centerX" secondItem="Gb9-6z-tlm" secondAttribute="centerX" id="nI6-5o-E6r"/>
                             <constraint firstAttribute="leadingMargin" secondItem="eI2-dI-WL7" secondAttribute="leading" id="qUs-F0-et8"/>
                             <constraint firstItem="bTT-E5-Ac3" firstAttribute="top" secondItem="6sz-2l-2eX" secondAttribute="bottom" id="s22-BW-XGP"/>
                             <constraint firstAttribute="trailingMargin" secondItem="bTT-E5-Ac3" secondAttribute="trailing" id="yMe-id-0Gm"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Saved Trip" id="mwL-Sf-XcM">
+                    <navigationItem key="navigationItem" title="Saved Event" id="mwL-Sf-XcM">
                         <barButtonItem key="rightBarButtonItem" title="Load" id="Ge5-Aj-Dqu"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="flightDateLabel" destination="eI2-dI-WL7" id="79J-6l-Sfs"/>
+                        <outlet property="eventDateLabel" destination="eI2-dI-WL7" id="phq-nE-SJV"/>
                         <outlet property="tableView" destination="bTT-E5-Ac3" id="nkg-9n-oHx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wuj-x6-GkX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3463" y="-2794"/>
+            <point key="canvasLocation" x="3461.5999999999999" y="-2794.4527736131936"/>
         </scene>
         <!--Add Interval-->
         <scene sceneID="JjI-hr-o2V">
@@ -1087,6 +1101,7 @@
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     <connections>
                                                         <action selector="schedLabelDidChange:" destination="wGE-E8-CqS" eventType="editingChanged" id="sjH-EV-Wep"/>
+                                                        <outlet property="delegate" destination="wGE-E8-CqS" id="3c8-LQ-46K"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -1118,6 +1133,9 @@
                                                     <rect key="frame" x="13" y="8" width="354" height="103"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" enablesReturnKeyAutomatically="YES"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="wGE-E8-CqS" id="fzp-xJ-SpC"/>
+                                                    </connections>
                                                 </textView>
                                             </subviews>
                                             <constraints>
@@ -1163,6 +1181,10 @@
                                             <subviews>
                                                 <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jQA-h5-6Yh">
                                                     <rect key="frame" x="8" y="9" width="359" height="180"/>
+                                                    <connections>
+                                                        <outlet property="dataSource" destination="wGE-E8-CqS" id="CyF-92-OK7"/>
+                                                        <outlet property="delegate" destination="wGE-E8-CqS" id="JuV-UB-JqG"/>
+                                                    </connections>
                                                 </pickerView>
                                             </subviews>
                                             <constraints>
@@ -1275,6 +1297,9 @@
                                             <subviews>
                                                 <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="I0N-YS-341">
                                                     <rect key="frame" x="8" y="0.0" width="359" height="289"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="wGE-E8-CqS" id="RUh-3q-sL9"/>
+                                                    </connections>
                                                 </mapView>
                                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nzZ-fG-DQK">
                                                     <rect key="frame" x="8" y="0.0" width="110" height="30"/>
@@ -1379,7 +1404,7 @@
         <!--Home View Controller-->
         <scene sceneID="wPz-Jc-Ipa">
             <objects>
-                <viewController id="aBK-ku-IeO" customClass="HomeViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="homeVC" id="aBK-ku-IeO" customClass="HomeViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="bae-ab-OIY"/>
                         <viewControllerLayoutGuide type="bottom" id="C0y-48-Vvy"/>
@@ -1394,7 +1419,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="ZGI-Hu-ThX"/>
                                 </constraints>
-                                <state key="normal" title="Load Previous Trip">
+                                <state key="normal" title="Load Previous Event">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -1455,7 +1480,7 @@
                                             <outlet property="categoryIconLabel" destination="qRQ-OJ-VVL" id="VRO-xP-U0A"/>
                                             <outlet property="categoryLabel" destination="2Lp-yO-Ebq" id="SoP-jE-cVo"/>
                                             <outlet property="highlightView" destination="iFo-bQ-Hhj" id="g3s-dy-UyF"/>
-                                            <segue destination="utA-yU-ZpI" kind="show" id="Rtc-QK-dcQ"/>
+                                            <segue destination="utA-yU-ZpI" kind="show" identifier="" id="Rtc-QK-dcQ"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -1553,24 +1578,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6sr-06-3DO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2600.8000000000002" y="-2062.2188905547227"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="Vhb-yY-RSV">
-            <objects>
-                <navigationController storyboardIdentifier="shareCalNavVC" automaticallyAdjustsScrollViewInsets="NO" id="vho-iU-lWk" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="qle-rf-Yhi">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="bz6-lp-e2h" kind="relationship" relationship="rootViewController" id="2GU-HR-ZW3"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pTm-Pw-8wx" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2604" y="-1110"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="EIn-Kg-nke">

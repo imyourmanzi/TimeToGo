@@ -20,8 +20,8 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 	var calendarToUseIndexPath = IndexPath()
 	
 	// CoreData vairables
-    var moc: NSManagedObjectContext?
-	var currentTrip: Trip!
+//    var moc: NSManagedObjectContext?
+	var event: Trip!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,14 +56,14 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 			
 		}
 		
-		// Fetch the current trip from the persistent store and assign the CoreData variables
-		moc = getContext()
-		let currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
-		let fetch = NSFetchRequest<Trip>()
-		fetch.entity = NSEntityDescription.entity(forEntityName: "Trip", in: moc!)
-		fetch.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.fetch(fetch))
-		currentTrip = trips[0]
+		// Fetch the current event from the persistent store and assign the CoreData variables
+//		moc = getContext()
+//		let eventName = UserDefaults.standard.object(forKey: "currentTripName") as! String
+//		let fetch = NSFetchRequest<Trip>()
+//		fetch.entity = NSEntityDescription.entity(forEntityName: "Trip", in: moc!)
+//		fetch.predicate = NSPredicate(format: "tripName == %@", eventName)
+//		let events = (try! moc!.fetch(fetch))
+//		event = events[0]
 		
     }
 	
@@ -142,33 +142,43 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 	
 	// MARK: - Navigation
 	
-	@IBAction func cancelAddToCal(_ sender: UIBarButtonItem) {
-		
-		dismiss(animated: true, completion: nil)
-		
-	}
+//	@IBAction func cancelAddToCal(_ sender: UIBarButtonItem) {
+//		
+//		dismiss(animated: true, completion: nil)
+//		
+//	}
 	
-	@IBAction func saveTripToCal(_ sender: UIBarButtonItem) {
+	@IBAction func saveEventToCal(_ sender: UIBarButtonItem) {
 		
-		guard let calendarIndex = (calendarToUseIndexPath as NSIndexPath?)?.row else {
-			return
-		}
+//		guard let calendarIndex = calendarToUseIndexPath.row else {
+//			return
+//		}
 		
-		calendarToUse = calendarsToList[calendarIndex]
+		calendarToUse = calendarsToList[calendarToUseIndexPath.row]
 		
-		for entry in currentTrip.entries as! [Interval] {
+//        print(event)
+//        print(event.entries)
+//        print(event.entries as! [Interval])
+        
+        guard let theEntries = event.entries as? [Interval] else {
+            // TODO: display alert vc saying cound not access event entries and unwind on "dismiss" pressed (send false as sender with unwind)
+            return
+        }
+        
+		for entry in theEntries {
 			
-			addInterval(entry, toCalendar: calendarToUse)
+            add(entry: entry, to: calendarToUse)
 			
 		}
-		dismiss(animated: true, completion: nil)
+//		dismiss(animated: true, completion: nil)
+        performSegue(withIdentifier: "unwindToScheudle", sender: true)
 		
 	}
 	
 	
 	// MARK: - Interval to calendar event
 	
-	private func addInterval(_ entry: Interval, toCalendar calendar: EKCalendar) {
+	private func add(entry: Interval, to calendar: EKCalendar) {
 		
 		let durationOfInterval = entry.timeIntervalByConvertingTimeValue()
 		let endDate = entry.startDate.addingTimeInterval(durationOfInterval)
@@ -177,16 +187,16 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 		if entry.notesStr != nil && entry.notesStr != "" {
 			notes = entry.notesStr!
 		}
-		notes += "\nFor \(currentTrip.tripName)\n\nOrganized and Automatically Added by It's Time To Go"
+		notes += "\nFor \(event.tripName)\n\nOrganized and Automatically Added by It's Time To Go"
 		if entry.endLocation != nil {
 			let endLoc = MKMapItem(placemark: entry.endLocation!)
 			endLocStr = "\(endLoc.name!) \(Interval.getAddressFromMapItem(endLoc))"
 		}
-		createEventWithTitle(entry.scheduleLabel, startDate: entry.startDate, endDate: endDate, location: endLocStr, inCalendar: calendar, inEventStore: eventStore, withNotes: notes)
+        createEvent(title: entry.scheduleLabel, startDate: entry.startDate, endDate: endDate, location: endLocStr, inCalendar: calendar, inEventStore: eventStore, withNotes: notes)
 		
 	}
 	
-	private func createEventWithTitle(_ title: String, startDate: Date, endDate: Date, location: String?, inCalendar calendar: EKCalendar, inEventStore eventStore: EKEventStore, withNotes notes: String) {
+	private func createEvent(title: String, startDate: Date, endDate: Date, location: String?, inCalendar calendar: EKCalendar, inEventStore eventStore: EKEventStore, withNotes notes: String) {
 		
 		let event = EKEvent(eventStore: eventStore)
 		event.calendar = calendar
@@ -202,6 +212,7 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 		do {
 			try eventStore.save(event, span: EKSpan.thisEvent)
         } catch {
+            // TODO: display alert vc saying could not save to calendar
 		}
 		
 	}

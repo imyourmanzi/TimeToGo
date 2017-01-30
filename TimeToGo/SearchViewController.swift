@@ -51,16 +51,10 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
 		
 		searchResultsController.isActive = true
 		
-	}
-	
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
-	}
+    }
 	
 	
 	// MARK: - Search updating

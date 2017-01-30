@@ -14,9 +14,9 @@ private let reuseIdentifier = "categoryCell"
 class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CoreDataHelper {
     
     // CoreData variables
-    var moc: NSManagedObjectContext?
-    var allTrips: [Trip] = []
-    var trip: Trip!
+//    var moc: NSManagedObjectContext?
+    var allEvents: [Trip] = []
+//    var trip: Trip!
     var entries: [Interval] = []
     
     // Current VC variables
@@ -29,7 +29,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         super.viewDidLoad()
 
         // Assign the moc CoreData variable by referencing the AppDelegate's
-        moc = getContext()
+//        moc = getContext()
         
         // Set the custom title for the navigation bar
         self.navigationItem.titleView = titleImageView
@@ -44,18 +44,24 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     override func viewWillAppear(_ animated: Bool) {
         
-        // If not done already, move all the main labels' contents into their respective notes and set them nil
-        if !(UserDefaults.standard.bool(forKey: "movedMainLabel")) {
+//        let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
+//        allEvents = (try! moc!.fetch(fetchRequest))
         
-            let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-            allTrips = (try! moc!.fetch(fetchRequest))
+        // If not done already, move all the main labels' contents into their respective notes and set them nil
+        do {
+            allEvents = try fetchAllEvents()
+        } catch {
+            // TODO: display alert vc that data was not found, etc.
+        }
+        
+        if !(UserDefaults.standard.bool(forKey: "movedMainLabel")) {
             
             var i = 0
-            for trip in allTrips {
+            for event in allEvents {
                 
     //            print("trip", i, trip.tripName)
                 
-                self.entries = trip.entries as! [Interval]
+                self.entries = event.entries as! [Interval]
                 
                 var j = 0
                 for entry in self.entries {
@@ -81,7 +87,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
                     
                 }
                 
-                allTrips[i].entries = self.entries as NSArray
+                allEvents[i].entries = self.entries as NSArray
                 i += 1
                 
             }
@@ -90,6 +96,24 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             UserDefaults.standard.set(true, forKey: "movedMainLabel")
             
         }
+        
+        ////////////// place in UIViewController extension
+        if allEvents.count <= 0 {
+            
+            if let tabs = tabBarController?.tabBar.items {
+                
+                for tab in tabs {
+                    
+                    if tab.title != "Home" {
+                        tab.isEnabled = false
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        /////////////
         
     }
     
@@ -258,18 +282,44 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     // MARK: - Navigation
     
+    @IBAction func unwindToHome(_ segue: UIStoryboardSegue) {
+        
+//        print("unwound")
+        
+        // TODO: display alert vc telling user that there are no more events
+        
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         
         performUpdateOnCoreData()
         
     }
+    
+//    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+////        print("should segue?")
+//        
+//        if allEvents.count <= 0 && identifier != "toChooseType" {
+////            print("will not segue")
+//            return false
+//        }
+//        
+////        print("will segue")
+//        return true
+//        
+//    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if let eventTypeVC = segue.destination as? EventTypeCollectionViewController {
             
-            eventTypeVC.navigationItem.title = (eventCategories[categoryIndexPath.item]).components(separatedBy: "^")[1]
             eventTypeVC.eventTypes = getEventTypes(from: categoriesFileData, ofCategory: eventCategories[categoryIndexPath.item])
+            eventTypeVC.allEvents = allEvents
+            eventTypeVC.navigationItem.title = (eventCategories[categoryIndexPath.item]).components(separatedBy: "^")[1]
+            
+        } else if let allEventsVC = segue.destination as? AllEventsTableViewController {
+            
+            allEventsVC.allEvents = allEvents
             
         }
         

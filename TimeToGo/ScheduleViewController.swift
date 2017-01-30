@@ -16,20 +16,20 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	let eventStore = EKEventStore()
 	
 	// CoreData variables
-	var moc: NSManagedObjectContext?
-	var currentTripName: String!
-	var currentTrip: Trip!
-	var entries = [Interval]()
+//	var moc: NSManagedObjectContext?
+//	var eventName: String!
+	var event: Trip!
+    var entries: [Interval] = []
 	
 	// Current VC variables
 	var scheduleScroll: UIScrollView!
 	let scrollSubview = UIView()
 	
-	var flightDate: Date!
+	var eventDate: Date!
 	var intervalDate: Date!
 	
-	let flightIntervalLabel = UILabel()
-	let flightIntervalTimeLabel = UILabel()
+	let eventIntervalLabel = UILabel()
+	let eventIntervalTimeLabel = UILabel()
 	
 	let dateFormatter = DateFormatter()
 	
@@ -37,7 +37,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
         super.viewDidLoad()
 		
 		// Get the app's managedObjectContext
-		moc = getContext()
+//		moc = getContext()
 		
 		let lessHeight = self.tabBarController!.tabBar.frame.height + 64.0 + 44.0
 		scheduleScroll = UIScrollView(frame: CGRect(x: 0.0, y: 64.0, width: view.frame.width, height: view.frame.height - lessHeight))
@@ -50,38 +50,52 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		
-		// Fetch the current trip from the persistent store and assign the CoreData variables
-		currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
-		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.fetch(fetchRequest))
-		currentTrip = trips[0]
-		self.entries = currentTrip.entries as! [Interval]
-		self.flightDate = currentTrip.flightDate as Date!
+		// Fetch the current event from the persistent store and assign the CoreData variables
+//		eventName = UserDefaults.standard.object(forKey: "currentTripName") as! String
+//		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
+//		fetchRequest.predicate = NSPredicate(format: "tripName == %@", eventName)
+//		let events = (try! moc!.fetch(fetchRequest))
+//		event = events[0]
+//		self.entries = event.entries as! [Interval]
+//		self.eventDate = event.flightDate as Date!
 		
-        //  Set the title display to the currentTripName
-		self.navigationItem.title = currentTripName
-		
-		// Set up labels
-		setupLabels()
-		
-		// Set up the dateFormatter for setting interval times
-		dateFormatter.dateFormat = "h:mm a"
-		intervalDate = (flightDate as NSDate).copy() as! Date
-		
-		for entry in Array(entries.reversed()) {
-			
-			// Set up the times for each interval
-			entry.updateScheduleText()
-			intervalDate = Date(timeInterval: -(entry.timeIntervalByConvertingTimeValue()), since: intervalDate)
-			entry.startDate = intervalDate
-			entry.updateDateTextWithString(dateFormatter.string(from: intervalDate))
-			
-		}
-		
+        do {
+            
+            event = try fetchCurrentEvent()
+            guard let theEntries = event.entries as? [Interval] else {
+                // TODO: display alert vc saying data was not found, etc.
+                return
+            }
+            entries = theEntries
+            eventDate = event.flightDate
+            
+            //  Set the title display to the eventName
+            self.navigationItem.title = eventName
+            
+            // Set up labels
+            setupLabels()
+            
+            // Set up the dateFormatter for setting interval times
+            dateFormatter.dateFormat = "h:mm a"
+            intervalDate = (eventDate as NSDate).copy() as! Date
+            
+            for entry in Array(entries.reversed()) {
+                
+                // Set up the times for each interval
+                entry.updateScheduleText()
+                intervalDate = Date(timeInterval: -(entry.timeIntervalByConvertingTimeValue()), since: intervalDate)
+                entry.startDate = intervalDate
+                entry.updateDateTextWithString(dateFormatter.string(from: intervalDate))
+                
+            }
+            
+        } catch {
+            // TODO: display alert vc saying data was not found, etc.
+        }
+        
 	}
 	
-	// Set up and add the flight labels and the interval labels
+	// Set up and add the event labels and the interval labels
 	private func setupLabels() {
 		
 		// Intervals
@@ -95,18 +109,18 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 			
 		}
 		
-			// flight interval
+			// event interval
 		dateFormatter.dateFormat = "h:mm a"
-		flightIntervalLabel.translatesAutoresizingMaskIntoConstraints = false
-		flightIntervalTimeLabel.translatesAutoresizingMaskIntoConstraints = false
-		flightIntervalLabel.text = "Flight Time"
-		flightIntervalTimeLabel.text = dateFormatter.string(from: flightDate)
-		flightIntervalLabel.font = UIFont.systemFont(ofSize: 16.0)
-		flightIntervalTimeLabel.font = UIFont.systemFont(ofSize: 16.0)
-		scrollSubview.addSubview(flightIntervalLabel)
-		scrollSubview.addSubview(flightIntervalTimeLabel)
+		eventIntervalLabel.translatesAutoresizingMaskIntoConstraints = false
+		eventIntervalTimeLabel.translatesAutoresizingMaskIntoConstraints = false
+		eventIntervalLabel.text = "Event Time"
+		eventIntervalTimeLabel.text = dateFormatter.string(from: eventDate)
+		eventIntervalLabel.font = UIFont.systemFont(ofSize: 16.0)
+		eventIntervalTimeLabel.font = UIFont.systemFont(ofSize: 16.0)
+		scrollSubview.addSubview(eventIntervalLabel)
+		scrollSubview.addSubview(eventIntervalTimeLabel)
 		
-		let leftLabelConstraint = NSLayoutConstraint(item: flightIntervalLabel,
+		let leftLabelConstraint = NSLayoutConstraint(item: eventIntervalLabel,
 			attribute: NSLayoutAttribute.left,
 			relatedBy: NSLayoutRelation.equal,
 			toItem: scrollSubview,
@@ -114,7 +128,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 			multiplier: 1.0,
 			constant: 15.0)
 		
-		let topLabelConstraint = NSLayoutConstraint(item: flightIntervalLabel,
+		let topLabelConstraint = NSLayoutConstraint(item: eventIntervalLabel,
 			attribute: NSLayoutAttribute.top,
 			relatedBy: NSLayoutRelation.equal,
 			toItem: scrollSubview,
@@ -122,7 +136,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 			multiplier: 1.0,
 			constant: i)
 		
-		let rightLabelConstraint = NSLayoutConstraint(item: flightIntervalLabel,
+		let rightLabelConstraint = NSLayoutConstraint(item: eventIntervalLabel,
 			attribute: NSLayoutAttribute.right,
 			relatedBy: NSLayoutRelation.equal,
 			toItem: scrollSubview,
@@ -130,23 +144,23 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 			multiplier: 1.0,
 			constant: 40.0)
 		
-		let leftTimeConstraint = NSLayoutConstraint(item: flightIntervalTimeLabel,
+		let leftTimeConstraint = NSLayoutConstraint(item: eventIntervalTimeLabel,
 			attribute: NSLayoutAttribute.left,
 			relatedBy: NSLayoutRelation.greaterThanOrEqual,
-			toItem: flightIntervalLabel,
+			toItem: eventIntervalLabel,
 			attribute: NSLayoutAttribute.right,
 			multiplier: 1.0,
 			constant: 5.0)
 		
-		let topTimeConstraint = NSLayoutConstraint(item: flightIntervalTimeLabel,
+		let topTimeConstraint = NSLayoutConstraint(item: eventIntervalTimeLabel,
 			attribute: NSLayoutAttribute.top,
 			relatedBy: NSLayoutRelation.equal,
-			toItem: flightIntervalLabel,
+			toItem: eventIntervalLabel,
 			attribute: NSLayoutAttribute.top,
 			multiplier: 1.0,
 			constant: 0.0)
 		
-		let rightTimeConstraint = NSLayoutConstraint(item: flightIntervalTimeLabel,
+		let rightTimeConstraint = NSLayoutConstraint(item: eventIntervalTimeLabel,
 			attribute: NSLayoutAttribute.right,
 			relatedBy: NSLayoutRelation.equal,
 			toItem: scrollSubview,
@@ -167,38 +181,13 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	
 	// MARK: - Calendar access
 	
-	@IBAction func addToCal(_ sender: UIButton) {
-		
-		let shareCalVC = storyboard?.instantiateViewController(withIdentifier: "shareCalNavVC") as! UINavigationController
-		
-		switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
-			
-		case .authorized:
-			self.present(shareCalVC, animated: true, completion: nil)
-			
-		case .denied:
-			self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
-			
-		case .notDetermined:
-			eventStore.requestAccess(to: EKEntityType.event, completion: {
-				(granted: Bool, error: Error?) -> Void in
-				if granted {
-					
-					self.present(shareCalVC, animated: true, completion: nil)
-					
-				} else {
-					
-					self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
-					
-				}
-			})
-			
-		case .restricted:
-			self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was restricted.")
-			
-		}
-		
-	}
+//	@IBAction func addToCal(_ sender: UIButton) {
+//		
+//		let shareCalVC = storyboard?.instantiateViewController(withIdentifier: "shareCalNavVC") as! UINavigationController
+//		
+//		
+//		
+//	}
 	
 	private func displayAlertWithTitle(_ title: String?, message: String?) {
 		
@@ -212,7 +201,63 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	
 	
 	// MARK: - Navigation
+    
+    @IBAction func unwindToSchedule(_ segue: UIStoryboardSegue) {
+        
+        // TODO: display whether the save was successful or not (if sender is true or false
+        
+    }
 	
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        
+        var shouldSegue = false
+        
+        if identifier == "toShareToCal" {
+            
+            switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
+                
+            case .authorized:
+                shouldSegue = true
+                
+            case .denied:
+                shouldSegue = false
+                displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
+                
+            case .notDetermined:
+                eventStore.requestAccess(to: EKEntityType.event, completion: {
+                    (granted: Bool, error: Error?) -> Void in
+                    if granted {
+                        shouldSegue = true
+                    } else {
+                        shouldSegue = false
+                        self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
+                    }
+                })
+                
+            case .restricted:
+                shouldSegue = false
+                displayAlertWithTitle("Not Allowed", message: "Access to Calendars was restricted.")
+                
+            }
+            
+        }
+        
+        return shouldSegue
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if let shareToCalVC = segue.destination as? ShareToCalTableViewController {
+//            print("preparing for share")
+            
+//            print("event:", event)
+            shareToCalVC.event = event
+            
+        }
+        
+    }
+    
 	override func viewDidDisappear(_ animated: Bool) {
 		
 		// Remove all views from the scrollSubview
@@ -222,8 +267,8 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 			
 		}
 		
-		flightIntervalLabel.removeFromSuperview()
-		flightIntervalTimeLabel.removeFromSuperview()
+		eventIntervalLabel.removeFromSuperview()
+		eventIntervalTimeLabel.removeFromSuperview()
 		
 	}
 	

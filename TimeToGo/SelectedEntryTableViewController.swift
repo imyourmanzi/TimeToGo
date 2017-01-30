@@ -26,10 +26,10 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	@IBOutlet var mapView: MKMapView!				// Be careful using the MapView, it uses ~200 MB of RAM memory
 	
 	// CoreData variables
-	var moc: NSManagedObjectContext?
-	var currentTripName: String!
-	var currentTrip: Trip!
-	var entries = [Interval]()
+//	var moc: NSManagedObjectContext?
+//	var eventName: String!
+	var event: Trip!
+    var entries: [Interval] = []
 	
 	// Current trip variables
 //	var parentVC: EntriesViewController!
@@ -59,13 +59,13 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		// Fetch the current trip from the persistent store and assign the CoreData variables
-		moc = getContext()
-		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.fetch(fetchRequest))
-		currentTrip = trips[0]
-		self.entries = currentTrip.entries as! [Interval]
+		// Fetch the current event from the persistent store and assign the CoreData variables
+//		moc = getContext()
+//		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
+//		fetchRequest.predicate = NSPredicate(format: "tripName == %@", eventName)
+//		let events = (try! moc!.fetch(fetchRequest))
+//		event = events[0]
+//		self.entries = event.entries as! [Interval]
 		
 //		parentVC = self.navigationController?.viewControllers[0] as! EntriesViewController
 //		indexPath = parentVC.tableView.indexPathForSelectedRow
@@ -75,15 +75,15 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		
 		// Customized setup of the Interface Builder variables
-		schedLabelTextfield.delegate = self
+//		schedLabelTextfield.delegate = self
 		schedLabelTextfield.text = schedLabel
 		
 		intervalLabelCell.detailTextLabel?.text = intervalTimeStr
+//		
+//		intervalTimePicker.dataSource = self
+//		intervalTimePicker.delegate = self
 		
-		intervalTimePicker.dataSource = self
-		intervalTimePicker.delegate = self
-		
-		notesTextview.delegate = self
+//		notesTextview.delegate = self
 		notesTextview.text = notes
 		
 		if notes != nil && notes != "" {
@@ -93,7 +93,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		startLocTextfield.isEnabled = false
 		endLocTextfield.isEnabled = false
 		
-		mapView.delegate = self
+//		mapView.delegate = self
 		self.useLocation = currentEntry.useLocation
 		
 	}
@@ -182,10 +182,6 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-
 	
 	// MARK: - Text field delegate and action
 	
@@ -200,7 +196,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
 		
-		// Hide the flightDatePicker if beginning to edit the textfield
+		// Hide the eventDatePicker if beginning to edit the textfield
 		if pickerHidden == false {
 			
 			togglePicker()
@@ -246,7 +242,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
 		
-		// Hide the flightDatePicker if beginning to edit the textview
+		// Hide the eventDatePicker if beginning to edit the textview
 		if pickerHidden == false {
 			
 			togglePicker()
@@ -698,7 +694,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		if useLocation == true && useLocationPrev == false {
 			
-			mapView.delegate = self
+//			mapView.delegate = self
 			self.tableView.insertRows(at: rowsToChange, with: UITableViewRowAnimation.fade)
 			schedLabelTextfield.resignFirstResponder()
 			notesTextview.resignFirstResponder()
@@ -792,8 +788,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
             currentEntry.endLocation = nil
             
         }
-        self.entries[currentEntryIndexPath.row] = currentEntry
-        currentTrip.entries = self.entries as NSArray
+        entries[currentEntryIndexPath.row] = currentEntry
+//        event.entries = self.entries as NSArray
         
     }
     

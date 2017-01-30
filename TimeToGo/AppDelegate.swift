@@ -76,6 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	    // The directory the application uses to store the Core Data store file. This code uses a directory named "com.VMM.TimeToGo" in the application's documents Application Support directory.
 	    let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
 	    
+        // Print the file path for the sqlite database file for the current simulator
 //        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!)
         
         return urls[urls.count-1]
@@ -145,7 +146,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	
 	// MARK: - Core Data Saving support
 
-	func saveContext () {
+	func saveContext() {
 		
 	    guard let moc = self.managedObjectContext else {
 			return
@@ -156,7 +157,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			do {
 				try moc.save()
 			} catch {
-				
 			}
 			
 		}

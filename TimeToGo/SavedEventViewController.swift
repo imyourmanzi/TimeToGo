@@ -1,5 +1,5 @@
 //
-//  SavedTripViewController.swift
+//  SavedEventViewController.swift
 //  TimeToGo
 //
 //  Created by Matteo Manzi on 7/4/15.
@@ -8,32 +8,34 @@
 
 import UIKit
 
-class SavedTripViewController: UIViewController, UITableViewDataSource {
+class SavedEventViewController: UIViewController, UITableViewDataSource {
 	
 	// Interface Builder variables
 	@IBOutlet var tableView: UITableView!
-	@IBOutlet var flightDateLabel: UILabel!
-	
-	// CoreData variables
-	var tripName: String!
-	var flightDate: Date!
+	@IBOutlet var eventDateLabel: UILabel!
 	
 	// Current VC variables
+    var eventName: String!
+    var eventDate: Date!
 	var entries: [Interval]!
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        print("saved event view loaded")
     }
 
 	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
+//		print("saved event view will appear")
+        
 		// Set up the dateFormatter
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+//        print("set up date formatter")
 		
 		// Set the Interface Builder variables
-		flightDateLabel.text = "Flight Date and Time:\n\(dateFormatter.string(from: flightDate))"
+		eventDateLabel.text = "Event Date and Time:\n\(dateFormatter.string(from: eventDate))"
+//        print("set eventDateLabel")
 		
 	}
 	
@@ -67,8 +69,8 @@ class SavedTripViewController: UIViewController, UITableViewDataSource {
 	
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        // Update currentTripName to the chosen tripName
-        UserDefaults.standard.set(self.tripName, forKey: "currentTripName")
+        // Update currentTripName to the chosen eventName
+        UserDefaults.standard.set(self.eventName, forKey: "currentTripName")
         
     }
     

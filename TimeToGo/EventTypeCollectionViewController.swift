@@ -16,6 +16,8 @@ class EventTypeCollectionViewController: UICollectionViewController {
     var eventTypes: [String] = ["1","2","3"]
     var typeIndexPath = IndexPath()
     
+    // Intermittern variables - variable to be passed to next view controller
+    var allEvents: [Trip] = []
 
     // MARK: - Collection View data source
 
@@ -82,7 +84,10 @@ class EventTypeCollectionViewController: UICollectionViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
         if let newEventVC = segue.destination as? NewEventTableViewController {
+            
+            newEventVC.allEvents = allEvents
             newEventVC.eventType = (eventTypes[typeIndexPath.item]).components(separatedBy: "^")[1]
+            
         }
         
     }

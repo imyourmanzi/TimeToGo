@@ -1,5 +1,5 @@
 //
-//  EditTripNameTableViewController.swift
+//  EditEventNameTableViewController.swift
 //  TimeToGo
 //
 //  Created by Matteo Manzi on 7/4/15.
@@ -9,41 +9,41 @@
 import UIKit
 import CoreData
 
-class EditTripNameTableViewController: UITableViewController, UITextFieldDelegate, CoreDataHelper {
+class EditEventNameTableViewController: UITableViewController, UITextFieldDelegate, CoreDataHelper {
 
 	// Interface Builder variables
-	@IBOutlet var tripNameTextfield: UITextField!
+	@IBOutlet var eventNameTextfield: UITextField!
 
 	// CoreData variables
-	var moc: NSManagedObjectContext?
-	var currentTrip: Trip!
+//	var moc: NSManagedObjectContext?
+	var event: Trip!
 	
 	// Current VC variables
-	var tripName: String!
+	var eventName: String!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 
 		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = getContext()
+//		moc = getContext()
 		
-		// Set up the tripNameTextfield
-		tripNameTextfield.delegate = self
-		tripNameTextfield.text = tripName
+		// Set up the eventNameTextfield
+//		tripNameTextfield.delegate = self
+		eventNameTextfield.text = eventName
 		
 	}
 
-	@IBAction func tripNameDidChange(_ sender: UITextField) {
+	@IBAction func eventNameDidChange(_ sender: UITextField) {
 		
-		// Update the tripName varaible with the contents of the textfield
-		tripName = sender.text!.trimmingCharacters(in: CharacterSet.whitespaces)
+		// Update the eventName varaible with the contents of the textfield
+		eventName = sender.text!.trimmingCharacters(in: CharacterSet.whitespaces)
 		
 	}
 	
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 	
-		// Update the tripName varaible with the contents of the textfield
-		tripName = textField.text!.trimmingCharacters(in: CharacterSet.whitespaces)
+		// Update the eventName varaible with the contents of the textfield
+		eventName = textField.text!.trimmingCharacters(in: CharacterSet.whitespaces)
 		
 		textField.resignFirstResponder()
 		
@@ -56,7 +56,7 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
     
     func prepareForUpdateOnCoreData() {
         
-        currentTrip.tripName = self.tripName
+        event.tripName = self.eventName
         
     }
     
@@ -65,9 +65,9 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		
-		if tripNameTextfield.text!.isEmpty || tripNameTextfield.text == nil {
+		if eventNameTextfield.text!.isEmpty || eventNameTextfield.text == nil {
 			
-			// Alert the user that an entry cannot be saved if it does not have a tripLabel
+			// Alert the user that an entry cannot be saved if it does not have a eventName
 			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Event Name field was empty.", preferredStyle: UIAlertControllerStyle.alert)
 			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
 				alertVC.dismiss(animated: true, completion: nil)
@@ -94,9 +94,9 @@ class EditTripNameTableViewController: UITableViewController, UITextFieldDelegat
 //			}
 		
 			// Update the currentTripName so that other views will reference the updated name
-			UserDefaults.standard.set(self.tripName, forKey: "currentTripName")
+			UserDefaults.standard.set(self.eventName, forKey: "currentTripName")
 			
-			tripNameTextfield.resignFirstResponder()
+			eventNameTextfield.resignFirstResponder()
 			
 		}
 		
