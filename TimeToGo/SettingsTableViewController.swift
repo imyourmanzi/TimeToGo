@@ -43,7 +43,13 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 //		fetchRequest.predicate = NSPredicate(format: "tripName == %@", eventName)
 //		let events = (try! moc!.fetch(fetchRequest))
 //		event = events[0]
-
+        
+		getEventData()
+		
+	}
+    
+    private func getEventData() {
+        
         // Fetch the current event from the persistent store and assign the CoreData variables
         do {
             
@@ -56,15 +62,15 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             eventDateCell.detailTextLabel?.text = dateFormatter.string(from: self.eventDate)
             
         } catch {
-            // TODO: implement alert vc saying couldn't find event
+            displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
         }
         
-//		self.eventName = event.tripName
-		
-		eventNameCell.detailTextLabel?.text = eventName
-		
-//		let fetchAll = NSFetchRequest<Trip>(entityName: "Trip")
-//		allEvents = (try! moc!.fetch(fetchAll))
+        //		self.eventName = event.tripName
+        
+        eventNameCell.detailTextLabel?.text = eventName
+        
+        //		let fetchAll = NSFetchRequest<Trip>(entityName: "Trip")
+        //		allEvents = (try! moc!.fetch(fetchAll))
         
         // Fetch all of the managed objects from the persistent store and update the table view
         do {
@@ -73,11 +79,10 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             tableView.reloadData()
             
         } catch {
-            // TODO: implement alert vc saying no events found
+            displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
         }
-		
-		
-	}
+        
+    }
 	
 	@IBAction func clickedDeleteEvent(_ sender: UIButton) {
 		
@@ -111,18 +116,21 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
                 if let newEventName = self.allEvents.last?.tripName {
                     
                     UserDefaults.standard.set(newEventName, forKey: "currentTripName")
-                    self.viewWillAppear(true)
+//                    self.viewWillAppear(true)
+                    self.getEventData()
                     
                 }
 				
 				
 			} else if self.allEvents.count <= 0 {
 				
-				let semiDestVC = self.storyboard?.instantiateViewController(withIdentifier: "newTripNavVC") as! UINavigationController
-				let destVC = semiDestVC.viewControllers[0] as! NewEventTableViewController
-				destVC.hidesBottomBarWhenPushed = true
-				destVC.navigationItem.hidesBackButton = true
-				self.show(destVC, sender: self)
+//				let semiDestVC = self.storyboard?.instantiateViewController(withIdentifier: "newTripNavVC") as! UINavigationController
+//				let destVC = semiDestVC.viewControllers[0] as! NewEventTableViewController
+//				destVC.hidesBottomBarWhenPushed = true
+//				destVC.navigationItem.hidesBackButton = true
+//				self.show(destVC, sender: self)
+                
+                self.disableTabBarIfNeeded(events: self.allEvents, sender: self)
 				
 			}
 			
@@ -137,15 +145,15 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 
 	}
 	
-	private func displayAlertWithTitle(_ title: String?, message: String?) {
-		
-		let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-		let dismiss = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-		alert.addAction(dismiss)
-		
-		self.present(alert, animated: true, completion: nil)
-		
-	}
+//	private func displayAlertWithTitle(_ title: String?, message: String?) {
+//		
+//		let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+//		let dismiss = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+//		alert.addAction(dismiss)
+//		
+//		self.present(alert, animated: true, completion: nil)
+//		
+//	}
 
 	
 	// MARK: - Table view data source
@@ -190,7 +198,8 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			
 		} else {
 			
-			self.displayAlertWithTitle("Cannot Send Email", message: "Email is not set up on this device.")
+//			self.displayAlertWithTitle("Cannot Send Email", message: "Email is not set up on this device.")
+            displayAlert(title: "Cannot Send Email", message: "Email is not set up on this device.", on: self, dismissHandler: nil)
 			
 		}
 		
@@ -202,7 +211,8 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			
 			if result == MFMailComposeResult.sent || result == MFMailComposeResult.saved {
 				
-				self.displayAlertWithTitle("Thank You!", message: "Your feedback is greatly appreciated! You should receive a reply within a week. Visit the website to find learn a bit more about It's Time To Go.")
+//				self.displayAlertWithTitle("Thank You!", message: "Your feedback is greatly appreciated! You should receive a reply within a week. Visit the website to find learn a bit more about It's Time To Go.")
+                self.displayAlert(title: "Thank You!", message: "Your feedback is greatly appreciated! You should receive a reply within a week. Visit the website to find learn a bit more about It's Time To Go.", on: self, dismissHandler: nil)
 				
 			}
 			

@@ -18,6 +18,7 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 	var calendarsToList = [EKCalendar]()
 	var calendarToUse: EKCalendar!
 	var calendarToUseIndexPath = IndexPath()
+    var saveSuccessful = false
 	
 	// CoreData vairables
 //    var moc: NSManagedObjectContext?
@@ -26,35 +27,7 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		// Check for authorization to use calendars
-		switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
-			
-		case .authorized:
-			extractEventEntityCalendarsOutOfSotre(eventStore)
-		
-		case .notDetermined:
-			eventStore.requestAccess(to: EKEntityType.event, completion: {
-				(granted: Bool, error: NSError?) -> Void in
-				if granted {
-					
-					self.extractEventEntityCalendarsOutOfSotre(self.eventStore)
-					self.tableView.reloadData()
-					
-				}
-			} as! EKEventStoreRequestAccessCompletionHandler)
-			
-		default:
-			let alertViewController = UIAlertController(title: "No Access", message: "Access to Calendars is not allowed.", preferredStyle: UIAlertControllerStyle.alert)
-			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
-				alertViewController.dismiss(animated: true, completion: nil)
-				self.dismiss(animated: true, completion: nil)
-			})
-			alertViewController.addAction(dismissAction)
-			
-			present(alertViewController, animated: true, completion: nil)
-			
-			
-		}
+		checkForCalendarAccess()
 		
 		// Fetch the current event from the persistent store and assign the CoreData variables
 //		moc = getContext()
@@ -65,6 +38,41 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 //		let events = (try! moc!.fetch(fetch))
 //		event = events[0]
 		
+    }
+    
+    // Check for authorization to use calendars
+    private func checkForCalendarAccess() {
+        
+        switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
+            
+        case .authorized:
+            extractEventEntityCalendarsOutOfSotre(eventStore)
+            
+        case .notDetermined:
+            eventStore.requestAccess(to: EKEntityType.event, completion: {
+                (granted: Bool, error: NSError?) in
+                if granted {
+                    
+                    self.extractEventEntityCalendarsOutOfSotre(self.eventStore)
+                    self.tableView.reloadData()
+                    
+                }
+                } as! EKEventStoreRequestAccessCompletionHandler)
+            
+        default:
+            //			let alertViewController = UIAlertController(title: "No Access", message: "Access to Calendars is not allowed.", preferredStyle: UIAlertControllerStyle.alert)
+            //			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
+            //				alertViewController.dismiss(animated: true, completion: nil)
+            //				self.dismiss(animated: true, completion: nil)
+            //			})
+            //			alertViewController.addAction(dismissAction)
+            //			
+            //			present(alertViewController, animated: true, completion: nil)
+            
+            displayAlert(title: "No Access", message: "Access to Calendars is not allowed.", on: self, dismissHandler: nil)
+            
+        }
+        
     }
 	
 	// Get all calendars that allow modifications
@@ -161,8 +169,15 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 //        print(event.entries as! [Interval])
         
         guard let theEntries = event.entries as? [Interval] else {
-            // TODO: display alert vc saying cound not access event entries and unwind on "dismiss" pressed (send false as sender with unwind)
+            
+            displayAlert(title: "Error Retrieving Data", message: "There was an error accessing the event's entries.", on: self, dismissHandler: { (_) in
+                
+                self.saveSuccessful = false
+                self.performSegue(withIdentifier: "unwindToSchedule", sender: self)
+                
+            })
             return
+            
         }
         
 		for entry in theEntries {
@@ -171,7 +186,8 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 			
 		}
 //		dismiss(animated: true, completion: nil)
-        performSegue(withIdentifier: "unwindToScheudle", sender: true)
+        saveSuccessful = true
+        performSegue(withIdentifier: "unwindToScheudle", sender: self)
 		
 	}
 	
@@ -212,7 +228,14 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 		do {
 			try eventStore.save(event, span: EKSpan.thisEvent)
         } catch {
-            // TODO: display alert vc saying could not save to calendar
+            
+            displayAlert(title: "Save Event Failed", message: "The entry \"\(event.title)\" could not be saved to the calendar.", on: self, dismissHandler: { (_) in
+                
+                self.saveSuccessful = false
+                self.performSegue(withIdentifier: "unwindToSchedule", sender: self)
+                
+            })
+            
 		}
 		
 	}

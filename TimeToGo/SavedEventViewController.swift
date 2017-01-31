@@ -23,21 +23,29 @@ class SavedEventViewController: UIViewController, UITableViewDataSource {
         super.viewDidLoad()
         
 //        print("saved event view loaded")
+        
+        setupDateElements()
+        
     }
 
 	override func viewWillAppear(_ animated: Bool) {
 //		print("saved event view will appear")
         
-		// Set up the dateFormatter
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
-//        print("set up date formatter")
-		
-		// Set the Interface Builder variables
-		eventDateLabel.text = "Event Date and Time:\n\(dateFormatter.string(from: eventDate))"
-//        print("set eventDateLabel")
 		
 	}
+    
+    private func setupDateElements() {
+        
+        // Set up the dateFormatter
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+        //        print("set up date formatter")
+        
+        // Set the Interface Builder variables
+        eventDateLabel.text = "Event Date and Time:\n\(dateFormatter.string(from: eventDate))"
+        //        print("set eventDateLabel")
+        
+    }
 	
     
 	// MARK: - Table view data source

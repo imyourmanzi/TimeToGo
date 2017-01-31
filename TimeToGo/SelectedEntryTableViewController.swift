@@ -132,55 +132,60 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
+//		super.viewDidAppear(animated)
 		
 		if useLocation == true {
-
-			useLocationSwitch.setOn(true, animated: true)
-			useLocationSwitchFlipped(useLocationSwitch)
-			
-			guard let startLocation = startLocation, let endLocation = endLocation else {
-				return
-			}
-			
-			startLocTextfield.text = startLocation.name
-			endLocTextfield.text = endLocation.name
-			
-			mapView.removeAnnotations(mapView.annotations)
-			
-			startAnnotation = LocationAnnotation(coordinate: startLocation.placemark.coordinate, title: startLocation.name!, subtitle: Interval.getAddressFromMapItem(startLocation))
-			mapView.addAnnotation(startAnnotation)
-			
-			endAnnotation = LocationAnnotation(coordinate: endLocation.placemark.coordinate, title: endLocation.name!, subtitle: Interval.getAddressFromMapItem(endLocation))
-			mapView.addAnnotation(endAnnotation)
-			
-			if directionsOverlay != nil {
-				
-				mapView.remove(directionsOverlay!)
-				
-			}
-			
-			let directionsRequest = MKDirectionsRequest()
-			directionsRequest.source = startLocation
-			directionsRequest.destination = endLocation
-			directionsRequest.requestsAlternateRoutes = false
-			directionsRequest.transportType = MKDirectionsTransportType.automobile
-			
-			let directions = MKDirections(request: directionsRequest)
-			
-			directions.calculate(completionHandler: { (response: MKDirectionsResponse?, error: Error?) in
-				
-				guard let response = response else {
-					self.displayAlertWithTitle("Error in Route", message: "Could not find a route from Start to End locations")
-					return
-				}
-				
-				self.showRoute(response)
-			})
-			
+			setupLocationElements()
 		}
 		
 	}
+    
+    private func setupLocationElements() {
+        
+        useLocationSwitch.setOn(true, animated: true)
+        useLocationSwitchFlipped(useLocationSwitch)
+        
+        guard let startLocation = startLocation, let endLocation = endLocation else {
+            return
+        }
+        
+        startLocTextfield.text = startLocation.name
+        endLocTextfield.text = endLocation.name
+        
+        mapView.removeAnnotations(mapView.annotations)
+        
+        startAnnotation = LocationAnnotation(coordinate: startLocation.placemark.coordinate, title: startLocation.name!, subtitle: Interval.getAddressFromMapItem(startLocation))
+        mapView.addAnnotation(startAnnotation)
+        
+        endAnnotation = LocationAnnotation(coordinate: endLocation.placemark.coordinate, title: endLocation.name!, subtitle: Interval.getAddressFromMapItem(endLocation))
+        mapView.addAnnotation(endAnnotation)
+        
+        if directionsOverlay != nil {
+            
+            mapView.remove(directionsOverlay!)
+            
+        }
+        
+        let directionsRequest = MKDirectionsRequest()
+        directionsRequest.source = startLocation
+        directionsRequest.destination = endLocation
+        directionsRequest.requestsAlternateRoutes = false
+        directionsRequest.transportType = MKDirectionsTransportType.automobile
+        
+        let directions = MKDirections(request: directionsRequest)
+        
+        directions.calculate(completionHandler: { (response: MKDirectionsResponse?, error: Error?) in
+            
+            guard let response = response else {
+                //					self.displayAlertWithTitle("Error in Route", message: "Could not find a route from Start to End locations")
+                self.displayAlert(title: "Error in Route", message: "Could not find a route from Start to End locations", on: self, dismissHandler: nil)
+                return
+            }
+            
+            self.showRoute(response)
+        })
+        
+    }
 
 	
 	// MARK: - Text field delegate and action
@@ -483,39 +488,43 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				
 			case .denied:
 				useLocationSwitch.isOn = false
-				displayAlertWithTitle("Denied", message: "Location services are not allowed for this app")
+//				displayAlertWithTitle("Denied", message: "Location services are not allowed for this app")
+                displayAlert(title: "Denied", message: "Location services are not allowed for this app", on: self, dismissHandler: nil)
 				
 			case .notDetermined:
 				createLocationManager(false)
 				guard let locationManager = self.locationManager else {
-					displayAlertWithTitle("Error Starting Location Services", message: "Please try again later")
+//					displayAlertWithTitle("Error Starting Location Services", message: "Please try again later")
+                    displayAlert(title: "Error Starting Location Services", message: "Please try again later", on: self, dismissHandler: nil)
 					break
 				}
 				locationManager.requestWhenInUseAuthorization()
 				
 			case .restricted:
 				useLocationSwitch.isOn = false
-				displayAlertWithTitle("Restricted", message: "Location services are not allowed for this app")
+//				displayAlertWithTitle("Restricted", message: "Location services are not allowed for this app")
+                displayAlert(title: "Restricted", message: "Location services are not allowed for this app", on: self, dismissHandler: nil)
 				
 			}
 			
 		} else {
 			
-			displayAlertWithTitle("Location Services Disabled", message: "Location services are not enabled on the device")
+//			displayAlertWithTitle("Location Services Disabled", message: "Location services are not enabled on the device")
+            displayAlert(title: "Location Services Disabled", message: "Location services are not enabled on the device", on: self, dismissHandler: nil)
 			
 		}
 		
 	}
 	
-	private func displayAlertWithTitle(_ title: String?, message: String?) {
-		
-		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-		alertController.addAction(dismissAction)
-		
-		present(alertController, animated: true, completion: nil)
-		
-	}
+//	private func displayAlertWithTitle(_ title: String?, message: String?) {
+//		
+//		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+//		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+//		alertController.addAction(dismissAction)
+//		
+//		present(alertController, animated: true, completion: nil)
+//		
+//	}
 	
 	private func createLocationManager(_ startImmediately: Bool) {
 		
@@ -564,38 +573,58 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		guard let err = error as? CLError else {
 			
-			let alertController = UIAlertController(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", preferredStyle: UIAlertControllerStyle.alert)
-			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
-				
-				manager.stopUpdatingLocation()
-				self.useLocationSwitch.setOn(false, animated: true)
-				self.useLocationPrev = self.useLocation
-				self.useLocation = self.useLocationSwitch.isOn
-				self.toggleUseLocation()
-				
-			}
-			alertController.addAction(dismissBtn)
-			
-			self.present(alertController, animated: true, completion: nil)
+//			let alertController = UIAlertController(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", preferredStyle: UIAlertControllerStyle.alert)
+//			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
+//				
+//				manager.stopUpdatingLocation()
+//				self.useLocationSwitch.setOn(false, animated: true)
+//				self.useLocationPrev = self.useLocation
+//				self.useLocation = self.useLocationSwitch.isOn
+//				self.toggleUseLocation()
+//				
+//			}
+//			alertController.addAction(dismissBtn)
+//			
+//			self.present(alertController, animated: true, completion: nil)
+            
+            displayAlert(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", on: self, dismissHandler: { (_) in
+                
+                manager.stopUpdatingLocation()
+                self.useLocationSwitch.setOn(false, animated: true)
+                self.useLocationPrev = self.useLocation
+                self.useLocation = self.useLocationSwitch.isOn
+                self.toggleUseLocation()
+                
+            })
 			
 			return
 		}
 		
 		if err.code != CLError.Code.locationUnknown {
 			
-			let alertController = UIAlertController(title: "Error \(err.code)", message: "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", preferredStyle: UIAlertControllerStyle.alert)
-			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
-				
-				manager.stopUpdatingLocation()
-				self.useLocationSwitch.setOn(false, animated: true)
-				self.useLocationPrev = self.useLocation
-				self.useLocation = self.useLocationSwitch.isOn
-				self.toggleUseLocation()
-				
-			}
-			alertController.addAction(dismissBtn)
-			
-			self.present(alertController, animated: true, completion: nil)
+//			let alertController = UIAlertController(title: "Error \(err.code)", message: "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", preferredStyle: UIAlertControllerStyle.alert)
+//			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
+//				
+//				manager.stopUpdatingLocation()
+//				self.useLocationSwitch.setOn(false, animated: true)
+//				self.useLocationPrev = self.useLocation
+//				self.useLocation = self.useLocationSwitch.isOn
+//				self.toggleUseLocation()
+//				
+//			}
+//			alertController.addAction(dismissBtn)
+//			
+//			self.present(alertController, animated: true, completion: nil)
+            
+            displayAlert(title: "Error \(err.code)", message:  "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", on: self, dismissHandler: { (_) in
+                
+                manager.stopUpdatingLocation()
+                self.useLocationSwitch.setOn(false, animated: true)
+                self.useLocationPrev = self.useLocation
+                self.useLocation = self.useLocationSwitch.isOn
+                self.toggleUseLocation()
+                
+            })
 			
 		}
 		
@@ -661,7 +690,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	@IBAction func openRouteInMaps(_ sender: UIButton) {
 		
 		guard let startLocation = startLocation, let endLocation = endLocation else {
-			displayAlertWithTitle("Can't Open Route", message: "Make sure there are locations for both Start and End")
+//			displayAlertWithTitle("Can't Open Route", message: "Make sure there are locations for both Start and End")
+            displayAlert(title: "Can't Open Route", message: "Make sure there are locations for both Start and End", on: self, dismissHandler: nil)
 			return
 		}
 		
@@ -746,7 +776,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				
 				guard let placemarks = placemarks , placemarks.count > 0 else {
 
-					self.displayAlertWithTitle("Location Error", message: "Unable to confirm your current location. Please try again later.")
+//					self.displayAlertWithTitle("Location Error", message: "Unable to confirm your current location. Please try again later.")
+                    self.displayAlert(title: "Location Error", message: "Unable to confirm your current location. Please try again later.", on: self, dismissHandler: nil)
 					return
 					
 				}

@@ -16,9 +16,10 @@ class EventTypeCollectionViewController: UICollectionViewController {
     var eventTypes: [String] = ["1","2","3"]
     var typeIndexPath = IndexPath()
     
-    // Intermittern variables - variable to be passed to next view controller
+    // Intermittern variables - variables to be passed to next view controller
     var allEvents: [Trip] = []
 
+    
     // MARK: - Collection View data source
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {

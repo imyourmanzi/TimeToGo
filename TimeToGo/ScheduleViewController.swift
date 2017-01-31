@@ -39,12 +39,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 		// Get the app's managedObjectContext
 //		moc = getContext()
 		
-		let lessHeight = self.tabBarController!.tabBar.frame.height + 64.0 + 44.0
-		scheduleScroll = UIScrollView(frame: CGRect(x: 0.0, y: 64.0, width: view.frame.width, height: view.frame.height - lessHeight))
-		view.addSubview(scheduleScroll)
-		scrollSubview.frame = CGRect(x: 0.0, y: 30.0, width: scheduleScroll.frame.width, height: scheduleScroll.frame.height)
-		scheduleScroll.addSubview(scrollSubview)
-		scheduleScroll.contentInset = UIEdgeInsets.zero
+		setupScrollView()
 		
     }
 	
@@ -59,12 +54,31 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 //		self.entries = event.entries as! [Interval]
 //		self.eventDate = event.flightDate as Date!
 		
+        getEventData()
+        
+	}
+    
+    private func setupScrollView() {
+        
+        let lessHeight = self.tabBarController!.tabBar.frame.height + 64.0 + 44.0
+        scheduleScroll = UIScrollView(frame: CGRect(x: 0.0, y: 64.0, width: view.frame.width, height: view.frame.height - lessHeight))
+        view.addSubview(scheduleScroll)
+        scrollSubview.frame = CGRect(x: 0.0, y: 30.0, width: scheduleScroll.frame.width, height: scheduleScroll.frame.height)
+        scheduleScroll.addSubview(scrollSubview)
+        scheduleScroll.contentInset = UIEdgeInsets.zero
+        
+    }
+    
+    private func getEventData() {
+        
         do {
             
             event = try fetchCurrentEvent()
             guard let theEntries = event.entries as? [Interval] else {
-                // TODO: display alert vc saying data was not found, etc.
+                
+                displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
                 return
+                
             }
             entries = theEntries
             eventDate = event.flightDate
@@ -90,10 +104,10 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
             }
             
         } catch {
-            // TODO: display alert vc saying data was not found, etc.
+            displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
         }
         
-	}
+    }
 	
 	// Set up and add the event labels and the interval labels
 	private func setupLabels() {
@@ -180,6 +194,43 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	
 	
 	// MARK: - Calendar access
+    
+    private func canAccessCalendar() -> Bool {
+        
+        var canAccess = false
+        
+        switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
+            
+        case .authorized:
+            canAccess = true
+            
+        case .denied:
+            canAccess = false
+            //                displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
+            displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars", on: self, dismissHandler: nil)
+            
+        case .notDetermined:
+            eventStore.requestAccess(to: EKEntityType.event, completion: {
+                (granted: Bool, error: Error?) in
+                if granted {
+                    canAccess = true
+                } else {
+                    canAccess = false
+                    //                        self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
+                    self.displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars", on: self, dismissHandler: nil)
+                }
+            })
+            
+        case .restricted:
+            canAccess = false
+            //                displayAlertWithTitle("Not Allowed", message: "Access to Calendars was restricted.")
+            displayAlert(title: "Not Allowed", message: "Access to Calendars was restricted.", on: self, dismissHandler: nil)
+            
+        }
+        
+        return canAccess
+        
+    }
 	
 //	@IBAction func addToCal(_ sender: UIButton) {
 //		
@@ -189,60 +240,39 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 //		
 //	}
 	
-	private func displayAlertWithTitle(_ title: String?, message: String?) {
-		
-		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-		alertController.addAction(dismissAction)
-		
-		present(alertController, animated: true, completion: nil)
-		
-	}
+//	private func displayAlertWithTitle(_ title: String?, message: String?) {
+//		
+//		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+//		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+//		alertController.addAction(dismissAction)
+//		
+//		present(alertController, animated: true, completion: nil)
+//		
+//	}
 	
 	
 	// MARK: - Navigation
     
     @IBAction func unwindToSchedule(_ segue: UIStoryboardSegue) {
-        
-        // TODO: display whether the save was successful or not (if sender is true or false
+
+        // TODO: fix - it shows up on the sharetocalvc
+//        if let shareToCalVC = segue.source as? ShareToCalTableViewController {
+//            
+//            if shareToCalVC.saveSuccessful {
+//                displayAlert(title: "Save Successful", message: nil, on: self, dismissHandler: nil)
+//            }
+//            
+//        }
         
     }
 	
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         
-        var shouldSegue = false
-        
-        if identifier == "toShareToCal" {
-            
-            switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
-                
-            case .authorized:
-                shouldSegue = true
-                
-            case .denied:
-                shouldSegue = false
-                displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
-                
-            case .notDetermined:
-                eventStore.requestAccess(to: EKEntityType.event, completion: {
-                    (granted: Bool, error: Error?) -> Void in
-                    if granted {
-                        shouldSegue = true
-                    } else {
-                        shouldSegue = false
-                        self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
-                    }
-                })
-                
-            case .restricted:
-                shouldSegue = false
-                displayAlertWithTitle("Not Allowed", message: "Access to Calendars was restricted.")
-                
-            }
-            
+        if identifier == "toShareToCal" && canAccessCalendar() {
+            return true
         }
         
-        return shouldSegue
+        return false
         
     }
     

@@ -35,34 +35,42 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
 
 	override func viewWillAppear(_ animated: Bool) {
 		
-		// Fetch the current event from the persistent store and assign the CoreData variables
 //		eventName = UserDefaults.standard.object(forKey: "currentTripName") as! String
 //		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
 //		fetchRequest.predicate = NSPredicate(format: "tripName == %@", eventName)
 //		let events = (try! moc!.fetch(fetchRequest))
         
+        getEventData()
+        
+		performUpdateOnCoreData()
+        
+//        for entry in entries {
+//            print(entry.description)
+//        }
+        
+	}
+    
+    // Fetch the current event from the persistent store and assign the CoreData variables
+    private func getEventData() {
+        
         do {
             
             event = try fetchCurrentEvent()
             guard let theEntries = event.entries as? [Interval] else {
-                // TODO: display alert vc saying data was not found, etc.
+                
+                displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
                 return
+                
             }
             entries = theEntries
             eventDate = event.flightDate
             tableView.reloadData()
             
         } catch {
-            // TODO: display alert vc saying data was not found, etc.
+            displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
         }
         
-		performUpdateOnCoreData()
-		
-//        for entry in entries {
-//            print(entry.description)
-//        }
-        
-	}
+    }
 	
 	
 	// MARK: - Table view data source

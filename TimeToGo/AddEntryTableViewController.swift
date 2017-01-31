@@ -63,24 +63,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 //            print("caught bad one")
 //        }
         
-        // Fetch the current event from the persistent store and assign the CoreData variables
-        do {
-            
-            event = try fetchCurrentEvent()
-            if let theEntries = event.entries as? [Interval] {
-                entries = theEntries
-            } else {
-                parent?.dismiss(animated: true, completion: { 
-                    // TODO: implement a parent-displayed alert vc
-                })
-            }
-            
-        }  catch {
-//            print("caught one")
-            parent?.dismiss(animated: true, completion: {
-                // TODO: implement a parent-displayed alert vc
-            })
-        }
+        getEventData()
 		
 		// Setting the row heights for the table view
 		self.tableView.rowHeight = UITableViewAutomaticDimension
@@ -155,7 +138,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			
 			let directions = MKDirections(request: directionsRequest)
 			directions.calculate(completionHandler: {
-				(response: MKDirectionsResponse?, error: Error?) -> Void in
+				(response: MKDirectionsResponse?, error: Error?) in
 				
 				guard let response = response else {
 					return
@@ -177,18 +160,70 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
+    // Fetch the current event from the persistent store and assign the CoreData variables
+    private func getEventData() {
+        
+        do {
+            
+            event = try fetchCurrentEvent()
+            if let theEntries = event.entries as? [Interval] {
+                entries = theEntries
+            } else {
+                
+                if let parentVC = parent {
+                    
+                    parentVC.dismiss(animated: true, completion: {
+                        self.displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: parentVC, dismissHandler: nil)
+                    })
+                    
+                }
+                
+            }
+            
+        }  catch {
+//            print("caught one")
+            if let parentVC = parent {
+                
+                parentVC.dismiss(animated: true, completion: {
+                    self.displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: parentVC, dismissHandler: nil)
+                })
+                
+            }
+            
+        }
+        
+    }
+    
+    
+    // MARK: - Core Data helper
+    
+    func prepareForUpdateOnCoreData() {
+        
+        event.entries = self.entries as NSArray
+        
+    }
+    
 	@IBAction func saveEntry(_ sender: UIBarButtonItem) {
 		
 		if schedLabelTextfield.text!.isEmpty || schedLabelTextfield.text == nil {
 			
 			// Alert the user that an entry cannot be saved if it does not have a scheduleLabel
-			displayAlertWithTitle("Empty Field!", message: "Cannot leave Schedule Label empty")
+//			displayAlertWithTitle("Empty Field!", message: "Cannot leave Schedule Label empty")
+            displayAlert(title: "Empty Filed!", message: "Cannot leave Schedule Label empty", on: self, dismissHandler: nil)
 			
         } else {
 			
 			// Save entry information (and location information if it's present) and dismiss the view
 //			entries.append(Interval(mainLabel: mainLabel, scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, notesStr: notes, usesLocation: useLocation, startLoc: startLocation?.placemark, endLoc: endLocation?.placemark))
-            let newEntry = Interval(scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, notesStr: notes, usesLocation: useLocation, startLoc: startLocation?.placemark, endLoc: endLocation?.placemark)
+            
+            var newEntry: Interval!
+            
+            if useLocation == true && startLocation != nil && endLocation != nil {
+                newEntry = Interval(scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, notesStr: notes, usesLocation: useLocation, startLoc: startLocation?.placemark, endLoc: endLocation?.placemark)
+            } else {
+                newEntry = Interval(scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, notesStr: notes, usesLocation: false, startLoc: nil, endLoc: nil)
+            }
+            
             entries.append(newEntry)
 			performUpdateOnCoreData()
 			
@@ -238,16 +273,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		return true
 		
 	}
-    
-    
-    // MARK: - Core Data helper
-	
-	// Update the new entry in the event
-    func prepareForUpdateOnCoreData() {
-        
-        event.entries = self.entries as NSArray
-        
-    }
     
 //	func performUpdateOnCoreData() {
 //		
@@ -531,19 +556,22 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 				
 			case .denied:
 				useLocationSwitch.isOn = false
-				displayAlertWithTitle("Denied", message: "Location services are not allowed for this app")
+//				displayAlertWithTitle("Denied", message: "Location services are not allowed for this app")
+                displayAlert(title: "Denied", message: "Location services are not allowed for this app", on: self, dismissHandler: nil)
 				
 			case .notDetermined:
 				createLocationManager(false)
 				guard let locationManager = self.locationManager else {
-					displayAlertWithTitle("Error Starting Location Services", message: "Please try again later")
+//					displayAlertWithTitle("Error Starting Location Services", message: "Please try again later")
+                    displayAlert(title: "Error Starting Location Services", message: "Please try again later", on: self, dismissHandler: nil)
 					break
 				}
 				locationManager.requestWhenInUseAuthorization()
 				
 			case .restricted:
 				useLocationSwitch.isOn = false
-				displayAlertWithTitle("Restricted", message: "Location services are not allowed for this app")
+//				displayAlertWithTitle("Restricted", message: "Location services are not allowed for this app")
+                displayAlert(title: "Restricted", message: "Location services are not allowed for this app", on: self, dismissHandler: nil)
 				
 			}
 			
@@ -551,15 +579,15 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 	}
 	
-	private func displayAlertWithTitle(_ title: String?, message: String?) {
-		
-		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-		alertController.addAction(dismissAction)
-		
-		self.present(alertController, animated: true, completion: nil)
-		
-	}
+//	private func displayAlertWithTitle(_ title: String?, message: String?) {
+//		
+//		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+//		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+//		alertController.addAction(dismissAction)
+//		
+//		self.present(alertController, animated: true, completion: nil)
+//		
+//	}
 	
 	private func createLocationManager(_ startImmediately: Bool) {
 		
@@ -608,39 +636,59 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
         
 		guard let err = error as? CLError else {
 			
-			let alertController = UIAlertController(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", preferredStyle: UIAlertControllerStyle.alert)
-			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
-				
-				manager.stopUpdatingLocation()
-				self.useLocationSwitch.setOn(false, animated: true)
-				self.useLocationPrev = self.useLocation
-				self.useLocation = self.useLocationSwitch.isOn
-				self.toggleUseLocation()
-				
-			}
-			alertController.addAction(dismissBtn)
+//			let alertController = UIAlertController(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", preferredStyle: UIAlertControllerStyle.alert)
+//			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
+//				
+//				manager.stopUpdatingLocation()
+//				self.useLocationSwitch.setOn(false, animated: true)
+//				self.useLocationPrev = self.useLocation
+//				self.useLocation = self.useLocationSwitch.isOn
+//				self.toggleUseLocation()
+//				
+//			}
+//			alertController.addAction(dismissBtn)
+//			
+//			self.present(alertController, animated: true, completion: nil)
 			
-			self.present(alertController, animated: true, completion: nil)
-			
+            displayAlert(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", on: self, dismissHandler: { (_) in
+                
+                manager.stopUpdatingLocation()
+                self.useLocationSwitch.setOn(false, animated: true)
+                self.useLocationPrev = self.useLocation
+                self.useLocation = self.useLocationSwitch.isOn
+                self.toggleUseLocation()
+                
+            })
+            
 			return
 		}
 		
 		if err.code != CLError.Code.locationUnknown {
 			
-			let alertController = UIAlertController(title: "Error \(err.code)", message: "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", preferredStyle: UIAlertControllerStyle.alert)
-			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
-				
-				manager.stopUpdatingLocation()
-				self.useLocationSwitch.setOn(false, animated: true)
-				self.useLocationPrev = self.useLocation
-				self.useLocation = self.useLocationSwitch.isOn
-				self.toggleUseLocation()
-				
-			}
-			alertController.addAction(dismissBtn)
-			
-			self.present(alertController, animated: true, completion: nil)
+//			let alertController = UIAlertController(title: "Error \(err.code)", message: "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", preferredStyle: UIAlertControllerStyle.alert)
+//			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
+//				
+//				manager.stopUpdatingLocation()
+//				self.useLocationSwitch.setOn(false, animated: true)
+//				self.useLocationPrev = self.useLocation
+//				self.useLocation = self.useLocationSwitch.isOn
+//				self.toggleUseLocation()
+//				
+//			}
+//			alertController.addAction(dismissBtn)
+//			
+//			self.present(alertController, animated: true, completion: nil)
 
+            displayAlert(title: "Error \(err.code)", message: "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", on: self, dismissHandler: { (_) in
+                
+                manager.stopUpdatingLocation()
+                self.useLocationSwitch.setOn(false, animated: true)
+                self.useLocationPrev = self.useLocation
+                self.useLocation = self.useLocationSwitch.isOn
+                self.toggleUseLocation()
+                
+            })
+            
 		}		
 			
 	}
@@ -704,7 +752,8 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	@IBAction func openRouteInMaps(_ sender: UIButton) {
 		
 		guard let startLocation = startLocation, let endLocation = endLocation else {
-			displayAlertWithTitle("Can't Open Route", message: "Make sure there are locations for both Start and End")
+//			displayAlertWithTitle("Can't Open Route", message: "Make sure there are locations for both Start and End")
+            displayAlert(title: "Can't Open Route", message: "Make sure there are locations for both Start and End", on: self, dismissHandler: nil)
 			return
 		}
 
@@ -788,7 +837,8 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 				
 				guard let placemarks = placemarks , placemarks.count > 0 else {
 					
-					self.displayAlertWithTitle("Location Error", message: "Unable to confirm your current location. Please try again later.")
+//					self.displayAlertWithTitle("Location Error", message: "Unable to confirm your current location. Please try again later.")
+                    self.displayAlert(title: "Location Error", message: "Unable to confirm your current location. Please try again later.", on: self, dismissHandler: nil)
 					return
 					
 				}

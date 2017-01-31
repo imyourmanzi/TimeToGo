@@ -67,13 +67,17 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 		
 		if eventNameTextfield.text!.isEmpty || eventNameTextfield.text == nil {
 			
-			// Alert the user that an entry cannot be saved if it does not have a eventName
-			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Event Name field was empty.", preferredStyle: UIAlertControllerStyle.alert)
-			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
-				alertVC.dismiss(animated: true, completion: nil)
-			})
-			alertVC.addAction(okBtn)
-			parent?.present(alertVC, animated: true, completion: nil)
+//			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Event Name field was empty.", preferredStyle: UIAlertControllerStyle.alert)
+//			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
+//				alertVC.dismiss(animated: true, completion: nil)
+//			})
+//			alertVC.addAction(okBtn)
+//			parent?.present(alertVC, animated: true, completion: nil)
+            
+            // Alert the user that an entry cannot be saved if it does not have a eventName
+            if let parentVC = parent {
+                displayAlert(title: "Empty Field!", message: "Changes were not saved because the Event Name field was empty.", on: parentVC, dismissHandler: nil)
+            }
 			
 		} else {
 			

@@ -32,17 +32,23 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
 		// Assign the moc CoreData variable by referencing the AppDelegate's
 //		moc = getContext()
 		
+        setupDateElements()
+		
+	}
+    
+    private func setupDateElements() {
+        
         // Set the time zone
         let components = Calendar.current.dateComponents(in: TimeZone.current, from: eventDate)
         eventDate = Calendar.current.date(from: components)!
         
-//        print(eventDatePicker.calendar.timeZone)
+        //        print(eventDatePicker.calendar.timeZone)
         
-		// Define the date format and apply it to the event time display
-		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
-		dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
-		
-	}
+        // Define the date format and apply it to the event time display
+        dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+        dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
+        
+    }
 	
 	@IBAction func eventDateChanged(_ sender: UIDatePicker) {
 		

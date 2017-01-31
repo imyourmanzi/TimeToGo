@@ -29,24 +29,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		searchResultsController = ({
-			
-			let controller = UISearchController(searchResultsController: nil)
-			controller.delegate = self
-			controller.searchResultsUpdater = self
-			controller.dimsBackgroundDuringPresentation = false
-			controller.hidesNavigationBarDuringPresentation = false
-			controller.searchBar.showsCancelButton = false
-			controller.searchBar.delegate = self
-			controller.searchBar.placeholder = "Enter Location"
-			
-			self.tableView.tableHeaderView = controller.searchBar
-			
-			return controller
-			
-		})()
-		
-		self.tableView.reloadData()
+		setupSearchController()
 		
 	}
 	
@@ -54,6 +37,29 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		
 		searchResultsController.isActive = true
 		
+    }
+    
+    private func setupSearchController() {
+        
+        searchResultsController = {
+            
+            let controller = UISearchController(searchResultsController: nil)
+            controller.delegate = self
+            controller.searchResultsUpdater = self
+            controller.dimsBackgroundDuringPresentation = false
+            controller.hidesNavigationBarDuringPresentation = false
+            controller.searchBar.showsCancelButton = false
+            controller.searchBar.delegate = self
+            controller.searchBar.placeholder = "Enter Location"
+            
+            tableView.tableHeaderView = controller.searchBar
+            
+            return controller
+            
+        }()
+        
+        tableView.reloadData()
+        
     }
 	
 	
@@ -71,7 +77,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		request.region = region
 		
 		let search = MKLocalSearch(request: request)
-		search.start { (response: MKLocalSearchResponse?, error: Error?) -> Void in
+		search.start { (response: MKLocalSearchResponse?, error: Error?) in
 			
 			
 			guard let response = response , response.mapItems.count > 0 else {

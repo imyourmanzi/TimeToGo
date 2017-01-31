@@ -1669,7 +1669,7 @@
         <!--Home-->
         <scene sceneID="HNd-rC-bcz">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="NeL-rw-LcN" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="homeNavVC" automaticallyAdjustsScrollViewInsets="NO" id="NeL-rw-LcN" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Home" id="KUJ-mM-X9Y">
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="image" keyPath="selectedImage" value="homeTabSel"/>

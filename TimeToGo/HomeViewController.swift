@@ -47,30 +47,62 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
 //        let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
 //        allEvents = (try! moc!.fetch(fetchRequest))
         
-        // If not done already, move all the main labels' contents into their respective notes and set them nil
+        getEventData()
+        
+        moveMainLabelIfNeeded()
+        
+        disableTabBarIfNeeded(events: allEvents, sender: self)
+        
+        ////////////// place in UIViewController extension
+//        if allEvents.count <= 0 {
+//            
+//            if let tabs = tabBarController?.tabBar.items {
+//                
+//                for tab in tabs {
+//                    
+//                    if tab.title != "Home" {
+//                        tab.isEnabled = false
+//                    }
+//                    
+//                }
+//                
+//            }
+//            
+//        }
+        /////////////
+        
+    }
+    
+    private func getEventData() {
+        
         do {
             allEvents = try fetchAllEvents()
         } catch {
-            // TODO: display alert vc that data was not found, etc.
+            displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
         }
+        
+    }
+    
+    // If not done already, move all the main labels' contents into their respective notes and set them nil
+    private func moveMainLabelIfNeeded() {
         
         if !(UserDefaults.standard.bool(forKey: "movedMainLabel")) {
             
             var i = 0
             for event in allEvents {
                 
-    //            print("trip", i, trip.tripName)
+                //            print("trip", i, trip.tripName)
                 
                 self.entries = event.entries as! [Interval]
                 
                 var j = 0
                 for entry in self.entries {
-                
-    //                print("entry", j, entry.description)
-                
+                    
+                    //                print("entry", j, entry.description)
+                    
                     if let mainLabel = entry.mainLabel {
                         
-    //                    print("mainLabel exists in entry", j)
+                        //                    print("mainLabel exists in entry", j)
                         
                         if let notes = entry.notesStr {
                             entry.notesStr = "Main Label: \(mainLabel)\n\n\(notes)"
@@ -96,24 +128,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             UserDefaults.standard.set(true, forKey: "movedMainLabel")
             
         }
-        
-        ////////////// place in UIViewController extension
-        if allEvents.count <= 0 {
-            
-            if let tabs = tabBarController?.tabBar.items {
-                
-                for tab in tabs {
-                    
-                    if tab.title != "Home" {
-                        tab.isEnabled = false
-                    }
-                    
-                }
-                
-            }
-            
-        }
-        /////////////
         
     }
     
@@ -286,7 +300,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
 //        print("unwound")
         
-        // TODO: display alert vc telling user that there are no more events
+        displayAlert(title: "No Events", message: "There are currently no saved events.", on: self, dismissHandler: nil)
         
     }
     

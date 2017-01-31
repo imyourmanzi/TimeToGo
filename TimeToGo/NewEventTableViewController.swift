@@ -43,33 +43,21 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 		// Set up tripNameTextfield
 //		eventNameTextfield.delegate = self
 		
-		// Set up dateFormatter and assign a default newEventName
-		dateFormatter.dateStyle = .short
-		dateFormatter.timeStyle = .medium
-		newEventName = eventType.replacingOccurrences(of: " ", with: "") + "EventOn_\(dateFormatter.string(from: eventDate))"
-		
-		// Get current date but with seconds set to 0 and set date to current time zone
-		var components = Calendar.current.dateComponents(in: TimeZone.current, from: eventDate)
-		components.second = 0
-		eventDate = Calendar.current.date(from: components)!
-		
-		// Set up dateFormatter for use generating label for the eventDatePicker
-		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
-		dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
+        setupDateElements()
+        
+        // Set up the default entries
+        //        print("eventType:", eventType)
+        if let fileData = readData(fromCSV: eventType) {
+            //            print("fileData:", fileData)
+            defaultEntries = getEntries(from: fileData)
+        }
+        //        for entry in defaultEntries {
+        //            print("_Entries_\n", entry.scheduleLabel, entry.stringFromTimeValue())
+        //        }
 		
 	}
     
 	override func viewWillAppear(_ animated: Bool) {
-		
-        // Set up the default entries
-//        print("eventType:", eventType)
-        if let fileData = readData(fromCSV: eventType) {
-//            print("fileData:", fileData)
-            defaultEntries = getEntries(from: fileData)
-        }
-//        for entry in defaultEntries {
-//            print("_Entries_\n", entry.scheduleLabel, entry.stringFromTimeValue())
-//        }
         
 		// Fetch all of the managed objects from the persistent store and update the table view
 //		let fetchAll = NSFetchRequest<Trip>()
@@ -86,6 +74,24 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 //		}
 		
 	}
+    
+    private func setupDateElements() {
+        
+        // Set up dateFormatter and assign a default newEventName
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .medium
+        newEventName = eventType.replacingOccurrences(of: " ", with: "") + "EventOn_\(dateFormatter.string(from: eventDate))"
+        
+        // Get current date but with seconds set to 0 and set date to current time zone
+        var components = Calendar.current.dateComponents(in: TimeZone.current, from: eventDate)
+        components.second = 0
+        eventDate = Calendar.current.date(from: components)!
+        
+        // Set up dateFormatter for use generating label for the eventDatePicker
+        dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+        dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
+        
+    }
 	
     
     // MARK: - Manage CSV of default entries
@@ -300,7 +306,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
         
         // Follow normal procedure to create the event and display the schedule
         guard let theMoc = moc else {
-            // TODO: display alert vc saying that new event could not be saved
+            displayAlert(title: "Not Saved", message: "Data could not be saved.", on: self, dismissHandler: nil)
             return
         }
         let newEvent = NSEntityDescription.insertNewObject(forEntityName: "Trip", into: theMoc) as! Trip

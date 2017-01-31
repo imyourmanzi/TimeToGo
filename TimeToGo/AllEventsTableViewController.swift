@@ -31,26 +31,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 		// Assign the moc CoreData variable by referencing the AppDelegate's
 //		moc = getContext()
 		
-		// Set up the search controller
-        if #available(iOS 10.0, *) {
-            searchResultsController.loadViewIfNeeded()
-        } else if #available(iOS 9.0, *) {
-			searchResultsController.loadViewIfNeeded()
-		} else {
-			searchResultsController.loadView()
-		}
-		searchResultsController = ({
-			let controller = UISearchController(searchResultsController: nil)
-			controller.searchResultsUpdater = self
-			controller.dimsBackgroundDuringPresentation = false
-			controller.searchBar.sizeToFit()
-			
-			self.tableView.tableHeaderView = controller.searchBar
-			
-			return controller
-		})()
-		
-		tableView.reloadData()
+        setupSearchController()
         
 	}
 
@@ -66,7 +47,6 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 //            allEvents = try fetchAllEvents()
 //            tableView.reloadData()
 //        } catch {
-//            // TODO: implement an alert vc
 //        }
 		
 	}
@@ -78,6 +58,32 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
         }
         
     }
+    
+    // Set up the search controller
+    private func setupSearchController() {
+        
+        if #available(iOS 10.0, *) {
+            searchResultsController.loadViewIfNeeded()
+        } else if #available(iOS 9.0, *) {
+            searchResultsController.loadViewIfNeeded()
+        } else {
+            searchResultsController.loadView()
+        }
+        searchResultsController = ({
+            let controller = UISearchController(searchResultsController: nil)
+            controller.searchResultsUpdater = self
+            controller.dimsBackgroundDuringPresentation = false
+            controller.searchBar.sizeToFit()
+            
+            self.tableView.tableHeaderView = controller.searchBar
+            
+            return controller
+        })()
+        
+        tableView.reloadData()
+        
+    }
+    
 	
     // MARK: - Table view data source
 
