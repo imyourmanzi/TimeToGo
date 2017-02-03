@@ -15,8 +15,6 @@ protocol CoreDataHelper {
     var moc: NSManagedObjectContext? { get }
     var eventName: String? { get }
     
-//    func getContext() -> NSManagedObjectContext?
-    
     func fetchEvents(using: NSPredicate?) throws -> [Trip]
     
     func fetchEvent(named: String) throws -> Trip
@@ -66,18 +64,6 @@ extension CoreDataHelper {
         
     }
     
-//    func getContext() -> NSManagedObjectContext? {
-//        
-//        let appDel = UIApplication.shared.delegate as! AppDelegate
-//        
-//        guard let theMoc = appDel.managedObjectContext else {
-//            return nil
-//        }
-//        
-//        return theMoc
-//        
-//    }
-    
     func fetchEvents(using predicate: NSPredicate?) throws -> [Trip] {
         
         let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
@@ -100,22 +86,6 @@ extension CoreDataHelper {
     }
     
     func fetchEvent(named name: String) throws -> Trip {
-        
-//        let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-//        fetchRequest.predicate = NSPredicate(format: "tripName == %@", name)
-//        
-//        guard let theMoc = moc else {
-//            throw CoreDataEventError.invalidMOC
-//        }
-//            
-//        print("trying to fetch")
-//        let events = try theMoc.fetch(fetchRequest)
-//        let event = events[0]
-//    
-//        return event
-        
-//        print("caught for dataFetchFailed")
-//        throw CoreDataEventError.dataFetchError
         
         let predicate = NSPredicate(format: "tripName == %@", name)
         
@@ -140,14 +110,6 @@ extension CoreDataHelper {
     
     func fetchAllEvents() throws -> [Trip] {
         
-//        let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-//        
-//        guard let theMoc = moc else {
-//            throw CoreDataEventError.invalidMOC
-//        }
-//        
-//        return try theMoc.fetch(fetchRequest)
-        
         return try fetchEvents(using: nil)
         
     }
@@ -163,24 +125,5 @@ extension CoreDataHelper {
         appDelegate.saveContext()
         
     }
-    
-//    func performUpdateOnCoreData() {
-//        
-//        prepareForUpdateOnCoreData()
-//        
-//        guard let moc = self.moc else {
-//            return
-//        }
-//        
-//        if moc.hasChanges {
-//            
-//            do {
-//                try moc.save()
-//            } catch {
-//            }
-//            
-//        }
-//        
-//    }
     
 }

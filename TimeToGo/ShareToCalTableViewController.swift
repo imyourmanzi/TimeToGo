@@ -21,22 +21,12 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
     var saveSuccessful = false
 	
 	// CoreData vairables
-//    var moc: NSManagedObjectContext?
 	var event: Trip!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		checkForCalendarAccess()
-		
-		// Fetch the current event from the persistent store and assign the CoreData variables
-//		moc = getContext()
-//		let eventName = UserDefaults.standard.object(forKey: "currentTripName") as! String
-//		let fetch = NSFetchRequest<Trip>()
-//		fetch.entity = NSEntityDescription.entity(forEntityName: "Trip", in: moc!)
-//		fetch.predicate = NSPredicate(format: "tripName == %@", eventName)
-//		let events = (try! moc!.fetch(fetch))
-//		event = events[0]
 		
     }
     
@@ -50,25 +40,18 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
             
         case .notDetermined:
             eventStore.requestAccess(to: EKEntityType.event, completion: {
-                (granted: Bool, error: NSError?) in
+                (granted: Bool, error: Error?) in
+                
                 if granted {
                     
                     self.extractEventEntityCalendarsOutOfSotre(self.eventStore)
                     self.tableView.reloadData()
                     
                 }
-                } as! EKEventStoreRequestAccessCompletionHandler)
+                
+            })
             
         default:
-            //			let alertViewController = UIAlertController(title: "No Access", message: "Access to Calendars is not allowed.", preferredStyle: UIAlertControllerStyle.alert)
-            //			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
-            //				alertViewController.dismiss(animated: true, completion: nil)
-            //				self.dismiss(animated: true, completion: nil)
-            //			})
-            //			alertViewController.addAction(dismissAction)
-            //			
-            //			present(alertViewController, animated: true, completion: nil)
-            
             displayAlert(title: "No Access", message: "Access to Calendars is not allowed.", on: self, dismissHandler: nil)
             
         }
@@ -150,23 +133,9 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 	
 	// MARK: - Navigation
 	
-//	@IBAction func cancelAddToCal(_ sender: UIBarButtonItem) {
-//		
-//		dismiss(animated: true, completion: nil)
-//		
-//	}
-	
 	@IBAction func saveEventToCal(_ sender: UIBarButtonItem) {
 		
-//		guard let calendarIndex = calendarToUseIndexPath.row else {
-//			return
-//		}
-		
 		calendarToUse = calendarsToList[calendarToUseIndexPath.row]
-		
-//        print(event)
-//        print(event.entries)
-//        print(event.entries as! [Interval])
         
         guard let theEntries = event.entries as? [Interval] else {
             
@@ -185,7 +154,7 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
             add(entry: entry, to: calendarToUse)
 			
 		}
-//		dismiss(animated: true, completion: nil)
+        
         saveSuccessful = true
         performSegue(withIdentifier: "unwindToScheudle", sender: self)
 		

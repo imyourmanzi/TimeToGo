@@ -22,28 +22,18 @@ class SavedEventViewController: UIViewController, UITableViewDataSource {
 	override func viewDidLoad() {
         super.viewDidLoad()
         
-//        print("saved event view loaded")
-        
         setupDateElements()
         
     }
-
-	override func viewWillAppear(_ animated: Bool) {
-//		print("saved event view will appear")
-        
-		
-	}
     
     private func setupDateElements() {
         
         // Set up the dateFormatter
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
-        //        print("set up date formatter")
         
         // Set the Interface Builder variables
         eventDateLabel.text = "Event Date and Time:\n\(dateFormatter.string(from: eventDate))"
-        //        print("set eventDateLabel")
         
     }
 	
@@ -81,17 +71,5 @@ class SavedEventViewController: UIViewController, UITableViewDataSource {
         UserDefaults.standard.set(self.eventName, forKey: "currentTripName")
         
     }
-    
-//	@IBAction func loadTrip(_ sender: UIBarButtonItem) {
-//		
-//		// Update currentTripName to the chosen tripName
-//		UserDefaults.standard.set(self.tripName, forKey: "currentTripName")
-//		
-//		// Transition to the Scheudle VC
-//		let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as! UITabBarController
-//		mainTabVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-//		self.present(mainTabVC, animated: true, completion: nil)
-//		
-//	}
 	
 }

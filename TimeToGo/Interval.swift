@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 
+// TODO: Renames (see below)
 class Interval: NSObject, NSCoding {
     
 	// Public variables
@@ -26,36 +27,9 @@ class Interval: NSObject, NSCoding {
 	// Private label constants for schedule
 	private let entryLabel = UILabel()
 	private let dateLabel = UILabel()
-	
+    
 	
 	// MARK: - Initializers
-
-//  No longer needed
-//
-//	init(mainLabel: String, scheduleLabel: String, timeValueHours: Int, timeValueMins: Int) {
-//		
-//		self.mainLabel = mainLabel
-//		self.timeValueHours = timeValueHours
-//		self.timeValueMins = timeValueMins
-//		self.scheduleLabel = scheduleLabel
-//		
-//	}
-//	
-//	init(mainLabel: String, scheduleLabel: String, timeValueHours: Int, timeValueMins: Int, usesLocation: Bool, startLoc: MKPlacemark?, endLoc: MKPlacemark?) {
-//		
-//		self.mainLabel = mainLabel
-//		self.timeValueHours = timeValueHours
-//		self.timeValueMins = timeValueMins
-//		self.scheduleLabel = scheduleLabel
-//		self.useLocation = usesLocation
-//		if usesLocation == true && startLoc != nil && endLoc != nil {
-//			
-//			self.startLocation = startLoc
-//			self.endLocation = endLoc
-//			
-//		}
-//		
-//	}
 	
     init(scheduleLabel: String, timeValueHours: Int, timeValueMins: Int, notesStr: String?, usesLocation: Bool, startLoc: MKPlacemark?, endLoc: MKPlacemark?) {
 		

@@ -16,8 +16,6 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	let eventStore = EKEventStore()
 	
 	// CoreData variables
-//	var moc: NSManagedObjectContext?
-//	var eventName: String!
 	var event: Trip!
     var entries: [Interval] = []
 	
@@ -36,23 +34,11 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		// Get the app's managedObjectContext
-//		moc = getContext()
-		
 		setupScrollView()
 		
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
-		
-		// Fetch the current event from the persistent store and assign the CoreData variables
-//		eventName = UserDefaults.standard.object(forKey: "currentTripName") as! String
-//		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-//		fetchRequest.predicate = NSPredicate(format: "tripName == %@", eventName)
-//		let events = (try! moc!.fetch(fetchRequest))
-//		event = events[0]
-//		self.entries = event.entries as! [Interval]
-//		self.eventDate = event.flightDate as Date!
 		
         getEventData()
         
@@ -206,24 +192,25 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
             
         case .denied:
             canAccess = false
-            //                displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
             displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars", on: self, dismissHandler: nil)
             
         case .notDetermined:
             eventStore.requestAccess(to: EKEntityType.event, completion: {
                 (granted: Bool, error: Error?) in
+                
                 if granted {
                     canAccess = true
                 } else {
+                    
                     canAccess = false
-                    //                        self.displayAlertWithTitle("Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars")
                     self.displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars", on: self, dismissHandler: nil)
+                    
                 }
+                
             })
             
         case .restricted:
             canAccess = false
-            //                displayAlertWithTitle("Not Allowed", message: "Access to Calendars was restricted.")
             displayAlert(title: "Not Allowed", message: "Access to Calendars was restricted.", on: self, dismissHandler: nil)
             
         }
@@ -231,24 +218,6 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
         return canAccess
         
     }
-	
-//	@IBAction func addToCal(_ sender: UIButton) {
-//		
-//		let shareCalVC = storyboard?.instantiateViewController(withIdentifier: "shareCalNavVC") as! UINavigationController
-//		
-//		
-//		
-//	}
-	
-//	private func displayAlertWithTitle(_ title: String?, message: String?) {
-//		
-//		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-//		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-//		alertController.addAction(dismissAction)
-//		
-//		present(alertController, animated: true, completion: nil)
-//		
-//	}
 	
 	
 	// MARK: - Navigation
@@ -279,11 +248,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if let shareToCalVC = segue.destination as? ShareToCalTableViewController {
-//            print("preparing for share")
-            
-//            print("event:", event)
             shareToCalVC.event = event
-            
         }
         
     }

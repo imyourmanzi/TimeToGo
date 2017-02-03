@@ -14,9 +14,7 @@ private let reuseIdentifier = "categoryCell"
 class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CoreDataHelper {
     
     // CoreData variables
-//    var moc: NSManagedObjectContext?
     var allEvents: [Trip] = []
-//    var trip: Trip!
     var entries: [Interval] = []
     
     // Current VC variables
@@ -27,9 +25,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Assign the moc CoreData variable by referencing the AppDelegate's
-//        moc = getContext()
         
         // Set the custom title for the navigation bar
         self.navigationItem.titleView = titleImageView
@@ -38,38 +33,16 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             categoriesFileData = fileData
             eventCategories = getEventCategories(from: fileData)
         }
-//        print("eventCategories in viewDidLoad \(eventCategories)")
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
-//        let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-//        allEvents = (try! moc!.fetch(fetchRequest))
         
         getEventData()
         
         moveMainLabelIfNeeded()
         
         disableTabBarIfNeeded(events: allEvents, sender: self)
-        
-        ////////////// place in UIViewController extension
-//        if allEvents.count <= 0 {
-//            
-//            if let tabs = tabBarController?.tabBar.items {
-//                
-//                for tab in tabs {
-//                    
-//                    if tab.title != "Home" {
-//                        tab.isEnabled = false
-//                    }
-//                    
-//                }
-//                
-//            }
-//            
-//        }
-        /////////////
         
     }
     
@@ -91,18 +64,12 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             var i = 0
             for event in allEvents {
                 
-                //            print("trip", i, trip.tripName)
-                
                 self.entries = event.entries as! [Interval]
                 
                 var j = 0
                 for entry in self.entries {
                     
-                    //                print("entry", j, entry.description)
-                    
                     if let mainLabel = entry.mainLabel {
-                        
-                        //                    print("mainLabel exists in entry", j)
                         
                         if let notes = entry.notesStr {
                             entry.notesStr = "Main Label: \(mainLabel)\n\n\(notes)"
@@ -124,7 +91,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
                 
             }
             
-            // Update the database
+            // Update the standards database
             UserDefaults.standard.set(true, forKey: "movedMainLabel")
             
         }
@@ -143,12 +110,11 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         do {
             
             let contents = try String(contentsOfFile: filePath)
-//            print("contents\n\(contents)")
+            
             return contents
             
         } catch {
             
-//            print("File read error")
             return nil
             
         }
@@ -164,19 +130,13 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             rows.removeLast()
         }
         
-//        print("All Rows: \(rows)")
-//        print("Num rows: \(rows.count)")
         for row in rows {
             
-//            print("Row: \(row)")
             let category = row.components(separatedBy: ",")[0]
             
             
-            if !categories.contains(category) {
-                
-//                print("Category: \(category)")
+            if !(categories.contains(category)) {
                 categories.append(category)
-                
             }
             
         }
@@ -228,8 +188,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CategoryCollectionViewCell
         
-//        print("eventCategories in cellForItem \(eventCategories)")
-//        print("indexPath.item in cellForItem \(indexPath.item)")
         cell.configure(categoryTitle: eventCategories[indexPath.item])
         
         return cell
@@ -271,34 +229,9 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     
-    // MARK: - Core Data helper
-    
-//    func performUpdateOnCoreData() {
-//        
-//        print("performing update")
-//
-//        guard let moc = self.moc else {
-//            return
-//        }
-//        
-//        if moc.hasChanges {
-//            
-//            do {
-//                print("saving")
-//                try moc.save()
-//            } catch {
-//            }
-//            
-//        }
-//        
-//    }
-    
-    
     // MARK: - Navigation
     
     @IBAction func unwindToHome(_ segue: UIStoryboardSegue) {
-        
-//        print("unwound")
         
         displayAlert(title: "No Events", message: "There are currently no saved events.", on: self, dismissHandler: nil)
         
@@ -309,19 +242,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         performUpdateOnCoreData()
         
     }
-    
-//    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-////        print("should segue?")
-//        
-//        if allEvents.count <= 0 && identifier != "toChooseType" {
-////            print("will not segue")
-//            return false
-//        }
-//        
-////        print("will segue")
-//        return true
-//        
-//    }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         

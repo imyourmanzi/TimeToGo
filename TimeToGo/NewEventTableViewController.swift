@@ -18,7 +18,6 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
     @IBOutlet var setTodayButton: UIButton!
 	
 	// CoreData variables
-//	var moc: NSManagedObjectContext?
     var allEvents: [Trip] = []
 	
 	// Current VC variables
@@ -32,47 +31,13 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-//		// Set the view's background image
-//		let backgroundImageView = UIImageView(image: UIImage(named: "lookout"))
-//		backgroundImageView.contentMode = UIViewContentMode.scaleAspectFill
-//		self.tableView.backgroundView = backgroundImageView
-		
-		// Get the app's managedObjectContext
-//		moc = getContext()
-        
-		// Set up tripNameTextfield
-//		eventNameTextfield.delegate = self
-		
         setupDateElements()
         
         // Set up the default entries
-        //        print("eventType:", eventType)
         if let fileData = readData(fromCSV: eventType) {
-            //            print("fileData:", fileData)
             defaultEntries = getEntries(from: fileData)
         }
-        //        for entry in defaultEntries {
-        //            print("_Entries_\n", entry.scheduleLabel, entry.stringFromTimeValue())
-        //        }
-		
-	}
-    
-	override func viewWillAppear(_ animated: Bool) {
         
-		// Fetch all of the managed objects from the persistent store and update the table view
-//		let fetchAll = NSFetchRequest<Trip>()
-//		fetchAll.entity = NSEntityDescription.entity(forEntityName: "Trip", in: moc!)
-//		allEvents = (try! moc!.fetch(fetchAll))
-		
-		// Handle a case of 0 currently saved events
-//		if allEvents.count > 0 && self.navigationItem.leftBarButtonItem == nil {
-//			
-//			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(cancelNewEvent))
-//			let theEventName = allEvents[allEvents.count - 1].tripName
-//			UserDefaults.standard.set(theEventName, forKey: "currentTripName")
-//			
-//		}
-		
 	}
     
     private func setupDateElements() {
@@ -118,7 +83,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
         var entries: [Interval] = []
         
         var rows = data.components(separatedBy: "\n")
-//        print("Rows:", rows)
+        
         if rows.last == "" {
             rows.removeLast()
         }
@@ -183,9 +148,6 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
         var dateString = formatter.string(from: Date())
         var timeString = formatter.string(from: eventDate)
         
-        //        print("dateString before", dateString)
-        //        print("timeString before", timeString)
-        
         // Of the formatted strings:
         // - get the date (day) from the current
         // - get the time from event's date
@@ -195,35 +157,11 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
         timeString = timeString.substring(from: endDateIndex)
         let todayString = dateString + timeString
         
-        //        print("dateString after", dateString)
-        //        print("timeString after", timeString)
-        //        print("todayString", todayString)
-        
-        // Turn the current day into a Date object,
-        // the event's time into a Date object,
-        // and the default date Jan 1, 2001 into a Date object
-        //        formatter.dateFormat = "yyyy-MM-dd"
-        //        guard let theDate = formatter.date(from: dateString) else {
-        //            return
-        //        }
-        //        formatter.dateFormat = " HH:mm:ss Z"
-        //        guard let theTime = formatter.date(from: timeString) else {
-        //            return
-        //        }
-        //        formatter.dateFormat = "yyyy-MM-dd"
-        //        guard let exDate = formatter.date(from: "2000-01-01") else {
-        //            return
-        //        }
-        
         // Parse out the concatenated date and time
         guard let todayDate = formatter.date(from: todayString) else {
             return
         }
         eventDate = todayDate
-        
-        // Get the number of seconds (a TimeInterval) from Jan 1, 2001 12:00:00 AM until the event's time
-        // Then add that amound of time to current date (who's time is 12:00:00 AM)
-        //        eventDate = theDate.addingTimeInterval(theTime.timeIntervalSince(exDate))
         
         // Set the UI
         eventDatePicker.setDate(eventDate, animated: true)
@@ -320,16 +258,6 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
     
 	// MARK: - Navigation
 	
-//	func cancelNewEvent(_ sender: UIBarButtonItem) {
-//		
-//		// Allow the user to cancel out of creating a new event if there are previous and this is the first screen presented
-////		let mainVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as! UITabBarController
-////		mainVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-////		present(mainVC, animated: true, completion: nil)
-//        dismiss(animated: true, completion: nil)
-//		
-//	}
-	
 	@IBAction func createNewEvent(_ sender: UIBarButtonItem) {
 		
 		// Test to see if the potential newEventName is the same as any of the other tripNames
@@ -346,19 +274,6 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 		if nameIsUnique {
 			
             performUpdateOnCoreData()
-            
-//			guard let moc = self.moc else {
-//				return
-//			}
-//			
-//			if moc.hasChanges {
-//				
-//				do {
-//					try moc.save()
-//				} catch {
-//				}
-//				
-//			}
 			
 			UserDefaults.standard.set(newEventName, forKey: "currentTripName")
 			

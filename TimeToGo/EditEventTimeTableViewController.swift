@@ -17,8 +17,6 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
     @IBOutlet var setTodayButton: UIButton!
 
 	// CoreData variables
-//	var moc: NSManagedObjectContext?
-//	var currentEventName: String!       // Not used
 	var event: Trip!
 	
 	// Current VC variables
@@ -29,9 +27,6 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		// Assign the moc CoreData variable by referencing the AppDelegate's
-//		moc = getContext()
-		
         setupDateElements()
 		
 	}
@@ -41,8 +36,6 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
         // Set the time zone
         let components = Calendar.current.dateComponents(in: TimeZone.current, from: eventDate)
         eventDate = Calendar.current.date(from: components)!
-        
-        //        print(eventDatePicker.calendar.timeZone)
         
         // Define the date format and apply it to the event time display
         dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
@@ -70,9 +63,6 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
         var dateString = formatter.string(from: Date())
         var timeString = formatter.string(from: eventDate)
         
-//        print("dateString before", dateString)
-//        print("timeString before", timeString)
-        
         // Of the formatted strings:
         // - get the date (day) from the current
         // - get the time from event's date
@@ -82,35 +72,11 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
         timeString = timeString.substring(from: endDateIndex)
         let todayString = dateString + timeString
         
-//        print("dateString after", dateString)
-//        print("timeString after", timeString)
-//        print("todayString", todayString)
-        
-        // Turn the current day into a Date object,
-        // the event's time into a Date object,
-        // and the default date Jan 1, 2001 into a Date object
-//        formatter.dateFormat = "yyyy-MM-dd"
-//        guard let theDate = formatter.date(from: dateString) else {
-//            return
-//        }
-//        formatter.dateFormat = " HH:mm:ss Z"
-//        guard let theTime = formatter.date(from: timeString) else {
-//            return
-//        }
-//        formatter.dateFormat = "yyyy-MM-dd"
-//        guard let exDate = formatter.date(from: "2000-01-01") else {
-//            return
-//        }
-        
         // Parse out the concatenated date and time
         guard let todayDate = formatter.date(from: todayString) else {
             return
         }
         eventDate = todayDate
-        
-        // Get the number of seconds (a TimeInterval) from Jan 1, 2001 12:00:00 AM until the event's time
-        // Then add that amound of time to current date (who's time is 12:00:00 AM)
-//        eventDate = theDate.addingTimeInterval(theTime.timeIntervalSince(exDate))
         
         // Set the UI
         eventDatePicker.setDate(eventDate, animated: true)
@@ -200,19 +166,6 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
 	override func viewWillDisappear(_ animated: Bool) {
 
         performUpdateOnCoreData()
-        
-//		guard let moc = self.moc else {
-//			return
-//		}
-//		
-//		if moc.hasChanges {
-//			
-//			do {
-//				try moc.save()
-//			} catch {
-//			}
-//			
-//		}
 
 	}
 

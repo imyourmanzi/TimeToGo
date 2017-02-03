@@ -26,8 +26,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	@IBOutlet var mapView: MKMapView!				// Be careful using the MapView, it uses ~200 MB of RAM memory
 	
 	// CoreData variables
-//	var moc: NSManagedObjectContext?
-//	var eventName: String!
 	var event: Trip!
     var entries: [Interval] = []
 	
@@ -52,33 +50,17 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-//		moc = getContext()
-//		eventName = UserDefaults.standard.object(forKey: "currentTripName") as! String
-//		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-//		fetchRequest.predicate = NSPredicate(format: "tripName == %@", eventName!)
-//        do {
-//            let events = try moc!.fetch(fetchRequest)
-//            event = events[0]
-//        } catch {
-//            print("caught bad one")
-//        }
-        
         getEventData()
 		
 		// Setting the row heights for the table view
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		
 		// Customized setup of the Interface Builder variables
-//		schedLabelTextfield.delegate = self
 		schedLabelTextfield.text = schedLabel
 		
 		intervalTimeStr = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
 		intervalLabelCell.detailTextLabel?.text = intervalTimeStr
 		
-//		intervalTimePicker.dataSource = self
-//		intervalTimePicker.delegate = self
-		
-//		notesTextview.delegate = self
 		notesTextview.text = notes
 		
 		if notes != nil && notes != "" {
@@ -97,7 +79,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		guard let mItem = mapItem else {
 			
-			// Needs to be re-implemented
+			// TODO: Needs to be re-implemented
 //			displayAlertWithTitle("No Location", message: "Could not find the requested location")
 			return
 			
@@ -181,7 +163,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
             }
             
         }  catch {
-//            print("caught one")
+            
             if let parentVC = parent {
                 
                 parentVC.dismiss(animated: true, completion: {
@@ -208,14 +190,11 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		if schedLabelTextfield.text!.isEmpty || schedLabelTextfield.text == nil {
 			
 			// Alert the user that an entry cannot be saved if it does not have a scheduleLabel
-//			displayAlertWithTitle("Empty Field!", message: "Cannot leave Schedule Label empty")
             displayAlert(title: "Empty Filed!", message: "Cannot leave Schedule Label empty", on: self, dismissHandler: nil)
 			
         } else {
 			
 			// Save entry information (and location information if it's present) and dismiss the view
-//			entries.append(Interval(mainLabel: mainLabel, scheduleLabel: schedLabel, timeValueHours: timeValueHours, timeValueMins: timeValueMins, notesStr: notes, usesLocation: useLocation, startLoc: startLocation?.placemark, endLoc: endLocation?.placemark))
-            
             var newEntry: Interval!
             
             if useLocation == true && startLocation != nil && endLocation != nil {
@@ -273,23 +252,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		return true
 		
 	}
-    
-//	func performUpdateOnCoreData() {
-//		
-//		guard let moc = self.moc else {
-//			return
-//		}
-//		
-//		if moc.hasChanges {
-//			
-//			do {
-//				try moc.save()
-//			} catch {
-//			}
-//			
-//		}
-//		
-//	}
 	
 	
 	// MARK: - Text view delegate and action
@@ -556,13 +518,11 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 				
 			case .denied:
 				useLocationSwitch.isOn = false
-//				displayAlertWithTitle("Denied", message: "Location services are not allowed for this app")
                 displayAlert(title: "Denied", message: "Location services are not allowed for this app", on: self, dismissHandler: nil)
 				
 			case .notDetermined:
 				createLocationManager(false)
 				guard let locationManager = self.locationManager else {
-//					displayAlertWithTitle("Error Starting Location Services", message: "Please try again later")
                     displayAlert(title: "Error Starting Location Services", message: "Please try again later", on: self, dismissHandler: nil)
 					break
 				}
@@ -570,7 +530,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 				
 			case .restricted:
 				useLocationSwitch.isOn = false
-//				displayAlertWithTitle("Restricted", message: "Location services are not allowed for this app")
                 displayAlert(title: "Restricted", message: "Location services are not allowed for this app", on: self, dismissHandler: nil)
 				
 			}
@@ -578,16 +537,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		}
 		
 	}
-	
-//	private func displayAlertWithTitle(_ title: String?, message: String?) {
-//		
-//		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-//		let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-//		alertController.addAction(dismissAction)
-//		
-//		self.present(alertController, animated: true, completion: nil)
-//		
-//	}
 	
 	private func createLocationManager(_ startImmediately: Bool) {
 		
@@ -636,20 +585,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
         
 		guard let err = error as? CLError else {
 			
-//			let alertController = UIAlertController(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", preferredStyle: UIAlertControllerStyle.alert)
-//			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
-//				
-//				manager.stopUpdatingLocation()
-//				self.useLocationSwitch.setOn(false, animated: true)
-//				self.useLocationPrev = self.useLocation
-//				self.useLocation = self.useLocationSwitch.isOn
-//				self.toggleUseLocation()
-//				
-//			}
-//			alertController.addAction(dismissBtn)
-//			
-//			self.present(alertController, animated: true, completion: nil)
-			
             displayAlert(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", on: self, dismissHandler: { (_) in
                 
                 manager.stopUpdatingLocation()
@@ -665,20 +600,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		if err.code != CLError.Code.locationUnknown {
 			
-//			let alertController = UIAlertController(title: "Error \(err.code)", message: "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", preferredStyle: UIAlertControllerStyle.alert)
-//			let dismissBtn = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default) { (action: UIAlertAction) -> Void in
-//				
-//				manager.stopUpdatingLocation()
-//				self.useLocationSwitch.setOn(false, animated: true)
-//				self.useLocationPrev = self.useLocation
-//				self.useLocation = self.useLocationSwitch.isOn
-//				self.toggleUseLocation()
-//				
-//			}
-//			alertController.addAction(dismissBtn)
-//			
-//			self.present(alertController, animated: true, completion: nil)
-
             displayAlert(title: "Error \(err.code)", message: "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", on: self, dismissHandler: { (_) in
                 
                 manager.stopUpdatingLocation()
@@ -752,7 +673,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	@IBAction func openRouteInMaps(_ sender: UIButton) {
 		
 		guard let startLocation = startLocation, let endLocation = endLocation else {
-//			displayAlertWithTitle("Can't Open Route", message: "Make sure there are locations for both Start and End")
             displayAlert(title: "Can't Open Route", message: "Make sure there are locations for both Start and End", on: self, dismissHandler: nil)
 			return
 		}
@@ -786,7 +706,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		if useLocation && useLocationPrev == false {
 			
-//			mapView.delegate = self
 			self.tableView.insertRows(at: rowsToChange, with: UITableViewRowAnimation.fade)
 			schedLabelTextfield.resignFirstResponder()
 			notesTextview.resignFirstResponder()
@@ -837,7 +756,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 				
 				guard let placemarks = placemarks , placemarks.count > 0 else {
 					
-//					self.displayAlertWithTitle("Location Error", message: "Unable to confirm your current location. Please try again later.")
                     self.displayAlert(title: "Location Error", message: "Unable to confirm your current location. Please try again later.", on: self, dismissHandler: nil)
 					return
 					

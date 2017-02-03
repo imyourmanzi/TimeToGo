@@ -13,8 +13,6 @@ import MapKit
 class EntriesTableViewController: UITableViewController, CoreDataHelper {
 	
 	// CoreData variables
-//	var moc: NSManagedObjectContext?
-//	var eventName: String!
 	var event: Trip!
     var entries: [Interval] = []
 	var eventDate: Date!
@@ -28,25 +26,13 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
 		// Use auto-implemented 'Edit' button on right side of navigation bar
 		self.navigationItem.leftBarButtonItem = self.editButtonItem
 		
-		// Assign the moc CoreData variable by referencing the AppDelegate's
-//		moc = getContext()
-		
     }
 
 	override func viewWillAppear(_ animated: Bool) {
-		
-//		eventName = UserDefaults.standard.object(forKey: "currentTripName") as! String
-//		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-//		fetchRequest.predicate = NSPredicate(format: "tripName == %@", eventName)
-//		let events = (try! moc!.fetch(fetchRequest))
         
         getEventData()
         
 		performUpdateOnCoreData()
-        
-//        for entry in entries {
-//            print(entry.description)
-//        }
         
 	}
     
@@ -146,24 +132,6 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
         event.entries = entries as NSArray
         
     }
-    
-//	func performUpdateOnCoreData() {
-//		
-//		guard let moc = self.moc else {
-//			return
-//		}
-//		
-//		if moc.hasChanges {
-//			
-//			do {
-//				try moc.save()
-//			} catch {
-//				
-//			}
-//			
-//		}
-//		
-//	}
 		
 	
     // MARK: - Navigation
@@ -177,7 +145,6 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
             
             let selectedEntry = entries[selectedEntryIndexPath.row]
             
-//            destVC.eventName = eventName
             destVC.currentEntryIndexPath = selectedEntryIndexPath
             destVC.currentEntry = selectedEntry
             destVC.schedLabel = selectedEntry.scheduleLabel

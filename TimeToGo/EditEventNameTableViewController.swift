@@ -15,7 +15,6 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 	@IBOutlet var eventNameTextfield: UITextField!
 
 	// CoreData variables
-//	var moc: NSManagedObjectContext?
 	var event: Trip!
 	
 	// Current VC variables
@@ -23,12 +22,8 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-
-		// Assign the moc CoreData variable by referencing the AppDelegate's
-//		moc = getContext()
 		
 		// Set up the eventNameTextfield
-//		tripNameTextfield.delegate = self
 		eventNameTextfield.text = eventName
 		
 	}
@@ -67,13 +62,6 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 		
 		if eventNameTextfield.text!.isEmpty || eventNameTextfield.text == nil {
 			
-//			let alertVC = UIAlertController(title: "Empty Field!", message: "Changes were not saved because the Event Name field was empty.", preferredStyle: UIAlertControllerStyle.alert)
-//			let okBtn = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
-//				alertVC.dismiss(animated: true, completion: nil)
-//			})
-//			alertVC.addAction(okBtn)
-//			parent?.present(alertVC, animated: true, completion: nil)
-            
             // Alert the user that an entry cannot be saved if it does not have a eventName
             if let parentVC = parent {
                 displayAlert(title: "Empty Field!", message: "Changes were not saved because the Event Name field was empty.", on: parentVC, dismissHandler: nil)
@@ -82,22 +70,8 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 		} else {
 			
 			performUpdateOnCoreData()
-			
-//			guard let moc = self.moc else {
-//				return
-//			}
-//			
-//			if moc.hasChanges {
-//				
-//				do {
-//					try moc.save()
-//				} catch {
-//					
-//				}
-//				
-//			}
 		
-			// Update the currentTripName so that other views will reference the updated name
+			// Update the currentTripName so that other views will reference the updated eventName
 			UserDefaults.standard.set(self.eventName, forKey: "currentTripName")
 			
 			eventNameTextfield.resignFirstResponder()

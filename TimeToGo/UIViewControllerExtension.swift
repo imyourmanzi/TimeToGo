@@ -32,11 +32,7 @@ extension UIViewController {
                 guard let destVC = storyboard?.instantiateViewController(withIdentifier: "mainTabVC") else {
                     return
                 }
-//                var destVC: UIViewController 
-//                
-//                guard let destVC = destTabVC.childViewControllers[0] as? HomeViewController else {
-//                    return
-//                }
+                
                 destVC.modalTransitionStyle = .crossDissolve
                 present(destVC, animated: true, completion: nil)
                 
@@ -49,10 +45,8 @@ extension UIViewController {
     }
     
     fileprivate func setTabBar(enabled: Bool) {
-//        print("might disable")
         
         guard let tabs = tabBarController?.tabBar.items else {
-//            print("didn't disable")
             return
         }
         
@@ -63,8 +57,6 @@ extension UIViewController {
             }
             
         }
-        
-//        print("did disable")
         
     }
     
