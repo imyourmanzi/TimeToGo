@@ -252,17 +252,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	
 	// MARK: - Navigation
     
-    @IBAction func unwindToSchedule(_ segue: UIStoryboardSegue) {
-        
-//        if let shareToCalVC = segue.source as? ShareToCalTableViewController {
-//            
-//            if shareToCalVC.saveSuccessful {
-//                displayAlert(title: "Save Successful", message: nil, on: self, dismissHandler: nil)
-//            }
-//            
-//        }
-        
-    }
+    @IBAction func unwindToSchedule(_ segue: UIStoryboardSegue) { }
 	
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         

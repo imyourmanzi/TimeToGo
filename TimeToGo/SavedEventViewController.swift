@@ -67,11 +67,28 @@ class SavedEventViewController: UIViewController, UITableViewDataSource {
 		
 	}
 	
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+    // MARK: - Navigation
+    
+    @IBAction func loadEvent(_ sender: UIBarButtonItem) {
         
         // Update currentTripName to the chosen eventName
-        UserDefaults.standard.set(self.eventName, forKey: "currentTripName")
+        UserDefaults.standard.set(eventName, forKey: "currentTripName")
+        
+        guard let mainTabVC = storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+            return
+        }
+        
+        mainTabVC.modalTransitionStyle = .crossDissolve
+        mainTabVC.selectedIndex = 1
+        
+        present(mainTabVC, animated: true, completion: nil)
         
     }
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        
+//        
+//    }
 	
 }

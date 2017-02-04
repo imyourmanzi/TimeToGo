@@ -79,8 +79,6 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 	}
 	
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		
-//        print(allEvents.count)
         
 		let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
 		
@@ -116,7 +114,6 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 			
             // Delete the row from the data sources and the table view
             let eventRemoved = allEvents.remove(at: indexPath.row)
-//            print("after removing", allEvents.count)
             guard let theMoc = moc else {
                 
                 // Unless moc is not available, then put the event back
@@ -153,7 +150,14 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 		UserDefaults.standard.set(theEventName, forKey: "currentTripName")
 		
         // Transition to the Scheudle VC
-        // TODO: ^^
+        guard let mainTabVC = storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+            return
+        }
+        
+        mainTabVC.modalTransitionStyle = .crossDissolve
+        mainTabVC.selectedIndex = 1
+        
+        present(mainTabVC, animated: true, completion: nil)
 		
 	}
 	

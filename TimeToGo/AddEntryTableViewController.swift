@@ -148,9 +148,6 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
     // Fetch the current event from the persistent store and assign the CoreData variables
     private func getEventData() {
         
-//        print(parent?.description ?? "uh oh")
-//        print(presentingViewController ?? "uh oh")
-        
         do {
             
             event = try fetchCurrentEvent()

@@ -10,6 +10,8 @@ import UIKit
 import CoreData
 import MapKit
 
+private let reuseIdentifier = "entryCell"
+
 class EntriesTableViewController: UITableViewController, CoreDataHelper {
 	
 	// CoreData variables
@@ -108,7 +110,7 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
-		let cell = self.tableView.dequeueReusableCell(withIdentifier: "EntryCell", for: indexPath) 
+		let cell = self.tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
 		
 		var entry: Interval!
 		entry = entries[indexPath.row]

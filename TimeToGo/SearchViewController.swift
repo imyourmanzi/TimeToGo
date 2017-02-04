@@ -9,6 +9,8 @@
 import UIKit
 import MapKit
 
+private let reuseIdentifier = "resultCell"
+
 protocol communicationToMain {
 	
 	func backFromSearch(_ mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int)
@@ -172,7 +174,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
-		let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as UITableViewCell!
+		let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as UITableViewCell!
 		
 		if indexPath.section == 1 {
 			

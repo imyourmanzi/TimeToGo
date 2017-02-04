@@ -59,14 +59,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             allEvents = try fetchAllEvents()
         } catch CoreDataEventError.returnedNoEvents {
             
-//            let backgroundQueue = DispatchQueue(label: "com.timetogo.queue", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
-//            backgroundQueue.async {
-//                
-//                while !(self.isViewVisible) { }
-//                self.displayNoEventsAlert(on: self, dismissHandler: nil)
-//                
-//            }
-            
             guard let parentVC = parent else {
                 return
             }
@@ -74,14 +66,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             displayNoEventsAlert(on: parentVC, dismissHandler: nil)
             
         } catch {
-            
-//            let backgroundQueue = DispatchQueue(label: "com.timetogo.queue", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
-//            backgroundQueue.async {
-//                
-//                while !(self.isViewVisible) { }
-//                self.displayDataErrorAlert(on: self, dismissHandler: nil)
-//                
-//            }
             
             guard let parentVC = parent else {
                 return
@@ -270,7 +254,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     @IBAction func unwindToHome(_ segue: UIStoryboardSegue) {
         
-//        displayAlert(title: "No Events", message: "There are currently no saved events.", on: self, dismissHandler: nil)
         guard let allEventsVC = segue.source as? AllEventsTableViewController else {
             return
         }

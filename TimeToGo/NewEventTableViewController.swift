@@ -287,14 +287,6 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 			present(mainTabVC, animated: true, completion: nil)
 				
 		} else {
-			
-//			let nameAlertController = UIAlertController(title: "Cannot Save Event", message: "There is already an event with the same name.", preferredStyle: UIAlertControllerStyle.alert)
-//			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: { (alert: UIAlertAction) in
-//				nameAlertController.dismiss(animated: true, completion: nil)
-//			})
-//			nameAlertController.addAction(dismissAction)
-//
-//			self.present(nameAlertController, animated: true, completion: nil)
             
             // Do nothing except display an alert controller
             displayAlert(title: "Cannot Save Event", message: "There is already an event with the same name.", on: self, dismissHandler: nil)

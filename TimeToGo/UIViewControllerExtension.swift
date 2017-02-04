@@ -31,8 +31,6 @@ extension UIViewController {
         
         vc.present(alertController, animated: true, completion: nil)
         
-//        self.present(alertController, animated: true, completion: nil)
-        
     }
     
     func disableTabBarIfNeeded(events: [Trip], sender: UIViewController) {

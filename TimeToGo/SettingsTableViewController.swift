@@ -187,7 +187,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			mailComposer.setToRecipients(recipients)
 			mailComposer.setSubject(subject)
 			
-			mailComposer.setMessageBody("<p><strong>Issue:</strong> </p><p><strong>Detail:</strong> </p><br /><p>Date and time: \(Date())<br />Device Model: [PLEASE ADD]<br />iOS Version: \(UIDevice.current.systemVersion)</p>", isHTML: true)
+			mailComposer.setMessageBody("<p><strong>Issue:</strong> </p><p><strong>Detail:</strong> </p><br /><p>Date and time: \(Date().description(with: Locale.autoupdatingCurrent))<br />Device Model: [PLEASE ADD]<br />iOS Version: \(UIDevice.current.systemVersion)</p>", isHTML: true)
 			
 			present(mailComposer, animated: true, completion: nil)
 			
