@@ -44,7 +44,21 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
             event = try fetchCurrentEvent()
             guard let theEntries = event.entries as? [Interval] else {
                 
-                displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
+                guard let parentVC = parent else {
+                    return
+                }
+                displayDataErrorAlert(on: parentVC, dismissHandler: {
+                    (_) in
+                    
+                    guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+                        return
+                    }
+                    
+                    mainTabVC.modalTransitionStyle = .crossDissolve
+                    self.present(mainTabVC, animated: true, completion: nil)
+                    
+                })
+                
                 return
                 
             }
@@ -53,7 +67,23 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
             tableView.reloadData()
             
         } catch {
-            displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
+            
+            guard let parentVC = parent else {
+                return
+            }
+            
+            displayDataErrorAlert(on: parentVC, dismissHandler: {
+                (_) in
+                
+                guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+                    return
+                }
+                
+                mainTabVC.modalTransitionStyle = .crossDissolve
+                self.present(mainTabVC, animated: true, completion: nil)
+                
+            })
+            
         }
         
     }

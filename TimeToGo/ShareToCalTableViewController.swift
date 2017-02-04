@@ -11,6 +11,8 @@ import EventKit
 import CoreData
 import MapKit
 
+private let reuseIdentifier = "calendarCell"
+
 class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 	
 	// EventKit variables
@@ -102,7 +104,8 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 
 	
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "calendarCell", for: indexPath) 
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
 		
 		cell.textLabel?.text = calendarsToList[indexPath.row].title
 		
@@ -139,7 +142,8 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
         
         guard let theEntries = event.entries as? [Interval] else {
             
-            displayAlert(title: "Error Retrieving Data", message: "There was an error accessing the event's entries.", on: self, dismissHandler: { (_) in
+            displayDataErrorAlert(on: self, dismissHandler: {
+                (_) in
                 
                 self.saveSuccessful = false
                 self.performSegue(withIdentifier: "unwindToSchedule", sender: self)
@@ -155,8 +159,13 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 			
 		}
         
-        saveSuccessful = true
-        performSegue(withIdentifier: "unwindToScheudle", sender: self)
+        displayAlert(title: "Save Successful!", message: nil, on: self) {
+            (_) in
+            
+            self.saveSuccessful = true
+            self.performSegue(withIdentifier: "unwindToScheudle", sender: self)
+            
+        }
 		
 	}
 	
@@ -198,7 +207,8 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 			try eventStore.save(event, span: EKSpan.thisEvent)
         } catch {
             
-            displayAlert(title: "Save Event Failed", message: "The entry \"\(event.title)\" could not be saved to the calendar.", on: self, dismissHandler: { (_) in
+            displayAlert(title: "Save Event Failed", message: "The entry \"\(event.title)\" could not be saved to the calendar. You may want to check your \(event.calendar) calendar to see if there are other entries that were saved.", on: self, dismissHandler: {
+                (_) in
                 
                 self.saveSuccessful = false
                 self.performSegue(withIdentifier: "unwindToSchedule", sender: self)

@@ -277,20 +277,27 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 			
 			UserDefaults.standard.set(newEventName, forKey: "currentTripName")
 			
-			let mainVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as! UITabBarController
-			mainVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-			present(mainVC, animated: true, completion: nil)
+            guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+                return
+            }
+            
+			mainTabVC.modalTransitionStyle = .crossDissolve
+            mainTabVC.selectedIndex = 1
+            
+			present(mainTabVC, animated: true, completion: nil)
 				
 		} else {
 			
-			// Do nothing except display an alert controller
-			let nameAlertController = UIAlertController(title: "Cannot Save Event", message: "There is already an event with the same name.", preferredStyle: UIAlertControllerStyle.alert)
-			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: { (alert: UIAlertAction) in
-				nameAlertController.dismiss(animated: true, completion: nil)
-			})
-			nameAlertController.addAction(dismissAction)
-			
-			self.present(nameAlertController, animated: true, completion: nil)
+//			let nameAlertController = UIAlertController(title: "Cannot Save Event", message: "There is already an event with the same name.", preferredStyle: UIAlertControllerStyle.alert)
+//			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: { (alert: UIAlertAction) in
+//				nameAlertController.dismiss(animated: true, completion: nil)
+//			})
+//			nameAlertController.addAction(dismissAction)
+//
+//			self.present(nameAlertController, animated: true, completion: nil)
+            
+            // Do nothing except display an alert controller
+            displayAlert(title: "Cannot Save Event", message: "There is already an event with the same name.", on: self, dismissHandler: nil)
 			
 		}
 		

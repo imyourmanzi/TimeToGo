@@ -10,6 +10,18 @@ import UIKit
 
 extension UIViewController {
     
+    func displayDataErrorAlert(on vc: UIViewController, dismissHandler: ((UIAlertAction) -> Void)?) {
+        
+        displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: vc, dismissHandler: dismissHandler)
+        
+    }
+    
+    func displayNoEventsAlert(on vc: UIViewController, dismissHandler: ((UIAlertAction) -> Void)?) {
+        
+        displayAlert(title: "No Events Found", message: "You can create new events on the Home tab.", on: vc, dismissHandler: dismissHandler)
+        
+    }
+    
     func displayAlert(title: String?, message: String?, on vc: UIViewController, dismissHandler: ((UIAlertAction) -> Void)?) {
         
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -18,6 +30,8 @@ extension UIViewController {
         alertController.addAction(dismissAction)
         
         vc.present(alertController, animated: true, completion: nil)
+        
+//        self.present(alertController, animated: true, completion: nil)
         
     }
     
@@ -29,11 +43,13 @@ extension UIViewController {
                 setTabBar(enabled: false)
             } else {
                 
-                guard let destVC = storyboard?.instantiateViewController(withIdentifier: "mainTabVC") else {
+                guard let destVC = storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
                     return
                 }
                 
                 destVC.modalTransitionStyle = .crossDissolve
+                destVC.selectedIndex = 0
+                
                 present(destVC, animated: true, completion: nil)
                 
             }

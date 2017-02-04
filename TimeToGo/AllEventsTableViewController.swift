@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 
+private let reuseIdentifier = "eventCell"
+
 class AllEventsTableViewController: UITableViewController, UISearchResultsUpdating, CoreDataHelper {
     
 	// CoreData variables
@@ -78,7 +80,9 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 	
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
-		let cell = tableView.dequeueReusableCell(withIdentifier: "eventCell", for: indexPath) 
+//        print(allEvents.count)
+        
+		let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
 		
 		var event: Trip!
 		
@@ -92,7 +96,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
 		
 		cell.textLabel?.text = event.tripName
-		cell.detailTextLabel?.text = dateFormatter.string(from: event.flightDate as Date)
+		cell.detailTextLabel?.text = dateFormatter.string(from: event.flightDate)
 
         return cell
 		
@@ -102,7 +106,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 		
         if editingStyle == .delete {
 			
-			// Update the current event if the current one has been deleted
+			// Update the current event if the current one has been deleted but there are others left
 			if allEvents[indexPath.row].tripName == eventName && allEvents.count > 1 {
 				
 				eventName = allEvents[allEvents.count - 2].tripName
@@ -112,6 +116,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 			
             // Delete the row from the data sources and the table view
             let eventRemoved = allEvents.remove(at: indexPath.row)
+//            print("after removing", allEvents.count)
             guard let theMoc = moc else {
                 
                 // Unless moc is not available, then put the event back
@@ -122,6 +127,9 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
             theMoc.delete(eventRemoved)
             tableView.deleteRows(at: [indexPath], with: .fade)
 			
+            // Save the state of the persistent store
+            performUpdateOnCoreData()
+            
         }
 		
 		// Check for more existing events, if there are not, redirect the user back to the new event screen
@@ -129,9 +137,6 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
             performSegue(withIdentifier: "unwindToHome", sender: self)
 		}
         
-        // Save the state of the persistent store
-        performUpdateOnCoreData()
-	
     }
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -181,6 +186,8 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
         
         if identifier == "viewSavedEvent" && sender is IndexPath {
             return true
+        } else if identifier != "viewSavedEvent" {
+            return true
         }
         
         return false
@@ -210,6 +217,12 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
             
         }
 		
+    }
+    
+    deinit {
+        
+        searchResultsController.view.removeFromSuperview()
+        
     }
     
 }

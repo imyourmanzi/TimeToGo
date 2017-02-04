@@ -30,6 +30,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
     var entries: [Interval] = []
 	
 	// Current VC variables
+    var isViewVisible = false
 	var schedLabel: String!
 	var timeValueHours: Int = 0
 	var timeValueMins: Int = 15
@@ -135,6 +136,8 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	override func viewDidAppear(_ animated: Bool) {
 		
+        isViewVisible = true
+        
 		// Show the keyboard for the scheduleLabelTextfield when the view has appeared if it is empty
 		if schedLabelTextfield.text!.isEmpty {
 			schedLabelTextfield.becomeFirstResponder()
@@ -145,30 +148,45 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
     // Fetch the current event from the persistent store and assign the CoreData variables
     private func getEventData() {
         
+//        print(parent?.description ?? "uh oh")
+//        print(presentingViewController ?? "uh oh")
+        
         do {
             
             event = try fetchCurrentEvent()
             if let theEntries = event.entries as? [Interval] {
                 entries = theEntries
             } else {
-                
-                if let parentVC = parent {
+            
+                if let presentingVC = presentingViewController {
                     
-                    parentVC.dismiss(animated: true, completion: {
-                        self.displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: parentVC, dismissHandler: nil)
+                    let backgroundQueue = DispatchQueue(label: "com.timetogo.queue", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+                    backgroundQueue.async {
+                        
+                        while !self.isViewVisible { }
+                        presentingVC.dismiss(animated: true, completion: {
+                            self.displayDataErrorAlert(on: presentingVC, dismissHandler: nil)
+                        })
+                        
+                    }
+                    
+                }
+
+            }
+        
+        } catch {
+            
+            if let presentingVC = presentingViewController {
+                
+                let backgroundQueue = DispatchQueue(label: "com.timetogo.queue", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+                backgroundQueue.async {
+                    
+                    while !self.isViewVisible { }
+                    presentingVC.dismiss(animated: true, completion: {
+                        self.displayDataErrorAlert(on: presentingVC, dismissHandler: nil)
                     })
                     
                 }
-                
-            }
-            
-        }  catch {
-            
-            if let parentVC = parent {
-                
-                parentVC.dismiss(animated: true, completion: {
-                    self.displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: parentVC, dismissHandler: nil)
-                })
                 
             }
             
@@ -190,7 +208,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		if schedLabelTextfield.text!.isEmpty || schedLabelTextfield.text == nil {
 			
 			// Alert the user that an entry cannot be saved if it does not have a scheduleLabel
-            displayAlert(title: "Empty Filed!", message: "Cannot leave Schedule Label empty", on: self, dismissHandler: nil)
+            displayAlert(title: "Empty Filed!", message: "Cannot leave Schedule Label empty.", on: self, dismissHandler: nil)
 			
         } else {
 			
@@ -518,19 +536,19 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 				
 			case .denied:
 				useLocationSwitch.isOn = false
-                displayAlert(title: "Denied", message: "Location services are not allowed for this app", on: self, dismissHandler: nil)
+                displayAlert(title: "Denied", message: "Location services are not allowed for this app.", on: self, dismissHandler: nil)
 				
 			case .notDetermined:
 				createLocationManager(false)
 				guard let locationManager = self.locationManager else {
-                    displayAlert(title: "Error Starting Location Services", message: "Please try again later", on: self, dismissHandler: nil)
+                    displayAlert(title: "Error Starting Location Services", message: "Please try again later.", on: self, dismissHandler: nil)
 					break
 				}
 				locationManager.requestWhenInUseAuthorization()
 				
 			case .restricted:
 				useLocationSwitch.isOn = false
-                displayAlert(title: "Restricted", message: "Location services are not allowed for this app", on: self, dismissHandler: nil)
+                displayAlert(title: "Restricted", message: "Location services are not allowed for this app.", on: self, dismissHandler: nil)
 				
 			}
 			
@@ -585,7 +603,8 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
         
 		guard let err = error as? CLError else {
 			
-            displayAlert(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", on: self, dismissHandler: { (_) in
+            displayAlert(title: "Error", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", on: self, dismissHandler: {
+                (_) in
                 
                 manager.stopUpdatingLocation()
                 self.useLocationSwitch.setOn(false, animated: true)
@@ -600,7 +619,8 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 		
 		if err.code != CLError.Code.locationUnknown {
 			
-            displayAlert(title: "Error \(err.code)", message: "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", on: self, dismissHandler: { (_) in
+            displayAlert(title: "Error \(err.code)", message: "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", on: self, dismissHandler: {
+                (_) in
                 
                 manager.stopUpdatingLocation()
                 self.useLocationSwitch.setOn(false, animated: true)
@@ -673,7 +693,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	@IBAction func openRouteInMaps(_ sender: UIButton) {
 		
 		guard let startLocation = startLocation, let endLocation = endLocation else {
-            displayAlert(title: "Can't Open Route", message: "Make sure there are locations for both Start and End", on: self, dismissHandler: nil)
+            displayAlert(title: "Can't Open Route", message: "Make sure there are locations for both Start and End.", on: self, dismissHandler: nil)
 			return
 		}
 
@@ -722,22 +742,26 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 	
 	private func loadSearchControllerWithTitle(_ title: String?, mapView: MKMapView) {
 		
-		let searchNavVC = self.storyboard?.instantiateViewController(withIdentifier: "searchNavVC") as! UINavigationController
-		let searchVC = searchNavVC.viewControllers[0] as! SearchViewController
+        guard let searchNavVC = self.storyboard?.instantiateViewController(withIdentifier: "searchNavVC") as? UINavigationController else {
+            return
+        }
+        guard let searchVC = searchNavVC.viewControllers[0] as? SearchViewController else {
+            return
+        }
 		searchVC.delegate = self
 		
-		guard let title = title else {
+		guard let theTitle = title else {
 			
 			searchVC.whichLocationIndex = -1
 			searchVC.title = "Location"
 			return
 			
 		}
-		if title == "Start" {
+		if theTitle == "Start" {
 			
 			searchVC.whichLocationIndex = 0
 			
-		} else if title == "End" {
+		} else if theTitle == "End" {
 			
 			searchVC.whichLocationIndex = 1
 			
@@ -746,7 +770,7 @@ class AddEntryTableViewController: UITableViewController, UIPickerViewDataSource
 			searchVC.whichLocationIndex = -1
 			
 		}
-		searchVC.title = title + " Location"
+		searchVC.title = theTitle + " Location"
 		
 		searchVC.mapView = mapView
 		

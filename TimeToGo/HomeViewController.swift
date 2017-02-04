@@ -18,6 +18,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     var entries: [Interval] = []
     
     // Current VC variables
+    var isViewVisible = false
     let titleImageView = UIImageView(image: UIImage(named: "title"))
     var categoriesFileData: String = ""
     var eventCategories: [String] = ["A","B","C"]
@@ -46,12 +47,48 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        
+        isViewVisible = true
+        
+    }
+    
     private func getEventData() {
         
         do {
             allEvents = try fetchAllEvents()
+        } catch CoreDataEventError.returnedNoEvents {
+            
+//            let backgroundQueue = DispatchQueue(label: "com.timetogo.queue", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+//            backgroundQueue.async {
+//                
+//                while !(self.isViewVisible) { }
+//                self.displayNoEventsAlert(on: self, dismissHandler: nil)
+//                
+//            }
+            
+            guard let parentVC = parent else {
+                return
+            }
+            
+            displayNoEventsAlert(on: parentVC, dismissHandler: nil)
+            
         } catch {
-            displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
+            
+//            let backgroundQueue = DispatchQueue(label: "com.timetogo.queue", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+//            backgroundQueue.async {
+//                
+//                while !(self.isViewVisible) { }
+//                self.displayDataErrorAlert(on: self, dismissHandler: nil)
+//                
+//            }
+            
+            guard let parentVC = parent else {
+                return
+            }
+            
+            displayDataErrorAlert(on: parentVC, dismissHandler: nil)
+            
         }
         
     }
@@ -233,7 +270,11 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     @IBAction func unwindToHome(_ segue: UIStoryboardSegue) {
         
-        displayAlert(title: "No Events", message: "There are currently no saved events.", on: self, dismissHandler: nil)
+//        displayAlert(title: "No Events", message: "There are currently no saved events.", on: self, dismissHandler: nil)
+        guard let allEventsVC = segue.source as? AllEventsTableViewController else {
+            return
+        }
+        allEvents = allEventsVC.allEvents
         
     }
     
@@ -252,9 +293,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             eventTypeVC.navigationItem.title = (eventCategories[categoryIndexPath.item]).components(separatedBy: "^")[1]
             
         } else if let allEventsVC = segue.destination as? AllEventsTableViewController {
-            
             allEventsVC.allEvents = allEvents
-            
         }
         
     }

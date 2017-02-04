@@ -257,5 +257,11 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		self.dismiss(animated: true, completion: nil)
 		
 	}
+    
+    deinit {
+        
+        searchResultsController.view.removeFromSuperview()
+        
+    }
 	
 }

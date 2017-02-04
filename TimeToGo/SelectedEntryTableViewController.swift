@@ -154,7 +154,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
             
             guard let response = response else {
                 
-                self.displayAlert(title: "Error in Route", message: "Could not find a route from Start to End locations", on: self, dismissHandler: nil)
+                self.displayAlert(title: "Error in Route", message: "Could not find a route from Start to End locations.", on: self, dismissHandler: nil)
                 return
                 
             }
@@ -466,13 +466,13 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				
 			case .denied:
 				useLocationSwitch.isOn = false
-                displayAlert(title: "Denied", message: "Location services are not allowed for this app", on: self, dismissHandler: nil)
+                displayAlert(title: "Denied", message: "Location services are not allowed for this app.", on: self, dismissHandler: nil)
 				
 			case .notDetermined:
 				createLocationManager(false)
 				guard let locationManager = self.locationManager else {
                     
-                    displayAlert(title: "Error Starting Location Services", message: "Please try again later", on: self, dismissHandler: nil)
+                    displayAlert(title: "Error Starting Location Services", message: "Please try again later.", on: self, dismissHandler: nil)
 					break
                     
 				}
@@ -480,12 +480,12 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 				
 			case .restricted:
 				useLocationSwitch.isOn = false
-                displayAlert(title: "Restricted", message: "Location services are not allowed for this app", on: self, dismissHandler: nil)
+                displayAlert(title: "Restricted", message: "Location services are not allowed for this app.", on: self, dismissHandler: nil)
 				
 			}
 			
 		} else {
-            displayAlert(title: "Location Services Disabled", message: "Location services are not enabled on the device", on: self, dismissHandler: nil)
+            displayAlert(title: "Location Services Disabled", message: "Location services are not enabled on the device.", on: self, dismissHandler: nil)
 		}
 		
 	}
@@ -537,7 +537,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		guard let err = error as? CLError else {
             
-            displayAlert(title: "Error LocX", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", on: self, dismissHandler: { (_) in
+            displayAlert(title: "Error", message: "An unknown error occurred: \"\(error)\"\nTry contacting support with a screenshot.", on: self, dismissHandler: {
+                (_) in
                 
                 manager.stopUpdatingLocation()
                 self.useLocationSwitch.setOn(false, animated: true)
@@ -552,7 +553,8 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		if err.code != CLError.Code.locationUnknown {
             
-            displayAlert(title: "Error \(err.code)", message:  "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", on: self, dismissHandler: { (_) in
+            displayAlert(title: "Error \(err.code)", message:  "Location manager failed: \(err) -- Please contact support via the App Store with a screenshot of this error.", on: self, dismissHandler: {
+                (_) in
                 
                 manager.stopUpdatingLocation()
                 self.useLocationSwitch.setOn(false, animated: true)
@@ -627,7 +629,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 		guard let startLocation = startLocation, let endLocation = endLocation else {
             
-            displayAlert(title: "Can't Open Route", message: "Make sure there are locations for both Start and End", on: self, dismissHandler: nil)
+            displayAlert(title: "Can't Open Route", message: "Make sure there are locations for both Start and End.", on: self, dismissHandler: nil)
 			return
             
 		}
@@ -675,8 +677,12 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 	
 	private func loadSearchControllerWithTitle(_ title: String?, mapView: MKMapView) {
 		
-		let searchNavVC = self.storyboard?.instantiateViewController(withIdentifier: "searchNavVC") as! UINavigationController
-		let searchVC = searchNavVC.viewControllers[0] as! SearchViewController
+        guard let searchNavVC = self.storyboard?.instantiateViewController(withIdentifier: "searchNavVC") as? UINavigationController else {
+            return
+        }
+        guard let searchVC = searchNavVC.viewControllers[0] as? SearchViewController else {
+            return
+        }
 		searchVC.delegate = self
 		
 		guard let theTitle = title else {

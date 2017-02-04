@@ -41,7 +41,13 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             setupDateElements()
             
         } catch {
-            displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
+            
+            guard let parentVC = parent else {
+                return
+            }
+            
+            displayDataErrorAlert(on: parentVC, dismissHandler: nil)
+            
         }
         
         eventNameCell.detailTextLabel?.text = eventName
@@ -52,8 +58,34 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             allEvents = try fetchAllEvents()
             tableView.reloadData()
             
+        } catch CoreDataEventError.returnedNoEvents {
+            
+            guard let parentVC = parent else {
+                return
+            }
+            
+            displayNoEventsAlert(on: parentVC, dismissHandler: {
+                (_) in
+                
+                guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+                    return
+                }
+                
+                mainTabVC.modalTransitionStyle = .crossDissolve
+                mainTabVC.selectedIndex = 0
+                
+                self.present(mainTabVC, animated: true, completion: nil)
+                
+            })
+            
         } catch {
-            displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
+            
+            guard let parentVC = parent else {
+                return
+            }
+            
+            displayDataErrorAlert(on: parentVC, dismissHandler: nil)
+            
         }
         
     }
@@ -88,6 +120,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
                 
             }
 			theMoc.delete(eventRemoved)
+            
             self.performUpdateOnCoreData()
 			
 			if self.allEvents.count >= 1 {

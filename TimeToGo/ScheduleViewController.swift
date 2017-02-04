@@ -62,7 +62,21 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
             event = try fetchCurrentEvent()
             guard let theEntries = event.entries as? [Interval] else {
                 
-                displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
+                guard let parentVC = parent else {
+                    return
+                }
+                displayDataErrorAlert(on: parentVC, dismissHandler: {
+                    (_) in
+                    
+                    guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+                        return
+                    }
+                    
+                    mainTabVC.modalTransitionStyle = .crossDissolve
+                    self.present(mainTabVC, animated: true, completion: nil)
+                
+                })
+                
                 return
                 
             }
@@ -90,7 +104,23 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
             }
             
         } catch {
-            displayAlert(title: "Error Retrieving Data", message: "There was an error retrieving saved data.", on: self, dismissHandler: nil)
+            
+            guard let parentVC = parent else {
+                return
+            }
+            
+            displayDataErrorAlert(on: parentVC, dismissHandler: {
+                (_) in
+                
+                guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+                    return
+                }
+                
+                mainTabVC.modalTransitionStyle = .crossDissolve
+                self.present(mainTabVC, animated: true, completion: nil)
+                
+            })
+            
         }
         
     }
@@ -192,7 +222,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
             
         case .denied:
             canAccess = false
-            displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars", on: self, dismissHandler: nil)
+            displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars.", on: self, dismissHandler: nil)
             
         case .notDetermined:
             eventStore.requestAccess(to: EKEntityType.event, completion: {
@@ -203,7 +233,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
                 } else {
                     
                     canAccess = false
-                    self.displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars", on: self, dismissHandler: nil)
+                    self.displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars.", on: self, dismissHandler: nil)
                     
                 }
                 
@@ -223,8 +253,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	// MARK: - Navigation
     
     @IBAction func unwindToSchedule(_ segue: UIStoryboardSegue) {
-
-        // TODO: fix - it shows up on the sharetocalvc
+        
 //        if let shareToCalVC = segue.source as? ShareToCalTableViewController {
 //            
 //            if shareToCalVC.saveSuccessful {
@@ -238,6 +267,8 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         
         if identifier == "toShareToCal" && canAccessCalendar() {
+            return true
+        } else if identifier != "toShareToCal" {
             return true
         }
         

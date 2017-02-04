@@ -8,6 +8,8 @@
 
 import UIKit
 
+private let reuseIdentifier = "entryCell"
+
 class SavedEventViewController: UIViewController, UITableViewDataSource {
 	
 	// Interface Builder variables
@@ -55,7 +57,7 @@ class SavedEventViewController: UIViewController, UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
-		let cell = tableView.dequeueReusableCell(withIdentifier: "entryCell", for: indexPath)
+		let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
 		
 		let entry = entries[indexPath.row]
 		cell.textLabel?.text = entry.scheduleLabel

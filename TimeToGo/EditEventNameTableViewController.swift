@@ -61,7 +61,9 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 	override func viewWillDisappear(_ animated: Bool) {
 		
 		if eventNameTextfield.text!.isEmpty || eventNameTextfield.text == nil {
-			
+            
+//            print(parent?.description ?? "uh oh")
+            
             // Alert the user that an entry cannot be saved if it does not have a eventName
             if let parentVC = parent {
                 displayAlert(title: "Empty Field!", message: "Changes were not saved because the Event Name field was empty.", on: parentVC, dismissHandler: nil)
