@@ -13,7 +13,7 @@ private let reuseIdentifier = "resultCell"
 
 protocol communicationToMain {
 	
-	func backFromSearch(_ mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int)
+	func backFromSearchWith(mapItem: MKMapItem?, address: String, index: Int)
 	
 }
 
@@ -179,7 +179,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		if indexPath.section == 1 {
 			
 			let mapItem = mapSearchResults[indexPath.row]
-			let streetAddress = Interval.getAddressFromMapItem(mapItem)
+            let streetAddress = Interval.getAddress(from: mapItem)
 			
 			cell?.textLabel?.text = mapItem.name
 			cell?.detailTextLabel?.text = streetAddress
@@ -215,7 +215,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		if indexPath.section == 1 {
 			
 			mapItem = mapSearchResults[indexPath.row]
-			streetAddress = Interval.getAddressFromMapItem(mapItem!)
+            streetAddress = Interval.getAddress(from: mapItem!)
 				
 			selectedLocation = mapItem
 			
@@ -231,10 +231,10 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 		switch whichLocationIndex {
 			
 		case 0:
-			delegate?.backFromSearch(selectedLocation, withStreetAddress: streetAddress, atIndex: 0)
+			delegate?.backFromSearchWith(mapItem: selectedLocation, address: streetAddress, index: 0)
 			
 		case 1:
-			delegate?.backFromSearch(selectedLocation, withStreetAddress: streetAddress, atIndex: 1)
+			delegate?.backFromSearchWith(mapItem: selectedLocation, address: streetAddress, index: 1)
 			
 		default:
 			break

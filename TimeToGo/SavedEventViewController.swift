@@ -61,7 +61,7 @@ class SavedEventViewController: UIViewController, UITableViewDataSource {
 		
 		let entry = entries[indexPath.row]
 		cell.textLabel?.text = entry.scheduleLabel
-        cell.detailTextLabel?.text = entry.stringFromTimeValue()
+        cell.detailTextLabel?.text = entry.getTimeValueString()
 		
 		return cell
 		
@@ -85,10 +85,5 @@ class SavedEventViewController: UIViewController, UITableViewDataSource {
         present(mainTabVC, animated: true, completion: nil)
         
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        
-//        
-//    }
 	
 }

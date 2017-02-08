@@ -75,7 +75,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	func backFromSearch(_ mapItem: MKMapItem?, withStreetAddress address: String, atIndex index: Int) {
+	func backFromSearchWith(mapItem: MKMapItem?, address: String, index: Int) {
 		
 		guard let mItem = mapItem else {
 			
@@ -130,10 +130,10 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
         
         mapView.removeAnnotations(mapView.annotations)
         
-        startAnnotation = LocationAnnotation(coordinate: startLocation.placemark.coordinate, title: startLocation.name!, subtitle: Interval.getAddressFromMapItem(startLocation))
+        startAnnotation = LocationAnnotation(coordinate: startLocation.placemark.coordinate, title: startLocation.name!, subtitle: Interval.getAddress(from: startLocation))
         mapView.addAnnotation(startAnnotation)
         
-        endAnnotation = LocationAnnotation(coordinate: endLocation.placemark.coordinate, title: endLocation.name!, subtitle: Interval.getAddressFromMapItem(endLocation))
+        endAnnotation = LocationAnnotation(coordinate: endLocation.placemark.coordinate, title: endLocation.name!, subtitle: Interval.getAddress(from: endLocation))
         mapView.addAnnotation(endAnnotation)
         
         if directionsOverlay != nil {
@@ -159,7 +159,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
                 
             }
             
-            self.showRoute(response)
+            self.showRoute(from: response)
             
         })
         
@@ -301,7 +301,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 		} else if indexPath.section == 1 && (indexPath.row == 1 || indexPath.row == 2) {
 			
-			loadSearchControllerWithTitle((tableView.cellForRow(at: indexPath)?.contentView.subviews[1] as! UILabel).text, mapView: self.mapView)
+			loadSearchControllerWith(title: (tableView.cellForRow(at: indexPath)?.contentView.subviews[1] as! UILabel).text, mapView: self.mapView)
 			
 		}
 		
@@ -384,7 +384,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			
 		}
 		
-		intervalTimeStr = currentEntry.stringFromTimeValue()
+		intervalTimeStr = currentEntry.getTimeValueString()
 		intervalLabelCell.detailTextLabel?.text = intervalTimeStr
 		
 	}
@@ -459,17 +459,17 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			switch CLLocationManager.authorizationStatus() {
 				
 			case .authorizedAlways:
-				createLocationManager(true)
+				createLocationManager(startImmediately: true)
 				
 			case .authorizedWhenInUse:
-				createLocationManager(true)
+				createLocationManager(startImmediately: true)
 				
 			case .denied:
 				useLocationSwitch.isOn = false
                 displayAlert(title: "Denied", message: "Location services are not allowed for this app.", on: self, dismissHandler: nil)
 				
 			case .notDetermined:
-				createLocationManager(false)
+				createLocationManager(startImmediately: false)
 				guard let locationManager = self.locationManager else {
                     
                     displayAlert(title: "Error Starting Location Services", message: "Please try again later.", on: self, dismissHandler: nil)
@@ -490,7 +490,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	private func createLocationManager(_ startImmediately: Bool) {
+	private func createLocationManager(startImmediately: Bool) {
 		
 		if locationManager == nil {
 			locationManager = CLLocationManager()
@@ -591,7 +591,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	private func showRoute(_ response: MKDirectionsResponse) {
+	private func showRoute(from response: MKDirectionsResponse) {
 		
 		for route in response.routes {
 			
@@ -601,7 +601,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 			let timeInInt = Int((route.expectedTravelTime))
 			timeValueHours = timeInInt / 3600
 			timeValueMins = timeInInt / 60 % 60
-			intervalTimeStr = Interval.stringFromTimeValue(timeValueHours, timeValueMins: timeValueMins)
+			intervalTimeStr = Interval.getStringFrom(hours: timeValueHours, mins: timeValueMins)
 			intervalLabelCell.detailTextLabel?.text = intervalTimeStr
 			
 		}
@@ -675,7 +675,7 @@ class SelectedEntryTableViewController: UITableViewController, UIPickerViewDataS
 		
 	}
 	
-	private func loadSearchControllerWithTitle(_ title: String?, mapView: MKMapView) {
+	private func loadSearchControllerWith(title: String?, mapView: MKMapView) {
 		
         guard let searchNavVC = self.storyboard?.instantiateViewController(withIdentifier: "searchNavVC") as? UINavigationController else {
             return

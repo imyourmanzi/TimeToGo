@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="DatePickerWithTodayButtonTableViewCell" customModule="TimeToGo" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="T0H-AA-2ma">
+                    <rect key="frame" x="8" y="9" width="359" height="183.5"/>
+                    <date key="date" timeIntervalSinceReferenceDate="457229991.29718202">
+                        <!--2015-06-29 00:19:51 +0000-->
+                    </date>
+                </datePicker>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DEF-mx-ZxM">
+                    <rect key="frame" x="305" y="9" width="62" height="28"/>
+                    <color key="backgroundColor" red="0.9351306573" green="0.9351306573" blue="0.9351306573" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="28" id="05g-JR-zBb"/>
+                        <constraint firstAttribute="width" constant="62" id="j0F-Nc-gSe"/>
+                    </constraints>
+                    <state key="normal" title="Today"/>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="T0H-AA-2ma" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="4w9-XF-UVf"/>
+                <constraint firstItem="DEF-mx-ZxM" firstAttribute="top" secondItem="T0H-AA-2ma" secondAttribute="top" id="CcE-rt-MfD"/>
+                <constraint firstAttribute="trailing" secondItem="T0H-AA-2ma" secondAttribute="trailing" constant="8" id="JAw-gM-Ev8"/>
+                <constraint firstItem="T0H-AA-2ma" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="9" id="V1m-7M-wag"/>
+                <constraint firstAttribute="bottom" secondItem="T0H-AA-2ma" secondAttribute="bottom" constant="7.5" id="W1f-Ev-dm3"/>
+                <constraint firstItem="DEF-mx-ZxM" firstAttribute="trailing" secondItem="T0H-AA-2ma" secondAttribute="trailing" id="sON-0B-kCh"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+</document>

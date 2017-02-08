@@ -159,7 +159,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			
 			if indexPath.row == 0 {
 				
-				newEmailToRecipients(["timetogosupport@narwhalsandcode.com"], subject: "Question/Comment/Concern with It's Time To Go")
+                newEmail(to: ["timetogosupport@narwhalsandcode.com"], subject: "Question/Comment/Concern with It's Time To Go")
 				
 			} else if indexPath.row == 1 {
 			
@@ -178,7 +178,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	
 	// MARK: - Mail composer delegate
 	
-	private func newEmailToRecipients(_ recipients: [String], subject: String) {
+	private func newEmail(to recipients: [String], subject: String) {
 		
 		if MFMailComposeViewController.canSendMail() {
 			

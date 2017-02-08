@@ -97,9 +97,9 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
                 
                 // Set up the times for each interval
                 entry.updateScheduleText()
-                intervalDate = Date(timeInterval: -(entry.timeIntervalByConvertingTimeValue()), since: intervalDate)
+                intervalDate = Date(timeInterval: -(entry.getTimeInterval()), since: intervalDate)
                 entry.startDate = intervalDate
-                entry.updateDateTextWithString(dateFormatter.string(from: intervalDate))
+                entry.updateDateText(to: dateFormatter.string(from: intervalDate))
                 
             }
             
@@ -132,8 +132,8 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 		var i: CGFloat = 0.0
 		for entry in entries {
 			
-			entry.createScheduleLabelFromTopSpace(i, onView: scrollSubview)
-			entry.createDateLabelOnView(scrollSubview)
+            entry.createScheduleLabel(withSpace: i, on: scrollSubview)
+            entry.createDateLabel(on: scrollSubview)
 			
 			i += 50.0
 			
@@ -248,7 +248,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
         return canAccess
         
     }
-	
+    
 	
 	// MARK: - Navigation
     
@@ -278,9 +278,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 		
 		// Remove all views from the scrollSubview
 		for entry in entries {
-			
 			entry.removeViewsFromSuperview()
-			
 		}
 		
 		eventIntervalLabel.removeFromSuperview()

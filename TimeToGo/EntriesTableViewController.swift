@@ -116,7 +116,7 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
 		entry = entries[indexPath.row]
 		
 		cell.textLabel?.text = entry.scheduleLabel
-        cell.detailTextLabel?.text = entry.stringFromTimeValue()
+        cell.detailTextLabel?.text = entry.getTimeValueString()
         
 		return cell
 		
@@ -182,7 +182,7 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
             destVC.schedLabel = selectedEntry.scheduleLabel
             destVC.timeValueHours = selectedEntry.timeValueHours
             destVC.timeValueMins = selectedEntry.timeValueMins
-            destVC.intervalTimeStr = selectedEntry.stringFromTimeValue()
+            destVC.intervalTimeStr = selectedEntry.getTimeValueString()
             destVC.notes = selectedEntry.notesStr
             if selectedEntry.useLocation == true && selectedEntry.startLocation != nil && selectedEntry.endLocation != nil {
                 

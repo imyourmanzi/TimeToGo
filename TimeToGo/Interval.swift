@@ -9,7 +9,6 @@
 import UIKit
 import MapKit
 
-// TODO: Renames (see below)
 class Interval: NSObject, NSCoding {
     
 	// Public variables
@@ -69,7 +68,7 @@ class Interval: NSObject, NSCoding {
     // MARK: - Formatting time values
 	
 	// Gets a custom built time interval string from a combination of hours and minutes
-	func stringFromTimeValue() -> String {
+	func getTimeValueString() -> String {
 		
 		var timeString: String!
 		
@@ -89,8 +88,7 @@ class Interval: NSObject, NSCoding {
 	}
 	
 	// Class level function for getting custom built time interval string from a combination of hours and minutes
-    ////////////// RENAME
-	static func stringFromTimeValue(_ timeValueHours: Int, timeValueMins: Int) -> String {
+	static func getStringFrom(hours timeValueHours: Int, mins timeValueMins: Int) -> String {
 		
 		var timeString: String!
 		
@@ -112,8 +110,7 @@ class Interval: NSObject, NSCoding {
     // MARK: - Formatting schedule
 	
 	// Creates and adds label for scheduleLabel to a view
-    ////////////// RENAME
-	func createScheduleLabelFromTopSpace(_ topSpace: CGFloat, onView view: UIView) {
+	func createScheduleLabel(withSpace topSpace: CGFloat, on view: UIView) {
 		
 		entryLabel.translatesAutoresizingMaskIntoConstraints = false
 		entryLabel.numberOfLines = 2
@@ -156,8 +153,7 @@ class Interval: NSObject, NSCoding {
 	}
 	
 	// Returns an NSTimeInterval by converting timeValueHours and timeValueMins
-    ////////////// RENAME
-	func timeIntervalByConvertingTimeValue() -> TimeInterval {
+	func getTimeInterval() -> TimeInterval {
 		
 		let timeIntervalHours = Double(timeValueHours) * 60.0 * 60.0
 		let timeIntervalMins = Double(timeValueMins) * 60.0
@@ -168,8 +164,7 @@ class Interval: NSObject, NSCoding {
 	}
 	
 	// Creates and adds label for timeValueHours and timeValueMins to a view
-    ////////////// RENAME
-	func createDateLabelOnView(_ view: UIView) {
+	func createDateLabel(on view: UIView) {
 		
 		dateLabel.translatesAutoresizingMaskIntoConstraints = false
 		dateLabel.numberOfLines = 1
@@ -197,15 +192,13 @@ class Interval: NSObject, NSCoding {
 	}
 
 	// Updates text on above dateLabel
-    ////////////// RENAME
-	func updateDateTextWithString(_ dateString: String) {
+	func updateDateText(to dateString: String) {
 		
 		dateLabel.text = dateString
 		
 	}
 	
 	// Remove an interval's labels from their superview
-    ////////////// RENAME
 	func removeViewsFromSuperview() {
 		
 		entryLabel.removeFromSuperview()
@@ -217,8 +210,7 @@ class Interval: NSObject, NSCoding {
     // MARK: - Formatting map address
 	
 	// Static function that composes an address label for any MKMapItem
-    ////////////// RENAME
-	static func getAddressFromMapItem(_ mapItem: MKMapItem) -> String {
+	static func getAddress(from mapItem: MKMapItem) -> String {
 		
 		var streetAddress = ""
 		
@@ -293,7 +285,7 @@ class Interval: NSObject, NSCoding {
     
     override var description: String {
         
-        return "\n------\nSchedule Label:\t\(self.scheduleLabel)\nTime:\t\(self.stringFromTimeValue())\nNotes:\t\(self.notesStr)\nMain Label:\t\(self.mainLabel ?? "No mainLabel")\n------\n"
+        return "\n------\nSchedule Label:\t\(self.scheduleLabel)\nTime:\t\(self.getTimeValueString())\nNotes:\t\(self.notesStr)\nMain Label:\t\(self.mainLabel ?? "No mainLabel")\n------\n"
         
     }
     
