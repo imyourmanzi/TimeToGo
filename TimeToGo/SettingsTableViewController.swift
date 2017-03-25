@@ -15,7 +15,9 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
     // Interface Builder variables
 	@IBOutlet var eventDateCell: UITableViewCell!
 	@IBOutlet var eventNameCell: UITableViewCell!
+    @IBOutlet var eventTypeCell: UITableViewCell!
     @IBOutlet var deleteAlertPopoverViewAnchor: UIView!
+    @IBOutlet var resetAlertPopoverViewAnchor: UIView!
 	
     // Core Data variables
 	var event: Trip!
@@ -23,6 +25,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	
     // Current VC variables
 	var eventDate: Date!
+    var eventType: String!
     
 	override func viewWillAppear(_ animated: Bool) {
         
@@ -37,8 +40,9 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             
             event = try fetchCurrentEvent()
             eventDate = event.flightDate
+            eventType = event.eventType
             
-            setupDateElements()
+            setupCellDetails()
             
         } catch {
             
@@ -50,7 +54,6 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             
         }
         
-        eventNameCell.detailTextLabel?.text = eventName
         
         // Fetch all of the managed objects from the persistent store and update the table view
         do {
@@ -90,12 +93,42 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         
     }
     
-    private func setupDateElements() {
+//    private func setupDateElements() {
+//        
+//        
+//    }
+    
+    private func setupCellDetails() {
         
         // Set up the dateFormatter for the eventDate title display
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+        
+        eventNameCell.detailTextLabel?.text = eventName
         eventDateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
+        eventTypeCell.detailTextLabel?.text = eventType
+        
+    }
+    
+    @IBAction func clickedResetSchedule(_ sender: UIButton) {
+        
+        let resetAlertController = UIAlertController(title: nil, message: "Reset \(eventName!) to the default schedule?", preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let resetAction = UIAlertAction(title: "Reset", style: .destructive) { (action: UIAlertAction) in
+            
+            let template = EventTemplate(filename: self.eventType)
+            self.event.entries = template.getEntries() as NSArray
+            
+            self.performUpdateOnCoreData()
+            
+        }
+        
+        resetAlertController.addAction(cancelAction)
+        resetAlertController.addAction(resetAction)
+        
+        resetAlertController.popoverPresentationController?.sourceView = resetAlertPopoverViewAnchor
+        
+        present(resetAlertController, animated: true, completion: nil)
         
     }
 	
@@ -103,10 +136,10 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		
 		// Present an action sheet to confirm deletion of the event and handle the situations that can follow
 		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(eventName!)?", preferredStyle: .actionSheet)
-		let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {(action: UIAlertAction) in
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(action: UIAlertAction) in
 			deleteAlertController.dismiss(animated: true, completion: nil)
 		})
-		let deleteAction = UIAlertAction(title: "Delete Event", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction) in
+		let deleteAction = UIAlertAction(title: "Delete Event", style: .destructive, handler: { (action: UIAlertAction) in
 			
             guard let eventIndex = self.allEvents.index(of: self.event) else {
                 return
@@ -127,7 +160,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 				
                 if let newEventName = self.allEvents.last?.tripName {
                     
-                    UserDefaults.standard.set(newEventName, forKey: "currentTripName")
+                    self.setCurrentEventInDefaults(to: newEventName)
                     self.getEventData()
                     
                 }
@@ -214,7 +247,6 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		
-		// Prepare the possible views that may appear by pre-setting properties
 		if let timeVC = segue.destination as? EditEventTimeTableViewController {
             
 			timeVC.eventDate = self.eventDate

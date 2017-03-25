@@ -72,7 +72,7 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 			performUpdateOnCoreData()
 		
 			// Update the currentTripName so that other views will reference the updated eventName
-			UserDefaults.standard.set(self.eventName, forKey: "currentTripName")
+            setCurrentEventInDefaults(to: self.eventName)
 			
 			eventNameTextfield.resignFirstResponder()
 			

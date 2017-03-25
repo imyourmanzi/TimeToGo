@@ -18,7 +18,7 @@ class EventTypeCollectionViewController: UICollectionViewController {
     
     // Intermittern variables - variables to be passed to next view controller
     var allEvents: [Trip] = []
-
+    
     
     // MARK: - Collection View data source
 
@@ -87,7 +87,7 @@ class EventTypeCollectionViewController: UICollectionViewController {
         if let newEventVC = segue.destination as? NewEventTableViewController {
             
             newEventVC.allEvents = allEvents
-            newEventVC.eventType = (eventTypes[typeIndexPath.item]).components(separatedBy: "^")[1]
+            newEventVC.eventType = (eventTypes[typeIndexPath.item]).components(separatedBy: CSVFile.TITLE_DELIMIT)[1]
             
         }
         

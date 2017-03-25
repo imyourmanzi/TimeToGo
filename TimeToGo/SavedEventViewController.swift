@@ -10,7 +10,7 @@ import UIKit
 
 private let reuseIdentifier = "entryCell"
 
-class SavedEventViewController: UIViewController, UITableViewDataSource {
+class SavedEventViewController: UIViewController, UITableViewDataSource, CoreDataHelper {
 	
 	// Interface Builder variables
 	@IBOutlet var tableView: UITableView!
@@ -73,7 +73,7 @@ class SavedEventViewController: UIViewController, UITableViewDataSource {
     @IBAction func loadEvent(_ sender: UIBarButtonItem) {
         
         // Update currentTripName to the chosen eventName
-        UserDefaults.standard.set(eventName, forKey: "currentTripName")
+        setCurrentEventInDefaults(to: eventName)
         
         guard let mainTabVC = storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
             return

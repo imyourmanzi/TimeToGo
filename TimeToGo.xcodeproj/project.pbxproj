@@ -14,6 +14,9 @@
 		8A5D1D041E3911C500D0CD95 /* EventTypeData.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */; };
 		8A5D1D061E3911D100D0CD95 /* Plane.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D051E3911D100D0CD95 /* Plane.csv */; };
 		8A5D1D081E3913B400D0CD95 /* Train.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D071E3913B400D0CD95 /* Train.csv */; };
+		8A78951C1E86211700C32E92 /* CSVFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A78951B1E86211700C32E92 /* CSVFile.swift */; };
+		8A7895221E862DC300C32E92 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A7895211E862DC300C32E92 /* Events.swift */; };
+		8A7895241E86379000C32E92 /* EventTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A7895231E86379000C32E92 /* EventTemplate.swift */; };
 		8A8F8D4C1E32D837006C30F0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */; };
 		8A9C81261E3A52A100A83043 /* Car.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81251E3A52A100A83043 /* Car.csv */; };
 		8A9C81281E3A52B100A83043 /* Bus.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81271E3A52B100A83043 /* Bus.csv */; };
@@ -91,6 +94,9 @@
 		8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = EventTypeData.csv; path = csv_data/EventTypeData.csv; sourceTree = "<group>"; };
 		8A5D1D051E3911D100D0CD95 /* Plane.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Plane.csv; path = csv_data/Plane.csv; sourceTree = "<group>"; };
 		8A5D1D071E3913B400D0CD95 /* Train.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Train.csv; path = csv_data/Train.csv; sourceTree = "<group>"; };
+		8A78951B1E86211700C32E92 /* CSVFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSVFile.swift; sourceTree = "<group>"; };
+		8A7895211E862DC300C32E92 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
+		8A7895231E86379000C32E92 /* EventTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTemplate.swift; sourceTree = "<group>"; };
 		8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		8A9C81251E3A52A100A83043 /* Car.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Car.csv; path = csv_data/Car.csv; sourceTree = "<group>"; };
 		8A9C81271E3A52B100A83043 /* Bus.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Bus.csv; path = csv_data/Bus.csv; sourceTree = "<group>"; };
@@ -264,7 +270,10 @@
 			isa = PBXGroup;
 			children = (
 				8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */,
+				8A78951B1E86211700C32E92 /* CSVFile.swift */,
 				8AEACD651E469D23004F3137 /* DatePickerWithTodayButtonTableViewCell.swift */,
+				8A7895211E862DC300C32E92 /* Events.swift */,
+				8A7895231E86379000C32E92 /* EventTemplate.swift */,
 				98418DD41B48487A00ADC2D8 /* Interval.swift */,
 				98418DD51B48487A00ADC2D8 /* IntervalTransformer.swift */,
 				98FC89DA1B8161EC00ED9844 /* LocationAnnotation.swift */,
@@ -277,10 +286,10 @@
 		8AEACD611E469088004F3137 /* Modify Tab */ = {
 			isa = PBXGroup;
 			children = (
-				98418DCE1B48487A00ADC2D8 /* AddEntryTableViewController.swift */,
 				98418DD21B48487A00ADC2D8 /* EntriesTableViewController.swift */,
-				98FC89DC1B8165AE00ED9844 /* SearchViewController.swift */,
 				98418DD81B48487A00ADC2D8 /* SelectedEntryTableViewController.swift */,
+				98418DCE1B48487A00ADC2D8 /* AddEntryTableViewController.swift */,
+				98FC89DC1B8165AE00ED9844 /* SearchViewController.swift */,
 			);
 			name = "Modify Tab";
 			sourceTree = "<group>";
@@ -288,10 +297,10 @@
 		8AEACD621E4690AC004F3137 /* Home Tab */ = {
 			isa = PBXGroup;
 			children = (
-				98418DCF1B48487A00ADC2D8 /* AllEventsTableViewController.swift */,
-				8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */,
 				8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */,
+				8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */,
 				98418DD31B48487A00ADC2D8 /* NewEventTableViewController.swift */,
+				98418DCF1B48487A00ADC2D8 /* AllEventsTableViewController.swift */,
 				98418DD61B48487A00ADC2D8 /* SavedEventViewController.swift */,
 			);
 			name = "Home Tab";
@@ -309,9 +318,9 @@
 		8AEACD641E4690CB004F3137 /* Settings Tab */ = {
 			isa = PBXGroup;
 			children = (
+				98418DD91B48487A00ADC2D8 /* SettingsTableViewController.swift */,
 				98418DD01B48487A00ADC2D8 /* EditEventTimeTableViewController.swift */,
 				98418DD11B48487A00ADC2D8 /* EditEventNameTableViewController.swift */,
-				98418DD91B48487A00ADC2D8 /* SettingsTableViewController.swift */,
 			);
 			name = "Settings Tab";
 			sourceTree = "<group>";
@@ -541,8 +550,10 @@
 				98418DAC1B4847AA00ADC2D8 /* AppDelegate.swift in Sources */,
 				8A8F8D4C1E32D837006C30F0 /* HomeViewController.swift in Sources */,
 				98418DE11B48487A00ADC2D8 /* NewEventTableViewController.swift in Sources */,
+				8A7895221E862DC300C32E92 /* Events.swift in Sources */,
 				98418DE51B48487A00ADC2D8 /* ScheduleViewController.swift in Sources */,
 				8AEACD661E469D23004F3137 /* DatePickerWithTodayButtonTableViewCell.swift in Sources */,
+				8A78951C1E86211700C32E92 /* CSVFile.swift in Sources */,
 				98418DE91B48487A00ADC2D8 /* Trip.swift in Sources */,
 				8A44A8411E369AAA00B1CB09 /* TypeCollectionViewCell.swift in Sources */,
 				8A44A83B1E36811200B1CB09 /* CategoryCollectionViewCell.swift in Sources */,
@@ -551,6 +562,7 @@
 				8A44A8481E37E6B100B1CB09 /* CoreDataHelper.swift in Sources */,
 				98418DE71B48487A00ADC2D8 /* SettingsTableViewController.swift in Sources */,
 				8A44A83F1E36964500B1CB09 /* EventTypeCollectionViewController.swift in Sources */,
+				8A7895241E86379000C32E92 /* EventTemplate.swift in Sources */,
 				98418DDF1B48487A00ADC2D8 /* EditEventNameTableViewController.swift in Sources */,
 				98418DE81B48487A00ADC2D8 /* ShareToCalTableViewController.swift in Sources */,
 				98418DE21B48487A00ADC2D8 /* Interval.swift in Sources */,

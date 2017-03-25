@@ -13,11 +13,16 @@ private let reuseIdentifier = "categoryCell"
 
 class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CoreDataHelper {
     
+    // Value constants
+    let EVENT_TYPE_DATA_FILE = "EventTypeData"
+    let MOVE_MAIN_LABEL_KEY  = "movedMainLabel"
+    
     // CoreData variables
     var allEvents: [Trip] = []
     var entries: [Interval] = []
     
     // Current VC variables
+    var stockEvents: Events = Events()
     var isViewVisible = false
     let titleImageView = UIImageView(image: UIImage(named: "title"))
     var categoriesFileData: String = ""
@@ -29,11 +34,9 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         // Set the custom title for the navigation bar
         self.navigationItem.titleView = titleImageView
-
-        if let fileData = readData(fromCSV: "EventTypeData") {
-            categoriesFileData = fileData
-            eventCategories = getEventCategories(from: fileData)
-        }
+        
+        stockEvents = Events(filename: EVENT_TYPE_DATA_FILE)
+        eventCategories = stockEvents.getEventCategories()
         
     }
     
@@ -80,7 +83,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     // If not done already, move all the main labels' contents into their respective notes and set them nil
     private func moveMainLabelIfNeeded() {
         
-        if !(UserDefaults.standard.bool(forKey: "movedMainLabel")) {
+        if !(UserDefaults.standard.bool(forKey: MOVE_MAIN_LABEL_KEY)) {
             
             var i = 0
             for event in allEvents {
@@ -113,82 +116,85 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             }
             
             // Update the standards database
-            UserDefaults.standard.set(true, forKey: "movedMainLabel")
+            UserDefaults.standard.set(true, forKey: MOVE_MAIN_LABEL_KEY)
             
         }
         
     }
     
     
+    ////////////////////////////////////////////////////////////////////////////////////
+    //// DELETE
+    ////////////////////////////////////////////////////////////////////////////////////
     // MARK: - Manage CSV of Event Types
     
-    func readData(fromCSV file: String) -> String! {
-        
-        guard let filePath = Bundle.main.path(forResource: file, ofType: "csv") else {
-            return nil
-        }
-        
-        do {
-            
-            let contents = try String(contentsOfFile: filePath)
-            
-            return contents
-            
-        } catch {
-            
-            return nil
-            
-        }
-        
-    }
-    
-    func getEventCategories(from data: String) -> [String] {
-        
-        var categories: [String] = []
-        
-        var rows = data.components(separatedBy: "\n")
-        if rows.last == "" {
-            rows.removeLast()
-        }
-        
-        for row in rows {
-            
-            let category = row.components(separatedBy: ",")[0]
-            
-            
-            if !(categories.contains(category)) {
-                categories.append(category)
-            }
-            
-        }
-        
-        return categories
-        
-    }
-    
-    func getEventTypes(from data: String, ofCategory: String) -> [String] {
-        
-        var types: [String] = []
-        
-        var rows = data.components(separatedBy: "\n")
-        if rows.last == "" {
-            rows.removeLast()
-        }
-        
-        for row in rows {
-            
-            let rowCategory = row.components(separatedBy: ",")[0]
-            let rowType = row.components(separatedBy: ",")[1]
-            
-            if rowCategory == ofCategory {
-                types.append(rowType)
-            }
-            
-        }
-        
-        return types
-        
-    }
+//    func readData(fromCSV file: String) -> String! {
+//        
+//        guard let filePath = Bundle.main.path(forResource: file, ofType: "csv") else {
+//            return nil
+//        }
+//        
+//        do {
+//            
+//            let contents = try String(contentsOfFile: filePath)
+//            
+//            return contents
+//            
+//        } catch {
+//            return nil
+//        }
+//        
+//    }
+//    
+//    func getEventCategories(from data: String) -> [String] {
+//        
+//        var categories: [String] = []
+//        
+//        var rows = data.components(separatedBy: "\n")
+//        if rows.last == "" {
+//            rows.removeLast()
+//        }
+//        
+//        for row in rows {
+//            
+//            let category = row.components(separatedBy: ",")[0]
+//            
+//            
+//            if !(categories.contains(category)) {
+//                categories.append(category)
+//            }
+//            
+//        }
+//        
+//        return categories
+//        
+//    }
+//    
+//    func getEventTypes(from data: String, ofCategory: String) -> [String] {
+//        
+//        var types: [String] = []
+//        
+//        var rows = data.components(separatedBy: "\n")
+//        if rows.last == "" {
+//            rows.removeLast()
+//        }
+//        
+//        for row in rows {
+//            
+//            let rowCategory = row.components(separatedBy: ",")[0]
+//            let rowType = row.components(separatedBy: ",")[1]
+//            
+//            if rowCategory == ofCategory {
+//                types.append(rowType)
+//            }
+//            
+//        }
+//        
+//        return types
+//        
+//    }
+    ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
     
     
     // MARK: - Collection View Data Source
@@ -271,9 +277,9 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         if let eventTypeVC = segue.destination as? EventTypeCollectionViewController {
             
-            eventTypeVC.eventTypes = getEventTypes(from: categoriesFileData, ofCategory: eventCategories[categoryIndexPath.item])
+            eventTypeVC.eventTypes = stockEvents.getEventTypes(ofCategory: eventCategories[categoryIndexPath.item])
             eventTypeVC.allEvents = allEvents
-            eventTypeVC.navigationItem.title = (eventCategories[categoryIndexPath.item]).components(separatedBy: "^")[1]
+            eventTypeVC.navigationItem.title = (eventCategories[categoryIndexPath.item]).components(separatedBy: CSVFile.TITLE_DELIMIT)[1]
             
         } else if let allEventsVC = segue.destination as? AllEventsTableViewController {
             allEventsVC.allEvents = allEvents

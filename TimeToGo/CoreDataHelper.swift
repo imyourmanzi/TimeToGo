@@ -15,6 +15,8 @@ protocol CoreDataHelper {
     var moc: NSManagedObjectContext? { get }
     var eventName: String? { get }
     
+    func setCurrentEventInDefaults(to eventName: String)
+    
     func fetchEvents(using: NSPredicate?) throws -> [Trip]
     
     func fetchEvent(named: String) throws -> Trip
@@ -38,7 +40,7 @@ enum CoreDataEventError: Error {
 }
 
 
-// MARK: - Default Method Implementations
+// MARK: - Default Data Implementation
 
 extension CoreDataHelper {
     
@@ -61,6 +63,19 @@ extension CoreDataHelper {
     var eventName: String? {
         
         return UserDefaults.standard.string(forKey: "currentTripName")
+        
+    }
+    
+}
+
+
+// MARK: - Default Method Implementations
+
+extension CoreDataHelper {
+    
+    func setCurrentEventInDefaults(to eventName: String) {
+        
+        UserDefaults.standard.set(eventName, forKey: "currentTripName")
         
     }
     

@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class NewEventTableViewController: UITableViewController, UITextFieldDelegate, CoreDataHelper {
-	
+    
 	// Interface Builder variables
 	@IBOutlet var eventNameTextfield: UITextField!
 	@IBOutlet var dateCell: UITableViewCell!
@@ -24,6 +24,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
     var newEventName: String!
     var eventDate = Date()
     var eventType: String = ""
+    var template: EventTemplate = EventTemplate()
     var defaultEntries: [Interval] = []
 	let dateFormatter = DateFormatter()
 	var pickerHidden = true
@@ -34,9 +35,8 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
         setupDateElements()
         
         // Set up the default entries
-        if let fileData = readData(fromCSV: eventType) {
-            defaultEntries = getEntries(from: fileData)
-        }
+        template = EventTemplate(filename: eventType)
+        defaultEntries = template.getEntries()
         
 	}
     
@@ -59,42 +59,48 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
     }
 	
     
+    ////////////////////////////////////////////////////////////////////////////////////
+    //// DELETE
+    ////////////////////////////////////////////////////////////////////////////////////
     // MARK: - Manage CSV of default entries
     
-    func readData(fromCSV file: String) -> String! {
-        
-        guard let filePath = Bundle.main.path(forResource: file, ofType: "csv") else {
-            return nil
-        }
-        
-        do {
-            
-            let contents = try String(contentsOfFile: filePath)
-            return contents
-            
-        } catch {
-            return nil
-        }
-        
-    }
-    
-    func getEntries(from data: String) -> [Interval] {
-        
-        var entries: [Interval] = []
-        
-        var rows = data.components(separatedBy: "\n")
-        
-        if rows.last == "" {
-            rows.removeLast()
-        }
-        
-        for row in rows {
-            entries.append(Interval(args: row.components(separatedBy: ",")))
-        }
-        
-        return entries
-        
-    }
+//    func readData(fromCSV file: String) -> String! {
+//        
+//        guard let filePath = Bundle.main.path(forResource: file, ofType: "csv") else {
+//            return nil
+//        }
+//        
+//        do {
+//            
+//            let contents = try String(contentsOfFile: filePath)
+//            
+//            return contents
+//            
+//        } catch {
+//            return nil
+//        }
+//        
+//    }
+//    
+//    func getEntries(from data: String) -> [Interval] {
+//        
+//        var entries: [Interval] = []
+//        
+//        var rows = data.components(separatedBy: "\n")
+//        
+//        if rows.last == "" {
+//            rows.removeLast()
+//        }
+//        
+//        for row in rows {
+//            entries.append(Interval(args: row.components(separatedBy: ",")))
+//        }
+//        
+//        return entries
+//        
+//    }
+    ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
 
     
     // MARK: - Text and date input delegate
@@ -274,8 +280,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 		if nameIsUnique {
 			
             performUpdateOnCoreData()
-			
-			UserDefaults.standard.set(newEventName, forKey: "currentTripName")
+            setCurrentEventInDefaults(to: newEventName)
 			
             guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
                 return

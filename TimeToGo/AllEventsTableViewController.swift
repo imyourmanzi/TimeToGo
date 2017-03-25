@@ -108,7 +108,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 			if allEvents[indexPath.row].tripName == eventName && allEvents.count > 1 {
 				
 				eventName = allEvents[allEvents.count - 2].tripName
-				UserDefaults.standard.set(eventName, forKey: "currentTripName")
+                setCurrentEventInDefaults(to: eventName)
 				
 			}
 			
@@ -147,7 +147,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 			theEventName = self.allEvents[indexPath.row].tripName
 		}
 		
-		UserDefaults.standard.set(theEventName, forKey: "currentTripName")
+        setCurrentEventInDefaults(to: theEventName)
 		
         // Transition to the Scheudle VC
         guard let mainTabVC = storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
