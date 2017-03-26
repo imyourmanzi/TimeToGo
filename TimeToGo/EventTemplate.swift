@@ -10,7 +10,11 @@ import Foundation
 
 class EventTemplate {
     
+    // Instance data
     var file: CSVFile
+    
+    
+    // MARK: - Initializers
     
     init() {
         
@@ -23,6 +27,9 @@ class EventTemplate {
         file = CSVFile(filename: filename)
         
     }
+    
+    
+    // MARK: - Data parsing
     
     func getEntries() -> [Interval] {
         

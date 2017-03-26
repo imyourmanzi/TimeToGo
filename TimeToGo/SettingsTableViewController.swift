@@ -24,8 +24,8 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
     var allEvents: [Trip] = []
 	
     // Current VC variables
-	var eventDate: Date!
-    var eventType: String!
+	var eventDate: Date = Date()
+    var eventType: String = "Event Name"
     
 	override func viewWillAppear(_ animated: Bool) {
         
@@ -254,10 +254,17 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			
 		} else if let nameVC = segue.destination as? EditEventNameTableViewController {
 			
-			nameVC.eventName = self.eventName
+            if let name = self.eventName {
+                nameVC.eventName = name
+            }
 			nameVC.event = self.event
 			
-		}
+        } else if let typeVC = segue.destination as? EditEventTypeTableViewController {
+            
+            typeVC.eventType = self.eventType
+            typeVC.event = self.event
+            
+        }
 		
 	}
 	

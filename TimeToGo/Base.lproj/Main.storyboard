@@ -436,6 +436,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="ocb-rT-NZQ" kind="show" id="P9z-db-Hbw"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="aea-8j-IQC">
                                         <rect key="frame" x="0.0" y="187.5" width="375" height="44"/>
@@ -662,7 +665,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ndx-5C-JX0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2604" y="1131"/>
+            <point key="canvasLocation" x="2601" y="1131"/>
         </scene>
         <!--Event Name-->
         <scene sceneID="Z9a-wr-TMK">
@@ -716,6 +719,81 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zk6-wg-yPw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2602" y="1814"/>
+        </scene>
+        <!--Edit Event Type Table View Controller-->
+        <scene sceneID="MjN-Ai-n5F">
+            <objects>
+                <tableViewController id="ocb-rT-NZQ" customClass="EditEventTypeTableViewController" customModule="TimeToGo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="Luh-aK-X31">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection footerTitle="Tap to change the event type." id="X7n-aV-eb5">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="rkD-g4-vIZ" detailTextLabel="Ru8-NJ-bRX" style="IBUITableViewCellStyleValue1" id="0e3-qt-Fh2">
+                                        <rect key="frame" x="0.0" y="35" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0e3-qt-Fh2" id="div-PY-c5B">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rkD-g4-vIZ">
+                                                    <rect key="frame" x="15" y="11" width="38" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ru8-NJ-bRX">
+                                                    <rect key="frame" x="316" y="11" width="44" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="200" id="1GS-EL-O61">
+                                        <rect key="frame" x="0.0" y="79" width="375" height="200"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1GS-EL-O61" id="OZ7-th-a07">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="199"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aFL-tY-SbN">
+                                                    <rect key="frame" x="8" y="9" width="359" height="180.5"/>
+                                                    <connections>
+                                                        <outlet property="dataSource" destination="ocb-rT-NZQ" id="kVY-qW-0zk"/>
+                                                        <outlet property="delegate" destination="ocb-rT-NZQ" id="jxK-Ug-Uy7"/>
+                                                    </connections>
+                                                </pickerView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="aFL-tY-SbN" secondAttribute="bottom" constant="2" id="3BD-qg-uXg"/>
+                                                <constraint firstItem="aFL-tY-SbN" firstAttribute="top" secondItem="OZ7-th-a07" secondAttribute="topMargin" constant="1" id="3Zk-my-QM4"/>
+                                                <constraint firstItem="aFL-tY-SbN" firstAttribute="leading" secondItem="OZ7-th-a07" secondAttribute="leadingMargin" id="Bye-UN-pvJ"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="aFL-tY-SbN" secondAttribute="trailing" id="OTe-gI-hS8"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="ocb-rT-NZQ" id="Adw-kE-reX"/>
+                            <outlet property="delegate" destination="ocb-rT-NZQ" id="Qsk-AK-d5Z"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="eventTypeCell" destination="0e3-qt-Fh2" id="2bY-4v-ifD"/>
+                        <outlet property="eventTypePicker" destination="aFL-tY-SbN" id="KEM-jl-evQ"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6Sk-o4-sbR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2600.8000000000002" y="2497.6011994003002"/>
         </scene>
         <!--Interval-->
         <scene sceneID="qhQ-tU-xIv">

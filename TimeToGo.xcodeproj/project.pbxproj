@@ -48,6 +48,7 @@
 		8A9C81611E3A564700A83043 /* Work.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815E1E3A564700A83043 /* Work.csv */; };
 		8A9C81621E3A564700A83043 /* Worship.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815F1E3A564700A83043 /* Worship.csv */; };
 		8A9C81641E3A569600A83043 /* Custom.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81631E3A569600A83043 /* Custom.csv */; };
+		8AB3ED671E86E87E0090ED43 /* EditEventTypeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */; };
 		8ACDE10F1E3FB45700FD8F01 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */; };
 		8AEACD661E469D23004F3137 /* DatePickerWithTodayButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEACD651E469D23004F3137 /* DatePickerWithTodayButtonTableViewCell.swift */; };
 		8AEACD681E469D6D004F3137 /* DatePickerWithTodayButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8AEACD671E469D6D004F3137 /* DatePickerWithTodayButton.xib */; };
@@ -128,6 +129,7 @@
 		8A9C815E1E3A564700A83043 /* Work.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Work.csv; path = csv_data/Work.csv; sourceTree = "<group>"; };
 		8A9C815F1E3A564700A83043 /* Worship.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Worship.csv; path = csv_data/Worship.csv; sourceTree = "<group>"; };
 		8A9C81631E3A569600A83043 /* Custom.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Custom.csv; path = csv_data/Custom.csv; sourceTree = "<group>"; };
+		8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEventTypeTableViewController.swift; sourceTree = "<group>"; };
 		8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 		8AEACD651E469D23004F3137 /* DatePickerWithTodayButtonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerWithTodayButtonTableViewCell.swift; sourceTree = "<group>"; };
 		8AEACD671E469D6D004F3137 /* DatePickerWithTodayButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DatePickerWithTodayButton.xib; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 				98418DD91B48487A00ADC2D8 /* SettingsTableViewController.swift */,
 				98418DD01B48487A00ADC2D8 /* EditEventTimeTableViewController.swift */,
 				98418DD11B48487A00ADC2D8 /* EditEventNameTableViewController.swift */,
+				8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */,
 			);
 			name = "Settings Tab";
 			sourceTree = "<group>";
@@ -548,6 +551,7 @@
 			files = (
 				98418DDC1B48487A00ADC2D8 /* AddEntryTableViewController.swift in Sources */,
 				98418DAC1B4847AA00ADC2D8 /* AppDelegate.swift in Sources */,
+				8AB3ED671E86E87E0090ED43 /* EditEventTypeTableViewController.swift in Sources */,
 				8A8F8D4C1E32D837006C30F0 /* HomeViewController.swift in Sources */,
 				98418DE11B48487A00ADC2D8 /* NewEventTableViewController.swift in Sources */,
 				8A7895221E862DC300C32E92 /* Events.swift in Sources */,

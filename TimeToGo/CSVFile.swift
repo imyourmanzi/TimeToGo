@@ -16,6 +16,7 @@ class CSVFile {
     static let COLUMN_DELIMIT = ","
     static let TITLE_DELIMIT  = "^"
     
+    // Instance data
     var filename: String
     var rawData: String?
     
@@ -32,6 +33,9 @@ class CSVFile {
     
     }
 
+    
+    // MARK: - Data extraction
+    
     func readData() {
         
         guard let filePath = Bundle.main.path(forResource: filename, ofType: CSVFile.FILE_TYPE) else {

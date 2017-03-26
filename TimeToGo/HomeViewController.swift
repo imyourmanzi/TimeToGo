@@ -14,7 +14,6 @@ private let reuseIdentifier = "categoryCell"
 class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CoreDataHelper {
     
     // Value constants
-    let EVENT_TYPE_DATA_FILE = "EventTypeData"
     let MOVE_MAIN_LABEL_KEY  = "movedMainLabel"
     
     // CoreData variables
@@ -35,7 +34,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         // Set the custom title for the navigation bar
         self.navigationItem.titleView = titleImageView
         
-        stockEvents = Events(filename: EVENT_TYPE_DATA_FILE)
         eventCategories = stockEvents.getEventCategories()
         
     }

@@ -18,7 +18,7 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 	var event: Trip!
 	
 	// Current VC variables
-	var eventName: String!
+	var eventName: String = "Event Name Not Found"
 	
     override func viewDidLoad() {
         super.viewDidLoad()
