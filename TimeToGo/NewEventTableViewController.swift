@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 
+private let reuseIdentifier = "datePickerCell"
+
 class NewEventTableViewController: UITableViewController, UITextFieldDelegate, CoreDataHelper {
     
 	// Interface Builder variables
@@ -31,7 +33,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+        
         setupDateElements()
         
         // Set up the default entries
@@ -57,51 +59,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
         dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
         
     }
-	
     
-    ////////////////////////////////////////////////////////////////////////////////////
-    //// DELETE
-    ////////////////////////////////////////////////////////////////////////////////////
-    // MARK: - Manage CSV of default entries
-    
-//    func readData(fromCSV file: String) -> String! {
-//        
-//        guard let filePath = Bundle.main.path(forResource: file, ofType: "csv") else {
-//            return nil
-//        }
-//        
-//        do {
-//            
-//            let contents = try String(contentsOfFile: filePath)
-//            
-//            return contents
-//            
-//        } catch {
-//            return nil
-//        }
-//        
-//    }
-//    
-//    func getEntries(from data: String) -> [Interval] {
-//        
-//        var entries: [Interval] = []
-//        
-//        var rows = data.components(separatedBy: "\n")
-//        
-//        if rows.last == "" {
-//            rows.removeLast()
-//        }
-//        
-//        for row in rows {
-//            entries.append(Interval(args: row.components(separatedBy: ",")))
-//        }
-//        
-//        return entries
-//        
-//    }
-    ////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
-
     
     // MARK: - Text and date input delegate
     
@@ -187,7 +145,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 		}
 		
 	}
-	
+    
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
 		if indexPath.row == 1 {
@@ -220,7 +178,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 		self.tableView.beginUpdates()
 		
 		if pickerHidden {
-			
+            
 			eventDatePicker.setDate(eventDate, animated: true)
 			self.tableView.insertRows(at: [IndexPath(row: 2, section: 0)], with: UITableViewRowAnimation.fade)
 			eventNameTextfield.resignFirstResponder()

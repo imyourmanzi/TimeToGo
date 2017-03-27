@@ -50,8 +50,6 @@
 		8A9C81641E3A569600A83043 /* Custom.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81631E3A569600A83043 /* Custom.csv */; };
 		8AB3ED671E86E87E0090ED43 /* EditEventTypeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */; };
 		8ACDE10F1E3FB45700FD8F01 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */; };
-		8AEACD661E469D23004F3137 /* DatePickerWithTodayButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEACD651E469D23004F3137 /* DatePickerWithTodayButtonTableViewCell.swift */; };
-		8AEACD681E469D6D004F3137 /* DatePickerWithTodayButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8AEACD671E469D6D004F3137 /* DatePickerWithTodayButton.xib */; };
 		98418DAC1B4847AA00ADC2D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */; };
 		98418DAF1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAD1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld */; };
 		98418DB41B4847AB00ADC2D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98418DB21B4847AB00ADC2D8 /* Main.storyboard */; };
@@ -131,8 +129,6 @@
 		8A9C81631E3A569600A83043 /* Custom.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Custom.csv; path = csv_data/Custom.csv; sourceTree = "<group>"; };
 		8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEventTypeTableViewController.swift; sourceTree = "<group>"; };
 		8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
-		8AEACD651E469D23004F3137 /* DatePickerWithTodayButtonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerWithTodayButtonTableViewCell.swift; sourceTree = "<group>"; };
-		8AEACD671E469D6D004F3137 /* DatePickerWithTodayButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DatePickerWithTodayButton.xib; sourceTree = "<group>"; };
 		98418DA61B4847AA00ADC2D8 /* TimeToGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeToGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98418DAA1B4847AA00ADC2D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -273,7 +269,6 @@
 			children = (
 				8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */,
 				8A78951B1E86211700C32E92 /* CSVFile.swift */,
-				8AEACD651E469D23004F3137 /* DatePickerWithTodayButtonTableViewCell.swift */,
 				8A7895211E862DC300C32E92 /* Events.swift */,
 				8A7895231E86379000C32E92 /* EventTemplate.swift */,
 				98418DD41B48487A00ADC2D8 /* Interval.swift */,
@@ -357,7 +352,6 @@
 				8AEACD611E469088004F3137 /* Modify Tab */,
 				8AEACD641E4690CB004F3137 /* Settings Tab */,
 				98418DB21B4847AB00ADC2D8 /* Main.storyboard */,
-				8AEACD671E469D6D004F3137 /* DatePickerWithTodayButton.xib */,
 				98418DB51B4847AB00ADC2D8 /* Images.xcassets */,
 				98418DB71B4847AB00ADC2D8 /* LaunchScreen.xib */,
 				98418DAD1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld */,
@@ -483,7 +477,6 @@
 				8A9C81621E3A564700A83043 /* Worship.csv in Resources */,
 				8A9C81641E3A569600A83043 /* Custom.csv in Resources */,
 				8A9C81261E3A52A100A83043 /* Car.csv in Resources */,
-				8AEACD681E469D6D004F3137 /* DatePickerWithTodayButton.xib in Resources */,
 				8A9C814B1E3A552800A83043 /* Volleyball.csv in Resources */,
 				8A9C81511E3A55A200A83043 /* Date.csv in Resources */,
 				8A9C81531E3A55A200A83043 /* School Dance.csv in Resources */,
@@ -556,7 +549,6 @@
 				98418DE11B48487A00ADC2D8 /* NewEventTableViewController.swift in Sources */,
 				8A7895221E862DC300C32E92 /* Events.swift in Sources */,
 				98418DE51B48487A00ADC2D8 /* ScheduleViewController.swift in Sources */,
-				8AEACD661E469D23004F3137 /* DatePickerWithTodayButtonTableViewCell.swift in Sources */,
 				8A78951C1E86211700C32E92 /* CSVFile.swift in Sources */,
 				98418DE91B48487A00ADC2D8 /* Trip.swift in Sources */,
 				8A44A8411E369AAA00B1CB09 /* TypeCollectionViewCell.swift in Sources */,
