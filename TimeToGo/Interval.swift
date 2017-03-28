@@ -285,7 +285,12 @@ class Interval: NSObject, NSCoding {
     
     override var description: String {
         
-        return "\n------\nSchedule Label:\t\(self.scheduleLabel)\nTime:\t\(self.getTimeValueString())\nNotes:\t\(self.notesStr)\nMain Label:\t\(self.mainLabel ?? "No mainLabel")\n------\n"
+        var notes = ""
+        if let theNotes = notesStr {
+            notes = theNotes
+        }
+        
+        return "\n------\nSchedule Label:\t\(self.scheduleLabel)\nTime:\t\(self.getTimeValueString())\nNotes:\t\(notes)\nMain Label:\t\(self.mainLabel ?? "No mainLabel")\n------\n"
         
     }
     
