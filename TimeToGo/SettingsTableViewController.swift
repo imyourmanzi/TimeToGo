@@ -93,11 +93,6 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         
     }
     
-//    private func setupDateElements() {
-//        
-//        
-//    }
-    
     private func setupCellDetails() {
         
         // Set up the dateFormatter for the eventDate title display
@@ -127,6 +122,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         resetAlertController.addAction(resetAction)
         
         resetAlertController.popoverPresentationController?.sourceView = resetAlertPopoverViewAnchor
+        resetAlertController.popoverPresentationController?.permittedArrowDirections = .up
         
         present(resetAlertController, animated: true, completion: nil)
         
@@ -178,6 +174,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		deleteAlertController.addAction(deleteAction)
         
         deleteAlertController.popoverPresentationController?.sourceView = deleteAlertPopoverViewAnchor
+        deleteAlertController.popoverPresentationController?.permittedArrowDirections = .up
         
         present(deleteAlertController, animated: true, completion: nil)
 
@@ -196,7 +193,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 				
 			} else if indexPath.row == 1 {
 			
-				if let homepage = URL(string: "https://www.narwhalsandcode.com/apps/#time-to-go") {
+				if let homepage = URL(string: "https://www.narwhalsandcode.com/apps#time-to-go") {
 					UIApplication.shared.openURL(homepage)
 				}
 				
