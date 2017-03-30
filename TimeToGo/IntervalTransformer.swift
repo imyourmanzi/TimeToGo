@@ -2,8 +2,8 @@
 //  IntervalTransformer.swift
 //  TimeToGo
 //
-//  Created by Matteo Manzi on 7/4/15.
-//  Copyright (c) 2015 VMM Software. All rights reserved.
+//  Created by Matt Manzi on 7/4/15.
+//  Copyright (c) 2017 MRM Software. All rights reserved.
 //
 //	Class used by CoreData to save the array of Intervals in the Trip class
 
