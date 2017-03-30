@@ -1,4 +1,6 @@
-Wakes Upsies,0,45
-Leave for Airport,0,30
-Arrive at Airport,0,45
-Board Plane,0,30fhjf
+Pack Up and Get Ready,0,45
+Drive to Airport,0,30,true,Driving directions include current traffic conditions.
+Get Boarding Pass,0,15
+Check Luggage,0,15
+Go Through Security,0,40
+Board Plane,0,20

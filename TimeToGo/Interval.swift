@@ -47,7 +47,7 @@ class Interval: NSObject, NSCoding {
 	}
     
     init(args: [String]) {
-        
+            
         self.scheduleLabel = args[0]
         
         if let hours = Int(args[1]) {
@@ -60,6 +60,13 @@ class Interval: NSObject, NSCoding {
             self.timeValueMins = mins
         } else {
             self.timeValueMins = 0
+        }
+        
+        if args.count == 5 {
+            
+            self.useLocation = Bool(args[3])
+            self.notesStr = args[4]
+            
         }
         
     }
