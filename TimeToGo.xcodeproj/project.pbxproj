@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8A41E4EA1E99B33900F63C3C /* Interview.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A41E4E91E99B33900F63C3C /* Interview.csv */; };
 		8A44A83B1E36811200B1CB09 /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */; };
 		8A44A83F1E36964500B1CB09 /* EventTypeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */; };
 		8A44A8411E369AAA00B1CB09 /* TypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A8401E369AAA00B1CB09 /* TypeCollectionViewCell.swift */; };
@@ -40,7 +41,7 @@
 		8A9C81511E3A55A200A83043 /* Date.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C814D1E3A55A200A83043 /* Date.csv */; };
 		8A9C81521E3A55A200A83043 /* Party.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C814E1E3A55A200A83043 /* Party.csv */; };
 		8A9C81531E3A55A200A83043 /* School Dance.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C814F1E3A55A200A83043 /* School Dance.csv */; };
-		8A9C81541E3A55A200A83043 /* Wedding.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81501E3A55A200A83043 /* Wedding.csv */; };
+		8A9C81541E3A55A200A83043 /* Wedding Guest.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81501E3A55A200A83043 /* Wedding Guest.csv */; };
 		8A9C81591E3A55EF00A83043 /* Club.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81561E3A55EF00A83043 /* Club.csv */; };
 		8A9C815A1E3A55EF00A83043 /* Music.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81571E3A55EF00A83043 /* Music.csv */; };
 		8A9C815B1E3A55EF00A83043 /* Theater.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81581E3A55EF00A83043 /* Theater.csv */; };
@@ -48,6 +49,8 @@
 		8A9C81611E3A564700A83043 /* Work.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815E1E3A564700A83043 /* Work.csv */; };
 		8A9C81621E3A564700A83043 /* Worship.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815F1E3A564700A83043 /* Worship.csv */; };
 		8A9C81641E3A569600A83043 /* Custom.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81631E3A569600A83043 /* Custom.csv */; };
+		8AB073911EB24A680003DF53 /* Crew.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8AB073901EB24A680003DF53 /* Crew.csv */; };
+		8AB073931EB24D2E0003DF53 /* Cruise.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8AB073921EB24D2E0003DF53 /* Cruise.csv */; };
 		8AB3ED671E86E87E0090ED43 /* EditEventTypeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */; };
 		8ACDE10F1E3FB45700FD8F01 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */; };
 		98418DAC1B4847AA00ADC2D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */; };
@@ -85,6 +88,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8A41E4E91E99B33900F63C3C /* Interview.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Interview.csv; path = csv_data/Interview.csv; sourceTree = "<group>"; };
 		8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTypeCollectionViewController.swift; sourceTree = "<group>"; };
 		8A44A8401E369AAA00B1CB09 /* TypeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -119,7 +123,7 @@
 		8A9C814D1E3A55A200A83043 /* Date.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Date.csv; path = csv_data/Date.csv; sourceTree = "<group>"; };
 		8A9C814E1E3A55A200A83043 /* Party.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Party.csv; path = csv_data/Party.csv; sourceTree = "<group>"; };
 		8A9C814F1E3A55A200A83043 /* School Dance.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "School Dance.csv"; path = "csv_data/School Dance.csv"; sourceTree = "<group>"; };
-		8A9C81501E3A55A200A83043 /* Wedding.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wedding.csv; path = csv_data/Wedding.csv; sourceTree = "<group>"; };
+		8A9C81501E3A55A200A83043 /* Wedding Guest.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "Wedding Guest.csv"; path = "csv_data/Wedding Guest.csv"; sourceTree = "<group>"; };
 		8A9C81561E3A55EF00A83043 /* Club.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Club.csv; path = csv_data/Club.csv; sourceTree = "<group>"; };
 		8A9C81571E3A55EF00A83043 /* Music.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Music.csv; path = csv_data/Music.csv; sourceTree = "<group>"; };
 		8A9C81581E3A55EF00A83043 /* Theater.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Theater.csv; path = csv_data/Theater.csv; sourceTree = "<group>"; };
@@ -127,6 +131,8 @@
 		8A9C815E1E3A564700A83043 /* Work.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Work.csv; path = csv_data/Work.csv; sourceTree = "<group>"; };
 		8A9C815F1E3A564700A83043 /* Worship.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Worship.csv; path = csv_data/Worship.csv; sourceTree = "<group>"; };
 		8A9C81631E3A569600A83043 /* Custom.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Custom.csv; path = csv_data/Custom.csv; sourceTree = "<group>"; };
+		8AB073901EB24A680003DF53 /* Crew.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Crew.csv; path = csv_data/Crew.csv; sourceTree = "<group>"; };
+		8AB073921EB24D2E0003DF53 /* Cruise.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Cruise.csv; path = csv_data/Cruise.csv; sourceTree = "<group>"; };
 		8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEventTypeTableViewController.swift; sourceTree = "<group>"; };
 		8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 		98418DA61B4847AA00ADC2D8 /* TimeToGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeToGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -195,6 +201,7 @@
 				8A9C81291E3A52C000A83043 /* Boat.csv */,
 				8A9C81271E3A52B100A83043 /* Bus.csv */,
 				8A9C81251E3A52A100A83043 /* Car.csv */,
+				8AB073921EB24D2E0003DF53 /* Cruise.csv */,
 				8A5D1D051E3911D100D0CD95 /* Plane.csv */,
 				8A5D1D071E3913B400D0CD95 /* Train.csv */,
 			);
@@ -207,6 +214,7 @@
 				8A9C812E1E3A552800A83043 /* Baseball.csv */,
 				8A9C812F1E3A552800A83043 /* Basketball.csv */,
 				8A9C81301E3A552800A83043 /* Cheer.csv */,
+				8AB073901EB24A680003DF53 /* Crew.csv */,
 				8A9C81311E3A552800A83043 /* Dance.csv */,
 				8A9C81321E3A552800A83043 /* Field Hockey.csv */,
 				8A9C81331E3A552800A83043 /* Football.csv */,
@@ -230,7 +238,7 @@
 				8A9C814D1E3A55A200A83043 /* Date.csv */,
 				8A9C814E1E3A55A200A83043 /* Party.csv */,
 				8A9C814F1E3A55A200A83043 /* School Dance.csv */,
-				8A9C81501E3A55A200A83043 /* Wedding.csv */,
+				8A9C81501E3A55A200A83043 /* Wedding Guest.csv */,
 			);
 			name = "Social Activities Types Defaults";
 			sourceTree = "<group>";
@@ -248,6 +256,7 @@
 		8A9C815C1E3A55FF00A83043 /* Responsibilities Types Defaults */ = {
 			isa = PBXGroup;
 			children = (
+				8A41E4E91E99B33900F63C3C /* Interview.csv */,
 				8A9C815D1E3A564700A83043 /* School.csv */,
 				8A9C815E1E3A564700A83043 /* Work.csv */,
 				8A9C815F1E3A564700A83043 /* Worship.csv */,
@@ -479,6 +488,7 @@
 				8A9C81261E3A52A100A83043 /* Car.csv in Resources */,
 				8A9C814B1E3A552800A83043 /* Volleyball.csv in Resources */,
 				8A9C81511E3A55A200A83043 /* Date.csv in Resources */,
+				8AB073931EB24D2E0003DF53 /* Cruise.csv in Resources */,
 				8A9C81531E3A55A200A83043 /* School Dance.csv in Resources */,
 				8A9C81461E3A552800A83043 /* Martial Arts.csv in Resources */,
 				8A9C813D1E3A552800A83043 /* Baseball.csv in Resources */,
@@ -486,11 +496,12 @@
 				8A9C81281E3A52B100A83043 /* Bus.csv in Resources */,
 				8A9C81471E3A552800A83043 /* Soccer.csv in Resources */,
 				8A9C813E1E3A552800A83043 /* Basketball.csv in Resources */,
+				8A41E4EA1E99B33900F63C3C /* Interview.csv in Resources */,
 				8A9C81441E3A552800A83043 /* Gymnastics.csv in Resources */,
 				8A9C81521E3A55A200A83043 /* Party.csv in Resources */,
 				8A9C814A1E3A552800A83043 /* Track & Field.csv in Resources */,
 				8A9C81401E3A552800A83043 /* Dance.csv in Resources */,
-				8A9C81541E3A55A200A83043 /* Wedding.csv in Resources */,
+				8A9C81541E3A55A200A83043 /* Wedding Guest.csv in Resources */,
 				8A9C81601E3A564700A83043 /* School.csv in Resources */,
 				98418DB91B4847AB00ADC2D8 /* LaunchScreen.xib in Resources */,
 				8A9C815B1E3A55EF00A83043 /* Theater.csv in Resources */,
@@ -500,6 +511,7 @@
 				8A9C81421E3A552800A83043 /* Football.csv in Resources */,
 				8A9C81431E3A552800A83043 /* Golf.csv in Resources */,
 				8A9C81611E3A564700A83043 /* Work.csv in Resources */,
+				8AB073911EB24A680003DF53 /* Crew.csv in Resources */,
 				8A9C81411E3A552800A83043 /* Field Hockey.csv in Resources */,
 				8A9C812A1E3A52C000A83043 /* Boat.csv in Resources */,
 				8A9C81451E3A552800A83043 /* Lacrosse.csv in Resources */,
