@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -23,17 +23,10 @@
                         <constraint firstAttribute="width" secondItem="sNh-Uy-5gZ" secondAttribute="height" multiplier="89:110" id="jMK-dl-rqX"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="24" translatesAutoresizingMaskIntoConstraints="NO" id="kId-c2-rCX">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's Time To Go" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="kId-c2-rCX">
                     <rect key="frame" x="5" y="10" width="365" height="109.5"/>
-                    <attributedString key="attributedText">
-                        <fragment content="It's Time To Go">
-                            <attributes>
-                                <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <font key="NSFont" size="80" name="Avenir-Light"/>
-                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="truncatingTail" baseWritingDirection="natural"/>
-                            </attributes>
-                        </fragment>
-                    </attributedString>
+                    <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="80"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
@@ -41,8 +34,8 @@
             <constraints>
                 <constraint firstItem="sNh-Uy-5gZ" firstAttribute="top" secondItem="kId-c2-rCX" secondAttribute="bottom" constant="35" id="7Di-EU-Amx"/>
                 <constraint firstItem="kId-c2-rCX" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="DoL-nw-iWT"/>
-                <constraint firstItem="kId-c2-rCX" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="5" id="E9U-Mr-Z8y"/>
                 <constraint firstAttribute="trailing" secondItem="kId-c2-rCX" secondAttribute="trailing" constant="5" id="RMP-lg-fQP"/>
+                <constraint firstItem="kId-c2-rCX" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-10" id="jUH-nZ-xuv"/>
                 <constraint firstAttribute="centerX" secondItem="sNh-Uy-5gZ" secondAttribute="centerX" constant="5" id="meC-o2-pgk"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

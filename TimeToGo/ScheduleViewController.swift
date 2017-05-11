@@ -24,6 +24,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	let scrollSubview = UIView()
 	
 	var eventDate: Date!
+    var eventTimeLabel: String!
 	var intervalDate: Date!
 	
 	let eventIntervalLabel = UILabel()
@@ -82,6 +83,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
             }
             entries = theEntries
             eventDate = event.flightDate
+            eventTimeLabel = event.eventTimeLabel
             
             //  Set the title display to the eventName
             self.navigationItem.title = eventName
@@ -143,7 +145,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 		dateFormatter.dateFormat = "h:mm a"
 		eventIntervalLabel.translatesAutoresizingMaskIntoConstraints = false
 		eventIntervalTimeLabel.translatesAutoresizingMaskIntoConstraints = false
-		eventIntervalLabel.text = "Event Time"
+		eventIntervalLabel.text = eventTimeLabel
 		eventIntervalTimeLabel.text = dateFormatter.string(from: eventDate)
 		eventIntervalLabel.font = UIFont.systemFont(ofSize: 16.0)
 		eventIntervalTimeLabel.font = UIFont.systemFont(ofSize: 16.0)

@@ -138,7 +138,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		// Update currentTripName to the chosen eventName
+		// Update currentTripName UserDefaults key to the chosen eventName
 		var theEventName: String!
 		
 		if searchResultsController.isActive {

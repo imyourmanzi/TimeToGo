@@ -98,7 +98,7 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
 		
-		return "Event: \(dateFormatter.string(from: eventDate))"
+		return "\(event.eventTimeLabel): \(dateFormatter.string(from: eventDate))"
 		
 	}
 	

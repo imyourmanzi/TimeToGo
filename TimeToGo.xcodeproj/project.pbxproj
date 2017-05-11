@@ -49,6 +49,7 @@
 		8A9C81611E3A564700A83043 /* Work.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815E1E3A564700A83043 /* Work.csv */; };
 		8A9C81621E3A564700A83043 /* Worship.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815F1E3A564700A83043 /* Worship.csv */; };
 		8A9C81641E3A569600A83043 /* Custom.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81631E3A569600A83043 /* Custom.csv */; };
+		8AA3B07B1EC39BC900AF064C /* Fishing.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8AA3B07A1EC39BC900AF064C /* Fishing.csv */; };
 		8AB073911EB24A680003DF53 /* Crew.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8AB073901EB24A680003DF53 /* Crew.csv */; };
 		8AB073931EB24D2E0003DF53 /* Cruise.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8AB073921EB24D2E0003DF53 /* Cruise.csv */; };
 		8AB3ED671E86E87E0090ED43 /* EditEventTypeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */; };
@@ -131,6 +132,7 @@
 		8A9C815E1E3A564700A83043 /* Work.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Work.csv; path = csv_data/Work.csv; sourceTree = "<group>"; };
 		8A9C815F1E3A564700A83043 /* Worship.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Worship.csv; path = csv_data/Worship.csv; sourceTree = "<group>"; };
 		8A9C81631E3A569600A83043 /* Custom.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Custom.csv; path = csv_data/Custom.csv; sourceTree = "<group>"; };
+		8AA3B07A1EC39BC900AF064C /* Fishing.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Fishing.csv; path = csv_data/Fishing.csv; sourceTree = "<group>"; };
 		8AB073901EB24A680003DF53 /* Crew.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Crew.csv; path = csv_data/Crew.csv; sourceTree = "<group>"; };
 		8AB073921EB24D2E0003DF53 /* Cruise.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Cruise.csv; path = csv_data/Cruise.csv; sourceTree = "<group>"; };
 		8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEventTypeTableViewController.swift; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 				8AB073901EB24A680003DF53 /* Crew.csv */,
 				8A9C81311E3A552800A83043 /* Dance.csv */,
 				8A9C81321E3A552800A83043 /* Field Hockey.csv */,
+				8AA3B07A1EC39BC900AF064C /* Fishing.csv */,
 				8A9C81331E3A552800A83043 /* Football.csv */,
 				8A9C81341E3A552800A83043 /* Golf.csv */,
 				8A9C81351E3A552800A83043 /* Gymnastics.csv */,
@@ -518,6 +521,7 @@
 				8A9C813F1E3A552800A83043 /* Cheer.csv in Resources */,
 				8A9C812D1E3A52FF00A83043 /* Hockey.csv in Resources */,
 				8A9C815A1E3A55EF00A83043 /* Music.csv in Resources */,
+				8AA3B07B1EC39BC900AF064C /* Fishing.csv in Resources */,
 				8A5D1D061E3911D100D0CD95 /* Plane.csv in Resources */,
 				98418DB61B4847AB00ADC2D8 /* Images.xcassets in Resources */,
 			);

@@ -1,35 +1,36 @@
-🛩🚆^Travel,🛥^Boat
-🛩🚆^Travel,🚍^Bus
-🛩🚆^Travel,🚘^Car
-🛩🚆^Travel,🛳^Cruise
-🛩🚆^Travel,🛩^Plane
-🛩🚆^Travel,🚆^Train
-🏒🏈^Sports,⚾️^Baseball
-🏒🏈^Sports,🏀^Basketball
-🏒🏈^Sports,Cheer^Cheer
-🏒🏈^Sports,Crew^Crew
-🏒🏈^Sports,👯👯‍♂️^Dance
-🏒🏈^Sports,🏑^Field Hockey
-🏒🏈^Sports,🏈^Football
-🏒🏈^Sports,⛳️^Golf
-🏒🏈^Sports,🤸‍♀️🤸‍♂️^Gymnastics
-🏒🏈^Sports,🏒^Hockey
-🏒🏈^Sports,Lax^Lacrosse
-🏒🏈^Sports,🥋^Martial Arts
-🏒🏈^Sports,⚽️^Soccer
-🏒🏈^Sports,🏊🏊‍♀️^Swimming
-🏒🏈^Sports,🎾^Tennis
-🏒🏈^Sports,Track & Field^Track & Field
-🏒🏈^Sports,🏐^Volleyball
-🎉👫^Social Activities,👫👭👬^Date
-🎉👫^Social Activities,🎉^Party
-🎉👫^Social Activities,School Dance^School Dance
-🎉👫^Social Activities,👰👰🤵🤵^Wedding Guest
-🎼🎭^Extracurriculars,Club^Club
-🎼🎭^Extracurriculars,🎼^Music
-🎼🎭^Extracurriculars,🎭^Theater
-🏢⛪️^Responsibilities,👩‍💼👨‍💼^Interview
-🏢⛪️^Responsibilities,🚌^School
-🏢⛪️^Responsibilities,🏢^Work
-🏢⛪️^Responsibilities,⛪️🕌🕍🕋⛩^Worship
-✏️^Custom,✏️^Custom
+🛩🚆^Travel,🛥^Boat^Set Sail
+🛩🚆^Travel,🚍^Bus^Depart from Station
+🛩🚆^Travel,🚘^Car^Road Trip
+🛩🚆^Travel,🛳^Cruise^Bon Voyage
+🛩🚆^Travel,🛩^Plane^Takeoff
+🛩🚆^Travel,🚆^Train^All Aboard
+🏒🏈^Sports,⚾️^Baseball^Play Ball
+🏒🏈^Sports,🏀^Basketball^Game Time
+🏒🏈^Sports,Cheer^Cheer^DEFAULT
+🏒🏈^Sports,Crew^Crew^DEFAULT
+🏒🏈^Sports,👯👯‍♂️^Dance^DEFAULT
+🏒🏈^Sports,🏑^Field Hockey^Game Time
+🏒🏈^Sports,🎣^Fishing^DEFAULT
+🏒🏈^Sports,🏈^Football^Game Time
+🏒🏈^Sports,⛳️^Golf^DEFAULT
+🏒🏈^Sports,🤸‍♀️🤸‍♂️^Gymnastics^DEFAULT
+🏒🏈^Sports,🏒^Hockey^Game Time
+🏒🏈^Sports,Lax^Lacrosse^Game Time
+🏒🏈^Sports,🥋^Martial Arts^DEFAULT
+🏒🏈^Sports,⚽️^Soccer^Game Time
+🏒🏈^Sports,🏊🏊‍♀️^Swimming^DEFAULT
+🏒🏈^Sports,🎾^Tennis^DEFAULT
+🏒🏈^Sports,Track & Field^Track & Field^DEFAULT
+🏒🏈^Sports,🏐^Volleyball^Game Time
+🎉👫^Social Activities,👫👭👬^Date^DEFAULT
+🎉👫^Social Activities,🎉^Party^DEFAULT
+🎉👫^Social Activities,School Dance^School Dance^DEFAULT
+🎉👫^Social Activities,👰👰🤵🤵^Wedding Guest^DEFAULT
+🎼🎭^Extracurriculars,Club^Club^DEFAULT
+🎼🎭^Extracurriculars,🎼^Music^DEFAULT
+🎼🎭^Extracurriculars,🎭^Theater^Showtime
+🏢⛪️^Responsibilities,👩‍💼👨‍💼^Interview^DEFAULT
+🏢⛪️^Responsibilities,🚌^School^Class Starts
+🏢⛪️^Responsibilities,🏢^Work^Clock In
+🏢⛪️^Responsibilities,⛪️🕌🕍🕋⛩^Worship^DEFAULT
+✏️^Custom,✏️^Custom^DEFAULT

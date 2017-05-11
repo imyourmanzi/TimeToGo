@@ -89,6 +89,10 @@ class EventTypeCollectionViewController: UICollectionViewController {
             newEventVC.allEvents = allEvents
             newEventVC.eventType = (eventTypes[typeIndexPath.item]).components(separatedBy: CSVFile.TITLE_DELIMIT)[1]
             
+            let eventTimeLabel = (eventTypes[typeIndexPath.item]).components(separatedBy: CSVFile.TITLE_DELIMIT)[2]
+            newEventVC.eventTimeLabel = (eventTimeLabel == "DEFAULT") ? "Event Time" : eventTimeLabel
+            
+            
         }
         
     }

@@ -14,6 +14,7 @@ import CoreData
 
     @NSManaged var flightDate: Date
     @NSManaged var tripName: String
+    @NSManaged var eventTimeLabel: String
     @NSManaged var eventType: String
     @NSManaged var entries: NSArray
 

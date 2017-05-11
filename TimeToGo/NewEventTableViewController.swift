@@ -26,6 +26,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
     var newEventName: String!
     var eventDate = Date()
     var eventType: String = ""
+    var eventTimeLabel: String = ""
     var template: EventTemplate = EventTemplate()
     var defaultEntries: [Interval] = []
 	let dateFormatter = DateFormatter()
@@ -211,10 +212,12 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
             displayAlert(title: "Not Saved", message: "Data could not be saved.", on: self, dismissHandler: nil)
             return
         }
+        
         let newEvent = NSEntityDescription.insertNewObject(forEntityName: "Trip", into: theMoc) as! Trip
         newEvent.tripName = newEventName
         newEvent.flightDate = eventDate
         newEvent.eventType = eventType
+        newEvent.eventTimeLabel = eventTimeLabel
         newEvent.entries = defaultEntries as NSArray
         
     }
