@@ -1,0 +1,5 @@
+Put on Uniform,0,10
+Pack Bag,0,15
+Drive to Basketball Court,0,15,true,Driving directions include current traffic conditions.
+Stretch,0,10
+Warm Ups,0,15
