@@ -6,7 +6,7 @@
 🛩🚆^Travel,🚆^Train^All Aboard
 🏒🏈^Sports,⚾️^Baseball^Play Ball
 🏒🏈^Sports,🏀^Basketball^Game Time
-🏒🏈^Sports,Cheer^Cheer^DEFAULT
+🏒🏈^Sports,📣^Cheer^DEFAULT
 🏒🏈^Sports,🚣‍♀️🚣^Crew^DEFAULT
 🏒🏈^Sports,👯👯‍♂️^Dance^DEFAULT
 🏒🏈^Sports,🏑^Field Hockey^Game Time
@@ -15,7 +15,7 @@
 🏒🏈^Sports,⛳️^Golf^DEFAULT
 🏒🏈^Sports,🤸‍♀️🤸‍♂️^Gymnastics^DEFAULT
 🏒🏈^Sports,🏒^Hockey^Game Time
-🏒🏈^Sports,LAX^Lacrosse^Game Time
+🏒🏈^Sports,🥅^Lacrosse^Game Time
 🏒🏈^Sports,🥋^Martial Arts^DEFAULT
 🏒🏈^Sports,⚽️^Soccer^Game Time
 🏒🏈^Sports,🏊🏊‍♀️^Swimming^DEFAULT
@@ -24,13 +24,13 @@
 🏒🏈^Sports,🏐^Volleyball^Game Time
 🎉👫^Social Activities,👫👭👬^Date^DEFAULT
 🎉👫^Social Activities,🎉^Party^DEFAULT
-🎉👫^Social Activities,School Dance^School Dance^DEFAULT
+🎉👫^Social Activities,🎶^School Dance^DEFAULT
 🎉👫^Social Activities,🎂^Wedding^DEFAULT
-🎼🎭^Extracurriculars,Club^Club Meeting^DEFAULT
+🎼🎭^Extracurriculars,🌐^Club Meeting^DEFAULT
 🎼🎭^Extracurriculars,🎼^Music^DEFAULT
 🎼🎭^Extracurriculars,🎭^Theater^Showtime
 🏢⛪️^Responsibilities,👩‍💼👨‍💼^Interview^DEFAULT
 🏢⛪️^Responsibilities,🚌^School^Class Starts
 🏢⛪️^Responsibilities,🏢^Work^Clock In
-🏢⛪️^Responsibilities,⛪️🕌🕍🕋⛩^Worship^DEFAULT
+🏢⛪️^Responsibilities,🛐^Worship^DEFAULT
 ✏️^Custom,✏️^Custom^DEFAULT

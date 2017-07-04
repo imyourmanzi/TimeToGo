@@ -217,7 +217,18 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			mailComposer.setToRecipients(recipients)
 			mailComposer.setSubject(subject)
 			
-			mailComposer.setMessageBody("<p><strong>Issue:</strong> </p><p><strong>Detail:</strong> </p><br /><p>Date and time: \(Date().description(with: Locale.autoupdatingCurrent))<br />Device Model: [PLEASE ADD]<br />iOS Version: \(UIDevice.current.systemVersion)</p>", isHTML: true)
+            let gmtTime = Date()
+            let df = DateFormatter()
+            df.dateFormat = "yyyy-MM-dd HH:mm"
+            df.timeZone = TimeZone(identifier: "GMT")
+            
+			mailComposer.setMessageBody("<p><strong>Subject:</strong> </p>" +
+                                        "<p><strong>Detail:</strong> </p>" +
+                                        "<p><strong>Device (iPhone 7, iPad Air 2, etc):</strong> </p>" +
+                                        "<p>GMT Date and Time: \(df.string(from: gmtTime))<br/>" +
+                                        "iOS Version: \(UIDevice.current.systemVersion)<br/>" +
+                                        "App Version: \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] ?? "No Version Available")b\(Bundle.main.infoDictionary!["CFBundleVersion"] ?? "No Build Version Available")</p>",
+                                        isHTML: true)
 			
 			present(mailComposer, animated: true, completion: nil)
 			
