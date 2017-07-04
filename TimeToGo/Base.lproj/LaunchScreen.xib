@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,26 +17,26 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="sNh-Uy-5gZ">
-                    <rect key="frame" x="49" y="154.5" width="267" height="330"/>
+                    <rect key="frame" x="44" y="168.5" width="267" height="330"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="330" id="Blv-qv-evb"/>
+                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="430" id="Blv-qv-evb"/>
                         <constraint firstAttribute="width" secondItem="sNh-Uy-5gZ" secondAttribute="height" multiplier="89:110" id="jMK-dl-rqX"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's Time To Go" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="kId-c2-rCX">
-                    <rect key="frame" x="5" y="10" width="365" height="109.5"/>
-                    <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="80"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's Time To Go" textAlignment="center" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="kId-c2-rCX">
+                    <rect key="frame" x="12.5" y="-50.5" width="350" height="164"/>
+                    <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="120"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
             <color key="backgroundColor" red="0.1803921568627451" green="0.67450980392156867" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="sNh-Uy-5gZ" firstAttribute="top" secondItem="kId-c2-rCX" secondAttribute="bottom" constant="35" id="7Di-EU-Amx"/>
-                <constraint firstItem="kId-c2-rCX" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="DoL-nw-iWT"/>
-                <constraint firstAttribute="trailing" secondItem="kId-c2-rCX" secondAttribute="trailing" constant="5" id="RMP-lg-fQP"/>
-                <constraint firstItem="kId-c2-rCX" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-10" id="jUH-nZ-xuv"/>
-                <constraint firstAttribute="centerX" secondItem="sNh-Uy-5gZ" secondAttribute="centerX" constant="5" id="meC-o2-pgk"/>
+                <constraint firstItem="sNh-Uy-5gZ" firstAttribute="top" secondItem="kId-c2-rCX" secondAttribute="bottom" constant="55" id="7Di-EU-Amx"/>
+                <constraint firstItem="sNh-Uy-5gZ" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="GuR-JO-oQs"/>
+                <constraint firstItem="kId-c2-rCX" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Uy1-sh-9B1"/>
+                <constraint firstItem="kId-c2-rCX" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-25" id="jUH-nZ-xuv"/>
+                <constraint firstAttribute="centerX" secondItem="sNh-Uy-5gZ" secondAttribute="centerX" constant="10" id="meC-o2-pgk"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <point key="canvasLocation" x="548" y="455"/>
