@@ -1,5 +1,8 @@
-Put on Uniform,0,15
-Pack Bag,0,15
-Drive to Ice Rink,0,15,true,Driving directions include current traffic conditions.
-Stretch,0,15
-Warm Ups,0,30
+Eat a Small Snack,0,15
+Pack Bag,0,20
+Bathroom Break,0,5
+Stretch,0,10
+Drive to Rink,0,25,true,Driving directions include current traffic conditions.
+Team Warmup,0,30
+Dress for Game or Practice,0,15
+Coach Talk,0,15
