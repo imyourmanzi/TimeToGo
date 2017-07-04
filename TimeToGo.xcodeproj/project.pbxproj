@@ -42,7 +42,7 @@
 		8A9C81521E3A55A200A83043 /* Party.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C814E1E3A55A200A83043 /* Party.csv */; };
 		8A9C81531E3A55A200A83043 /* School Dance.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C814F1E3A55A200A83043 /* School Dance.csv */; };
 		8A9C81541E3A55A200A83043 /* Wedding.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81501E3A55A200A83043 /* Wedding.csv */; };
-		8A9C81591E3A55EF00A83043 /* Club.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81561E3A55EF00A83043 /* Club.csv */; };
+		8A9C81591E3A55EF00A83043 /* Club Meeting.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81561E3A55EF00A83043 /* Club Meeting.csv */; };
 		8A9C815A1E3A55EF00A83043 /* Music.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81571E3A55EF00A83043 /* Music.csv */; };
 		8A9C815B1E3A55EF00A83043 /* Theater.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81581E3A55EF00A83043 /* Theater.csv */; };
 		8A9C81601E3A564700A83043 /* School.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815D1E3A564700A83043 /* School.csv */; };
@@ -125,7 +125,7 @@
 		8A9C814E1E3A55A200A83043 /* Party.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Party.csv; path = csv_data/Party.csv; sourceTree = "<group>"; };
 		8A9C814F1E3A55A200A83043 /* School Dance.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "School Dance.csv"; path = "csv_data/School Dance.csv"; sourceTree = "<group>"; };
 		8A9C81501E3A55A200A83043 /* Wedding.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wedding.csv; path = csv_data/Wedding.csv; sourceTree = "<group>"; };
-		8A9C81561E3A55EF00A83043 /* Club.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Club.csv; path = csv_data/Club.csv; sourceTree = "<group>"; };
+		8A9C81561E3A55EF00A83043 /* Club Meeting.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "Club Meeting.csv"; path = "csv_data/Club Meeting.csv"; sourceTree = "<group>"; };
 		8A9C81571E3A55EF00A83043 /* Music.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Music.csv; path = csv_data/Music.csv; sourceTree = "<group>"; };
 		8A9C81581E3A55EF00A83043 /* Theater.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Theater.csv; path = csv_data/Theater.csv; sourceTree = "<group>"; };
 		8A9C815D1E3A564700A83043 /* School.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = School.csv; path = csv_data/School.csv; sourceTree = "<group>"; };
@@ -249,7 +249,7 @@
 		8A9C81551E3A55B300A83043 /* Extracurriculars Types Defaults */ = {
 			isa = PBXGroup;
 			children = (
-				8A9C81561E3A55EF00A83043 /* Club.csv */,
+				8A9C81561E3A55EF00A83043 /* Club Meeting.csv */,
 				8A9C81571E3A55EF00A83043 /* Music.csv */,
 				8A9C81581E3A55EF00A83043 /* Theater.csv */,
 			);
@@ -508,7 +508,7 @@
 				8A9C81601E3A564700A83043 /* School.csv in Resources */,
 				98418DB91B4847AB00ADC2D8 /* LaunchScreen.xib in Resources */,
 				8A9C815B1E3A55EF00A83043 /* Theater.csv in Resources */,
-				8A9C81591E3A55EF00A83043 /* Club.csv in Resources */,
+				8A9C81591E3A55EF00A83043 /* Club Meeting.csv in Resources */,
 				8A5D1D081E3913B400D0CD95 /* Train.csv in Resources */,
 				8A9C81491E3A552800A83043 /* Tennis.csv in Resources */,
 				8A9C81421E3A552800A83043 /* Football.csv in Resources */,
