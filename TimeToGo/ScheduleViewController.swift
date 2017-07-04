@@ -31,24 +31,18 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	let eventIntervalTimeLabel = UILabel()
 	
 	let dateFormatter = DateFormatter()
-	
-    override func viewDidLoad() {
-        super.viewDidLoad()
-		
-		setupScrollView()
-		
-    }
-	
+    
 	override func viewWillAppear(_ animated: Bool) {
 		
+        setupScrollView(for: view.frame.size)
         getEventData()
         
 	}
     
-    private func setupScrollView() {
+    private func setupScrollView(for size: CGSize) {
         
         let lessHeight = self.tabBarController!.tabBar.frame.height + 64.0 + 44.0
-        scheduleScroll = UIScrollView(frame: CGRect(x: 0.0, y: 64.0, width: view.frame.width, height: view.frame.height - lessHeight))
+        scheduleScroll = UIScrollView(frame: CGRect(x: 0.0, y: 64.0, width: size.width, height: size.height - lessHeight))
         view.addSubview(scheduleScroll)
         scrollSubview.frame = CGRect(x: 0.0, y: 30.0, width: scheduleScroll.frame.width, height: scheduleScroll.frame.height)
         scheduleScroll.addSubview(scrollSubview)
@@ -147,8 +141,8 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 		eventIntervalTimeLabel.translatesAutoresizingMaskIntoConstraints = false
 		eventIntervalLabel.text = eventTimeLabel
 		eventIntervalTimeLabel.text = dateFormatter.string(from: eventDate)
-		eventIntervalLabel.font = UIFont.systemFont(ofSize: 16.0)
-		eventIntervalTimeLabel.font = UIFont.systemFont(ofSize: 16.0)
+		eventIntervalLabel.font = UIFont.boldSystemFont(ofSize: 18.0)
+		eventIntervalTimeLabel.font = UIFont.boldSystemFont(ofSize: 18.0)
 		scrollSubview.addSubview(eventIntervalLabel)
 		scrollSubview.addSubview(eventIntervalTimeLabel)
 		
@@ -209,6 +203,29 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 		scheduleScroll.contentSize = scrollSubview.frame.size
 		
 	}
+    
+    private func clearViews() {
+        
+        // Remove all views from the scrollSubview
+        for entry in entries {
+            entry.removeViewsFromSuperview()
+        }
+        
+        eventIntervalLabel.removeFromSuperview()
+        eventIntervalTimeLabel.removeFromSuperview()
+        
+        scheduleScroll.removeFromSuperview()
+        
+    }
+    
+    // Detect orientation change and adapt scheduleScroll accordingly
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        
+        clearViews()
+        setupScrollView(for: size)
+        getEventData()
+        
+    }
 	
 	
 	// MARK: - Calendar access
@@ -254,6 +271,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	
 	// MARK: - Navigation
     
+    // Allows programatic return from ShareToCalTableViewController
     @IBAction func unwindToSchedule(_ segue: UIStoryboardSegue) { }
 	
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
@@ -278,13 +296,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
     
 	override func viewDidDisappear(_ animated: Bool) {
 		
-		// Remove all views from the scrollSubview
-		for entry in entries {
-			entry.removeViewsFromSuperview()
-		}
-		
-		eventIntervalLabel.removeFromSuperview()
-		eventIntervalTimeLabel.removeFromSuperview()
+		clearViews()
 		
 	}
 	
