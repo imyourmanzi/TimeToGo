@@ -31,14 +31,9 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
     var eventType: String = "Event Type"
     var hasEvents: Bool = false
     
-    override func viewDidLoad() {
-        
-        retrieveCurrentEventName()
-        
-    }
-    
 	override func viewWillAppear(_ animated: Bool) {
         
+        retrieveCurrentEventName()
 		getEventData()
 		
 	}
@@ -142,6 +137,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
                 if let newEventName = self.allEvents.last?.tripName {
                     
                     CoreDataConnector.setCurrentEventName(to: newEventName)
+                    self.retrieveCurrentEventName()
                     self.getEventData()
                     
                 }

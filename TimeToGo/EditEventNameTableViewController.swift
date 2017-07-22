@@ -69,10 +69,9 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 			
 		} else {
 			
-            CoreDataConnector.updateStore(from: self)
-		
-			// Update the currentTripName so that other views will reference the updated eventName
+            // Update the currentTripName so that other views will reference the updated eventName
             CoreDataConnector.setCurrentEventName(to: eventName)
+            CoreDataConnector.updateStore(from: self)
 			
 			eventNameTextfield.resignFirstResponder()
 			

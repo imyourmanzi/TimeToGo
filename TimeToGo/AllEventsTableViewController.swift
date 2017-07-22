@@ -24,8 +24,6 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-		
-        retrieveCurrentEventName()
         
 		// Use auto-implemented 'Edit' button on right side of navigation bar
         self.navigationItem.rightBarButtonItem = self.editButtonItem
@@ -33,6 +31,12 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
         setupSearchController()
         
 	}
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        retrieveCurrentEventName()
+        
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         

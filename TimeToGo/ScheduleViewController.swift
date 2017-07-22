@@ -37,14 +37,9 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	
 	let dateFormatter = DateFormatter()
     
-    override func viewDidLoad() {
-        
-        retrieveCurrentEventName()
-        
-    }
-    
 	override func viewWillAppear(_ animated: Bool) {
         
+        retrieveCurrentEventName()
         let showStatusBar = view.frame.size.width < view.frame.height || UIDevice.current.model == "iPad"
         setupScrollView(for: view.frame.size, showingStatusBar: showStatusBar)
         getEventData()
