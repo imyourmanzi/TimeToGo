@@ -16,15 +16,17 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 	// CoreData variables
     var allEvents: [Trip] = []
     var filteredEvents: [Trip] = []
-	var eventName: String!
 	
 	// Current VC variables
+    var eventName: String = UIConstants.NOT_FOUND
 	var savedEventIndexPath = IndexPath()
 	var searchResultsController = UISearchController()
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+        retrieveCurrentEventName()
+        
 		// Use auto-implemented 'Edit' button on right side of navigation bar
         self.navigationItem.rightBarButtonItem = self.editButtonItem
 		
@@ -35,7 +37,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
     override func viewDidAppear(_ animated: Bool) {
         
         if allEvents.count <= 0 {
-            performSegue(withIdentifier: "unwindToHome", sender: self)
+            performSegue(withIdentifier: IDs.SGE_TO_HOME, sender: self)
         }
         
     }
@@ -91,7 +93,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 		}
 		
 		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+		dateFormatter.dateFormat = UIConstants.STD_DATETIME_FORMAT
 		
 		cell.textLabel?.text = event.tripName
 		cell.detailTextLabel?.text = dateFormatter.string(from: event.flightDate)
@@ -108,13 +110,13 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 			if allEvents[indexPath.row].tripName == eventName && allEvents.count > 1 {
 				
 				eventName = allEvents[allEvents.count - 2].tripName
-                setCurrentEventInDefaults(to: eventName)
+                CoreDataConnector.setCurrentEventName(to: eventName)
 				
 			}
 			
             // Delete the row from the data sources and the table view
             let eventRemoved = allEvents.remove(at: indexPath.row)
-            guard let theMoc = moc else {
+            guard let theMoc = CoreDataConnector.getMoc() else {
                 
                 // Unless moc is not available, then put the event back
                 allEvents.insert(eventRemoved, at: indexPath.row)
@@ -125,13 +127,13 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
             tableView.deleteRows(at: [indexPath], with: .fade)
 			
             // Save the state of the persistent store
-            performUpdateOnCoreData()
+            CoreDataConnector.updateStore(from: self)
             
         }
 		
 		// Check for more existing events, if there are not, redirect the user back to the new event screen
 		if allEvents.count <= 0 {
-            performSegue(withIdentifier: "unwindToHome", sender: self)
+            performSegue(withIdentifier: IDs.SGE_TO_HOME, sender: self)
 		}
         
     }
@@ -147,10 +149,10 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 			theEventName = self.allEvents[indexPath.row].tripName
 		}
 		
-        setCurrentEventInDefaults(to: theEventName)
+        CoreDataConnector.setCurrentEventName(to: theEventName)
 		
         // Transition to the Scheudle VC
-        guard let mainTabVC = storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+        guard let mainTabVC = storyboard?.instantiateViewController(withIdentifier: IDs.VC_TAB_MAIN) as? UITabBarController else {
             return
         }
         
@@ -164,7 +166,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 	override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         
         savedEventIndexPath = indexPath
-        performSegue(withIdentifier: "viewSavedEvent", sender: indexPath)
+        performSegue(withIdentifier: IDs.SGE_VIEW_SAVED, sender: indexPath)
 		
 	}
 	
@@ -175,7 +177,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 		
 		filteredEvents.removeAll(keepingCapacity: false)
 		
-		let searchPredicate = NSPredicate(format: "tripName CONTAINS[c] %@", searchController.searchBar.text!)
+		let searchPredicate = NSPredicate(format: CoreDataConstants.SEARCH_BY_NAME, searchController.searchBar.text!)
 		let tempArr = (allEvents as NSArray).filtered(using: searchPredicate)
 		filteredEvents = tempArr as! [Trip]
 		
@@ -183,14 +185,27 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
 		
 	}
 	
+    
+    // MARK: - Core Data helper
+    
+    func retrieveCurrentEventName() {
+        
+        guard let currentEventName = CoreDataConnector.getCurrentEventName() else {
+            return
+        }
+        
+        eventName = currentEventName
+        
+    }
+    
 	
 	// MARK: - Navigation
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         
-        if identifier == "viewSavedEvent" && sender is IndexPath {
+        if identifier == IDs.SGE_VIEW_SAVED && sender is IndexPath {
             return true
-        } else if identifier != "viewSavedEvent" {
+        } else if identifier != IDs.SGE_VIEW_SAVED {
             return true
         }
         
@@ -202,7 +217,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
         
 		searchResultsController.isActive = false
         
-        if segue.identifier == "viewSavedEvent" {
+        if segue.identifier == IDs.SGE_VIEW_SAVED {
             
             if let savedEventVC = segue.destination as? SavedEventViewController {
             
@@ -213,6 +228,7 @@ class AllEventsTableViewController: UITableViewController, UISearchResultsUpdati
                     savedEventVC.title = selectedEvent.tripName
                     savedEventVC.eventName = selectedEvent.tripName
                     savedEventVC.eventDate = selectedEvent.flightDate
+                    savedEventVC.eventType = selectedEvent.eventType
                     savedEventVC.entries = selectedEvent.entries as! [Interval]
                     
                 }

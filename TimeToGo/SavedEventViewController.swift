@@ -15,10 +15,12 @@ class SavedEventViewController: UIViewController, UITableViewDataSource, CoreDat
 	// Interface Builder variables
 	@IBOutlet var tableView: UITableView!
 	@IBOutlet var eventDateLabel: UILabel!
+    @IBOutlet var eventTypeLabel: UILabel!
 	
 	// Current VC variables
-    var eventName: String!
+    var eventName: String = UIConstants.NOT_FOUND
     var eventDate: Date!
+    var eventType: String = UIConstants.NOT_FOUND
 	var entries: [Interval]!
 	
 	override func viewDidLoad() {
@@ -32,10 +34,11 @@ class SavedEventViewController: UIViewController, UITableViewDataSource, CoreDat
         
         // Set up the dateFormatter
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+        dateFormatter.dateFormat = UIConstants.STD_DATETIME_FORMAT
         
         // Set the Interface Builder variables
         eventDateLabel.text = "Event Date and Time:\n\(dateFormatter.string(from: eventDate))"
+        eventTypeLabel.text = "Event Type:\n\(eventType)"
         
     }
 	
@@ -73,9 +76,9 @@ class SavedEventViewController: UIViewController, UITableViewDataSource, CoreDat
     @IBAction func loadEvent(_ sender: UIBarButtonItem) {
         
         // Update currentTripName to the chosen eventName
-        setCurrentEventInDefaults(to: eventName)
+        CoreDataConnector.setCurrentEventName(to: eventName)
         
-        guard let mainTabVC = storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+        guard let mainTabVC = storyboard?.instantiateViewController(withIdentifier: IDs.VC_TAB_MAIN) as? UITabBarController else {
             return
         }
         

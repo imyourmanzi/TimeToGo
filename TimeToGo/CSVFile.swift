@@ -11,10 +11,10 @@ import Foundation
 class CSVFile {
     
     // CSV-specific constants
-    static let FILE_TYPE      = "csv"
-    static let ROW_DELIMIT    = "\n"
-    static let COLUMN_DELIMIT = ","
-    static let TITLE_DELIMIT  = "^"
+    static let FILE_TYPE: String      = "csv"
+    static let ROW_DELIMIT: String    = "\n"
+    static let COLUMN_DELIMIT: String = ","
+    static let TITLE_DELIMIT: String  = "^"
     
     // Instance data
     var filename: String

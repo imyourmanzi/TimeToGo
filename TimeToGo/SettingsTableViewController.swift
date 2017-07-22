@@ -11,11 +11,13 @@ import CoreData
 import MessageUI
 
 class SettingsTableViewController: UITableViewController, MFMailComposeViewControllerDelegate, CoreDataHelper {
-
+    
     // Interface Builder variables
 	@IBOutlet var eventDateCell: UITableViewCell!
 	@IBOutlet var eventNameCell: UITableViewCell!
     @IBOutlet var eventTypeCell: UITableViewCell!
+    @IBOutlet var resetButton: UIButton!
+    @IBOutlet var deleteButton: UIButton!
     @IBOutlet var deleteAlertPopoverViewAnchor: UIView!
     @IBOutlet var resetAlertPopoverViewAnchor: UIView!
 	
@@ -24,8 +26,16 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
     var allEvents: [Trip] = []
 	
     // Current VC variables
+    var eventName: String = UIConstants.NOT_FOUND
 	var eventDate: Date = Date()
-    var eventType: String = "Event Name"
+    var eventType: String = "Event Type"
+    var hasEvents: Bool = false
+    
+    override func viewDidLoad() {
+        
+        retrieveCurrentEventName()
+        
+    }
     
 	override func viewWillAppear(_ animated: Bool) {
         
@@ -35,52 +45,19 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
     
     private func getEventData() {
         
-        // Fetch the current event from the persistent store and assign the CoreData variables
+        // Fetch the current event and all of the managed objects from the persistent store
         do {
             
-            event = try fetchCurrentEvent()
-            eventDate = event.flightDate
-            eventType = event.eventType
+            event = try CoreDataConnector.fetchCurrentEvent()
+            allEvents = try CoreDataConnector.fetchAllEvents()
             
-            setupCellDetails()
-            
-        } catch {
-            
-            guard let parentVC = parent else {
-                return
-            }
-            
-            displayDataErrorAlert(on: parentVC, dismissHandler: nil)
-            
-        }
-        
-        
-        // Fetch all of the managed objects from the persistent store and update the table view
-        do {
-            
-            allEvents = try fetchAllEvents()
-            tableView.reloadData()
+            hasEvents = true
             
         } catch CoreDataEventError.returnedNoEvents {
             
-            guard let parentVC = parent else {
-                return
-            }
-            
-            displayNoEventsAlert(on: parentVC, dismissHandler: {
-                (_) in
-                
-                guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
-                    return
-                }
-                
-                mainTabVC.modalTransitionStyle = .crossDissolve
-                mainTabVC.selectedIndex = 0
-                
-                self.present(mainTabVC, animated: true, completion: nil)
-                
-            })
-            
+            hasEvents = false
+            return
+        
         } catch {
             
             guard let parentVC = parent else {
@@ -88,8 +65,14 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             }
             
             displayDataErrorAlert(on: parentVC, dismissHandler: nil)
+            return
             
         }
+        
+        // Assign the CoreData variables and update the table view
+        eventDate = event.flightDate
+        eventType = event.eventType
+        setupCellDetails()
         
     }
     
@@ -97,24 +80,26 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
         
         // Set up the dateFormatter for the eventDate title display
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+        dateFormatter.dateFormat = UIConstants.STD_DATETIME_FORMAT
         
         eventNameCell.detailTextLabel?.text = eventName
         eventDateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
         eventTypeCell.detailTextLabel?.text = eventType
         
+        tableView.reloadData()
+        
     }
     
     @IBAction func clickedResetSchedule(_ sender: UIButton) {
         
-        let resetAlertController = UIAlertController(title: nil, message: "Reset \(eventName!) to the default schedule?", preferredStyle: .actionSheet)
+        let resetAlertController = UIAlertController(title: nil, message: "Reset \(eventName) to the default schedule for \(eventType) event?", preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let resetAction = UIAlertAction(title: "Reset", style: .destructive) { (action: UIAlertAction) in
             
             let template = EventTemplate(filename: self.eventType)
             self.event.entries = template.getEntries() as NSArray
             
-            self.performUpdateOnCoreData()
+            CoreDataConnector.updateStore(from: self)
             
         }
         
@@ -131,7 +116,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	@IBAction func clickedDeleteEvent(_ sender: UIButton) {
 		
 		// Present an action sheet to confirm deletion of the event and handle the situations that can follow
-		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(eventName!)?", preferredStyle: .actionSheet)
+		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(eventName)?", preferredStyle: .actionSheet)
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(action: UIAlertAction) in
 			deleteAlertController.dismiss(animated: true, completion: nil)
 		})
@@ -142,7 +127,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             }
             
             let eventRemoved = self.allEvents.remove(at: eventIndex)
-            guard let theMoc = self.moc else {
+            guard let theMoc = CoreDataConnector.getMoc() else {
                 
                 self.allEvents.insert(eventRemoved, at: eventIndex)
                 return
@@ -150,22 +135,23 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             }
 			theMoc.delete(eventRemoved)
             
-            self.performUpdateOnCoreData()
+            CoreDataConnector.updateStore(from: self)
 			
 			if self.allEvents.count >= 1 {
 				
                 if let newEventName = self.allEvents.last?.tripName {
                     
-                    self.setCurrentEventInDefaults(to: newEventName)
+                    CoreDataConnector.setCurrentEventName(to: newEventName)
                     self.getEventData()
                     
                 }
 				
-				
-			} else if self.allEvents.count <= 0 {
+			} else if self.allEvents.isEmpty {
                 
-                self.disableTabBarIfNeeded(events: self.allEvents, sender: self)
-				
+                self.hasEvents = false
+                
+                self.setupCellDetails()
+                
 			}
 			
 		})
@@ -181,30 +167,59 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	}
 
 	
-	// MARK: - Table view data source
-	
+	// MARK: - Table view delegate
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        if indexPath.section == 0 && !hasEvents {
+            
+            cell.selectionStyle = .none
+            eventDateCell.detailTextLabel?.text = "Event Time"
+            eventNameCell.detailTextLabel?.text = "Event Name"
+            eventTypeCell.detailTextLabel?.text = "Event Type"
+            
+        }
+        
+        eventDateCell.textLabel?.isEnabled = hasEvents
+        eventNameCell.textLabel?.isEnabled = hasEvents
+        eventTypeCell.textLabel?.isEnabled = hasEvents
+        
+        resetButton.isEnabled = hasEvents
+        deleteButton.isEnabled = hasEvents
+        
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        
+        if indexPath.section == 0 && !hasEvents {
+            return nil
+        }
+        
+        return indexPath
+        
+    }
+    
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		
+        
 		if indexPath.section == 1 {
 			
-			if indexPath.row == 0 {
-				
-                newEmail(to: ["timetogosupport@narwhalsandcode.com"], subject: "Question/Comment/Concern with It's Time To Go")
-				
-			} else if indexPath.row == 1 {
-			
-				if let homepage = URL(string: "https://www.narwhalsandcode.com/apps#time-to-go") {
-					UIApplication.shared.openURL(homepage)
-				}
-				
-			}
-			
+            switch indexPath.row {
+                
+            case 0:
+                newEmail(to: [SettingConstants.SUPPORT_EMAIL], subject: SettingConstants.SUPPORT_SUBJECT)
+            case 1:
+                if let homepage = URL(string: SettingConstants.SUPPORT_SITE) { UIApplication.shared.openURL(homepage) }
+            default:
+                break
+                
+            }
+            
 		}
 		
 		tableView.deselectRow(at: indexPath, animated: true)
 		
 	}
-	
+    
 	
 	// MARK: - Mail composer delegate
 	
@@ -250,6 +265,19 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		
 	}
 	
+    
+    // MARK: - Core Data helper
+    
+    func retrieveCurrentEventName() {
+        
+        guard let currentEventName = CoreDataConnector.getCurrentEventName() else {
+            return
+        }
+        
+        eventName = currentEventName
+        
+    }
+    
 	
 	// MARK: - Navigation
 	
@@ -257,20 +285,18 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		
 		if let timeVC = segue.destination as? EditEventTimeTableViewController {
             
-			timeVC.eventDate = self.eventDate
-			timeVC.event = self.event
+			timeVC.eventDate = eventDate
+			timeVC.event = event
 			
 		} else if let nameVC = segue.destination as? EditEventNameTableViewController {
 			
-            if let name = self.eventName {
-                nameVC.eventName = name
-            }
-			nameVC.event = self.event
+            nameVC.eventName = eventName
+			nameVC.event = event
 			
         } else if let typeVC = segue.destination as? EditEventTypeTableViewController {
             
-            typeVC.eventType = self.eventType
-            typeVC.event = self.event
+            typeVC.eventType = eventType
+            typeVC.event = event
             
         }
 		

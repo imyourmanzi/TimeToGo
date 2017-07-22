@@ -22,6 +22,24 @@ extension UIViewController {
         
     }
     
+    func displayGoToSettingsCalendarAlert(on vc: UIViewController) {
+        
+        let alertController = UIAlertController(title: "Not Allowed", message: "Access to Calendars was denied, press Allow to go to Settings now.\n(Settings > It's Time To Go > Turn on Calendars)", preferredStyle: .alert)
+        let allowAction = UIAlertAction(title: "Allow", style: .default) {
+            (_) in
+            
+            UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
+            
+        }
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
+        
+        alertController.addAction(allowAction)
+        alertController.addAction(dismissAction)
+        
+        vc.present(alertController, animated: true, completion: nil)
+        
+    }
+    
     func displayAlert(title: String?, message: String?, on vc: UIViewController, dismissHandler: ((UIAlertAction) -> Void)?) {
         
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -30,47 +48,6 @@ extension UIViewController {
         alertController.addAction(dismissAction)
         
         vc.present(alertController, animated: true, completion: nil)
-        
-    }
-    
-    func disableTabBarIfNeeded(events: [Trip], sender: UIViewController) {
-        
-        if events.count <= 0 {
-            
-            if sender is HomeViewController {
-                setTabBar(enabled: false)
-            } else {
-                
-                guard let destVC = storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
-                    return
-                }
-                
-                destVC.modalTransitionStyle = .crossDissolve
-                destVC.selectedIndex = 0
-                
-                present(destVC, animated: true, completion: nil)
-                
-            }
-            
-        } else {
-            setTabBar(enabled: true)
-        }
-        
-    }
-    
-    fileprivate func setTabBar(enabled: Bool) {
-        
-        guard let tabs = tabBarController?.tabBar.items else {
-            return
-        }
-        
-        for tab in tabs {
-            
-            if tab.title != "Home" {
-                tab.isEnabled = enabled
-            }
-            
-        }
         
     }
     

@@ -16,8 +16,8 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     
     func configure(categoryTitle: String) {
         
-        categoryIconLabel.text = categoryTitle.components(separatedBy: "^")[0]
-        categoryLabel.text = categoryTitle.components(separatedBy: "^")[1]
+        categoryIconLabel.text = categoryTitle.components(separatedBy: CSVFile.TITLE_DELIMIT)[0]
+        categoryLabel.text = categoryTitle.components(separatedBy: CSVFile.TITLE_DELIMIT)[1]
         
         categoryIconLabel.layer.cornerRadius = 7.0
         highlightView.layer.cornerRadius = 7.0

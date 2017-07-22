@@ -21,21 +21,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ValueTransformer.setValueTransformer(intervalTransformer, forName: NSValueTransformerName(rawValue: "IntervalTransformer"))
         
 		// Set the appearance of the navigation bar across the application to a light
-		// blue bar color and white text color
+		// blue bar color and white text color and the page control dot for current page
+        // to a light orange
 		UINavigationBar.appearance().barTintColor = UIColor(red: 46/255, green: 172/255, blue: 240/255, alpha: 1.0)
 		UINavigationBar.appearance().tintColor = UIColor.white
+        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor(colorLiteralRed: 255/255, green: 169/255, blue: 59/255, alpha: 1.0)
 		
         // Register a default for:
         // - the currentTripName
         // - whether or not the mainLabel was moved
+        // - whether or not it's the first launch
 		let defaults = UserDefaults.standard
 		defaults.register(defaults: ["currentTripName": ""])
         defaults.register(defaults: ["movedMainLabel": false])
-		
+        defaults.register(defaults: ["notFirstLaunch": false])
+        
 		return true
 	}
-
-	func applicationWillResignActive(_ application: UIApplication) {
+    
+    func applicationWillResignActive(_ application: UIApplication) {
 		
 		self.saveContext()
         
@@ -80,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}()
 
 	lazy var managedObjectModel: NSManagedObjectModel = {
-	    
+        
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
 	    let modelURL = Bundle.main.url(forResource: "TimeToGo", withExtension: "momd")!
         
@@ -97,7 +101,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	    let url = self.applicationDocumentsDirectory.appendingPathComponent("TimeToGo.sqlite")
         let migrateOptions = [NSMigratePersistentStoresAutomaticallyOption: true, NSInferMappingModelAutomaticallyOption: true]
         
-	    var error: NSError? = nil
 	    var failureReason = "There was an error creating or loading the application's saved data."
         do {
             try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: migrateOptions)
@@ -108,36 +111,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             var dict = [String: AnyObject]()
             dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data" as AnyObject
             dict[NSLocalizedFailureReasonErrorKey] = failureReason as AnyObject
-            dict[NSUnderlyingErrorKey] = error
-            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)/////////////////////////////////////////////////////////////////////////////////
-            // Replace this with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            NSLog("Unresolved error \(String(describing: error)), \(error!.userInfo)")
-            abort()//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            dict[NSUnderlyingErrorKey] = err
+            err = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
+            NSLog("Unresolved error \(String(describing: err)), \(err.userInfo)")
+            fatalError()
             
         } catch {
             fatalError()
         }
-//	    do {
-//			try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: migrateOptions)
-//		} catch var error1 as NSError {
-//            
-//			error = error1
-//	        coordinator = nil
-//	        // Report any error we got.
-//	        var dict = [String: AnyObject]()
-//	        dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data" as AnyObject?
-//	        dict[NSLocalizedFailureReasonErrorKey] = failureReason as AnyObject?
-//	        dict[NSUnderlyingErrorKey] = error
-//	        error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)/////////////////////////////////////////////////////////////////////////////////
-//	        // Replace this with code to handle the error appropriately.
-//	        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//	        NSLog("Unresolved error \(String(describing: error)), \(error!.userInfo)")
-//	        abort()//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//            
-//	    } catch {
-//			fatalError()
-//		}
 	    
 	    return coordinator
         
@@ -159,19 +140,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}()
 
 	
-	// MARK: - Core Data Saving support
+	// MARK: - Core Data saving support
 
 	func saveContext() {
 		
 	    guard let moc = self.managedObjectContext else {
 			return
 		}
-		
+        
 		if moc.hasChanges {
-			
+            
 			do {
 				try moc.save()
 			} catch {
+                moc.rollback()
 			}
 			
 		}

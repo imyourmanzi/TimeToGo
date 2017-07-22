@@ -17,9 +17,10 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
 	// CoreData variables
 	var event: Trip!
     var entries: [Interval] = []
-	var eventDate: Date!
 	
     // Current VC variables
+    var hasEvent: Bool = false
+    var eventDate: Date!
     var selectedEntryIndexPath = IndexPath()
     
     override func viewDidLoad() {
@@ -34,8 +35,6 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
         
         getEventData()
         
-		performUpdateOnCoreData()
-        
 	}
     
     // Fetch the current event from the persistent store and assign the CoreData variables
@@ -43,7 +42,8 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
         
         do {
             
-            event = try fetchCurrentEvent()
+            event = try CoreDataConnector.fetchCurrentEvent()
+            
             guard let theEntries = event.entries as? [Interval] else {
                 
                 guard let parentVC = parent else {
@@ -52,7 +52,7 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
                 displayDataErrorAlert(on: parentVC, dismissHandler: {
                     (_) in
                     
-                    guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+                    guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: IDs.VC_TAB_MAIN) as? UITabBarController else {
                         return
                     }
                     
@@ -64,9 +64,20 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
                 return
                 
             }
+            
             entries = theEntries
             eventDate = event.flightDate
             tableView.reloadData()
+            
+            self.tableView.dataSource = self
+            self.navigationController?.navigationBar.isUserInteractionEnabled = true
+            
+        } catch CoreDataEventError.returnedNoEvents {
+            
+            self.tableView.dataSource = nil
+            self.navigationController?.navigationBar.isUserInteractionEnabled = false
+            
+            return
             
         } catch {
             
@@ -77,7 +88,7 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
             displayDataErrorAlert(on: parentVC, dismissHandler: {
                 (_) in
                 
-                guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+                guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: IDs.VC_TAB_MAIN) as? UITabBarController else {
                     return
                 }
                 
@@ -88,6 +99,8 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
             
         }
         
+        CoreDataConnector.updateStore(from: self)
+        
     }
 	
 	
@@ -96,7 +109,7 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		
 		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+		dateFormatter.dateFormat = UIConstants.STD_DATETIME_FORMAT
 		
 		return "\(event.eventTimeLabel): \(dateFormatter.string(from: eventDate))"
 		
@@ -133,7 +146,7 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
 			
 			tableView.deleteRows(at: [indexPath], with: .fade)
 			
-			performUpdateOnCoreData()
+            CoreDataConnector.updateStore(from: self)
 			
 		}
         
@@ -144,7 +157,7 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
 		let movedEntry = entries.remove(at: sourceIndexPath.row)
 		entries.insert(movedEntry, at: destinationIndexPath.row)
 		
-		performUpdateOnCoreData()
+        CoreDataConnector.updateStore(from: self)
 		
 	}
     
@@ -159,7 +172,7 @@ class EntriesTableViewController: UITableViewController, CoreDataHelper {
     
     // MARK: - Core Data helper
     
-    func prepareForUpdateOnCoreData() {
+    func prepareForUpdate() {
         
         event.entries = entries as NSArray
         

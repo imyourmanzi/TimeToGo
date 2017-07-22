@@ -11,15 +11,15 @@ import MapKit
 
 private let reuseIdentifier = "resultCell"
 
-protocol communicationToMain {
+protocol LocationProviderDelegate {
 	
-	func backFromSearchWith(mapItem: MKMapItem?, address: String, index: Int)
+	func searchDidProvide(mapItem: MKMapItem?, address: String, index: Int)
 	
 }
 
 class SearchViewController: UITableViewController, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate {
 
-	var delegate: communicationToMain? = nil
+	var delegate: LocationProviderDelegate? = nil
 	
 	var mapView: MKMapView!
 	var whichLocationIndex: Int!
@@ -102,10 +102,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	func didPresentSearchController(_ searchController: UISearchController) {
 
 		if searchController.isActive {
-			
 			searchController.searchBar.showsCancelButton = false
-			searchResultsController.searchBar.becomeFirstResponder()
-			
 		}
 		
 	}
@@ -116,9 +113,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 		
 		if searchText.isEmpty {
-			
 			self.tableView.reloadData()
-			
 		}
 		
 	}
@@ -129,19 +124,13 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	override func numberOfSections(in tableView: UITableView) -> Int {
 
 		guard let searchResultsController = searchResultsController else {
-			
 			return 1
-			
 		}
 		
 		if (searchResultsController.searchBar.text == nil || searchResultsController.searchBar.text?.isEmpty == true) {
-			
 			return 1
-			
 		} else {
-			
 			return 2
-			
 		}
 		
 	}
@@ -149,9 +138,7 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		
 		if section == 1 {
-
 			return "Search Results"
-			
 		}
 		
 		return nil
@@ -161,13 +148,9 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
 		if section == 1 {
-			
 			return mapSearchResults.count
-			
 		} else {
-			
 			return 1
-			
 		}
 		
 	}
@@ -189,13 +172,9 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 			cell?.textLabel?.text = "Current Location"
 
 			if userCurrentLocation?.placemark.coordinate == nil {
-				
-				cell?.detailTextLabel?.text = "(Not found)"
-				
+				cell?.detailTextLabel?.text = "Loading..."
 			} else {
-				
 				cell?.detailTextLabel?.text = userCurrentLocation!.name
-				
 			}
 			
 			
@@ -216,31 +195,13 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 			
 			mapItem = mapSearchResults[indexPath.row]
             streetAddress = Interval.getAddress(from: mapItem!)
-				
-			selectedLocation = mapItem
-			
 			selectedLocation = mapItem
 			
 		} else {
-			
 			selectedLocation = userCurrentLocation
-			
 		}
 		
-		
-		switch whichLocationIndex {
-			
-		case 0:
-			delegate?.backFromSearchWith(mapItem: selectedLocation, address: streetAddress, index: 0)
-			
-		case 1:
-			delegate?.backFromSearchWith(mapItem: selectedLocation, address: streetAddress, index: 1)
-			
-		default:
-			break
-			
-		}
-		
+        delegate?.searchDidProvide(mapItem: selectedLocation, address: streetAddress, index: whichLocationIndex)
 		searchResultsController.dismiss(animated: true, completion: nil)
 		self.dismiss(animated: true, completion: nil)
 		
@@ -252,16 +213,15 @@ class SearchViewController: UITableViewController, UISearchResultsUpdating, UISe
 	@IBAction func dismissLocationSearch(_ sender: UIBarButtonItem) {
 		
 		if searchResultsController.isActive {
-			
 			searchResultsController.dismiss(animated: true, completion: nil)
-			
 		}
+        
 		self.dismiss(animated: true, completion: nil)
 		
 	}
     
     deinit {
-        
+
         searchResultsController.view.removeFromSuperview()
         
     }

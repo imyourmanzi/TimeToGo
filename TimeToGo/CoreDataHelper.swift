@@ -9,29 +9,7 @@
 import UIKit
 import CoreData
 
-protocol CoreDataHelper {
-    
-    var appDelegate: AppDelegate { get }
-    var moc: NSManagedObjectContext? { get }
-    var eventName: String? { get }
-    
-    func setCurrentEventInDefaults(to eventName: String)
-    
-    func fetchEvents(using: NSPredicate?) throws -> [Trip]
-    
-    func fetchEvent(named: String) throws -> Trip
-    
-    func fetchCurrentEvent() throws -> Trip
-    
-    func fetchAllEvents() throws -> [Trip]
-    
-    func prepareForUpdateOnCoreData()
-    
-    func performUpdateOnCoreData()
-    
-}
-
-enum CoreDataEventError: Error {
+public enum CoreDataEventError: Error {
     
     case invalidEventName
     case invalidContext
@@ -39,18 +17,32 @@ enum CoreDataEventError: Error {
     
 }
 
+public protocol CoreDataHelper {
+    
+    // Setting a local view controller variable for event name
+    func retrieveCurrentEventName()
+    
+    // Any deafult steps that may be done here, when preparing for saving the context
+    func prepareForUpdate() 
+    
+}
 
-// MARK: - Default Data Implementation
+
+// MARK: - Default function implementation
 
 extension CoreDataHelper {
     
-    var appDelegate: AppDelegate {
-        
-        return UIApplication.shared.delegate as! AppDelegate
-        
-    }
+    func retrieveCurrentEventName() { }
     
-    var moc: NSManagedObjectContext? {
+    func prepareForUpdate() { }
+    
+}
+
+public class CoreDataConnector {
+    
+    static let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+
+    static func getMoc() -> NSManagedObjectContext? {
         
         guard let theMoc = appDelegate.managedObjectContext else {
             return nil
@@ -60,39 +52,60 @@ extension CoreDataHelper {
         
     }
     
-    var eventName: String? {
+    static func getCurrentEventName() -> String? {
         
-        return UserDefaults.standard.string(forKey: "currentTripName")
-        
-    }
-    
-}
-
-
-// MARK: - Default Method Implementations
-
-extension CoreDataHelper {
-    
-    func setCurrentEventInDefaults(to eventName: String) {
-        
-        UserDefaults.standard.set(eventName, forKey: "currentTripName")
+        return UserDefaults.standard.string(forKey: CoreDataConstants.CURRENT_EVENT_NAME_KEY)
         
     }
     
-    func fetchEvents(using predicate: NSPredicate?) throws -> [Trip] {
+    static func setCurrentEventName(to newName: String) {
         
-        let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
+        UserDefaults.standard.set(newName, forKey: CoreDataConstants.CURRENT_EVENT_NAME_KEY)
+        
+    }
+    
+    static func fetchCurrentEvent() throws -> Trip {
+        
+        guard let currentEventName = getCurrentEventName() else {
+            throw CoreDataEventError.invalidEventName
+        }
+        
+        return try fetchOneEvent(named: currentEventName)
+        
+    }
+    
+    static func fetchAllEvents() throws -> [Trip] {
+        
+        return try fetchEvents(using: nil)
+        
+    }
+    
+    
+    static func updateStore(from sender: UIViewController?) {
+        
+        if let theSender = sender as? CoreDataHelper {
+            theSender.prepareForUpdate()
+        }
+        
+        appDelegate.saveContext()
+        
+    }
+    
+    private static func fetchEvents(using predicate: NSPredicate?) throws -> [Trip] {
+        
+        let fetchRequest = NSFetchRequest<Trip>(entityName: CoreDataConstants.ENTITY_NAME)
+        
         if let fetchPredicate = predicate {
             fetchRequest.predicate = fetchPredicate
         }
         
-        guard let theMoc = moc else {
+        guard let theMoc = getMoc() else {
             throw CoreDataEventError.invalidContext
         }
         
         let events = try theMoc.fetch(fetchRequest)
         
-        if events.count <= 0 {
+        if events.isEmpty {
             throw CoreDataEventError.returnedNoEvents
         } else {
             return events
@@ -100,44 +113,16 @@ extension CoreDataHelper {
         
     }
     
-    func fetchEvent(named name: String) throws -> Trip {
+    private static func fetchOneEvent(named name: String) throws -> Trip {
         
-        let predicate = NSPredicate(format: "tripName == %@", name)
-        
+        let predicate = NSPredicate(format: CoreDataConstants.FETCH_BY_NAME, name)
         let events = try fetchEvents(using: predicate)
+        
         guard let event = events.first else {
             throw CoreDataEventError.returnedNoEvents
         }
         
         return event
-        
-    }
-    
-    func fetchCurrentEvent() throws -> Trip {
-        
-        guard let theName = eventName else {
-            throw CoreDataEventError.invalidEventName
-        }
-        
-        return try fetchEvent(named: theName)
-        
-    }
-    
-    func fetchAllEvents() throws -> [Trip] {
-        
-        return try fetchEvents(using: nil)
-        
-    }
-    
-    func prepareForUpdateOnCoreData() {
-        // Add any deafult steps that may be done here, when preparing for saving the context
-    }
-    
-    func performUpdateOnCoreData() {
-        
-        prepareForUpdateOnCoreData()
-        
-        appDelegate.saveContext()
         
     }
     

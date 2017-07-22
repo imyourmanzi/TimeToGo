@@ -146,7 +146,7 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
                 (_) in
                 
                 self.saveSuccessful = false
-                self.performSegue(withIdentifier: "unwindToSchedule", sender: self)
+                self.performSegue(withIdentifier: IDs.SGE_TO_SCHEDULE, sender: self)
                 
             })
             return
@@ -163,7 +163,7 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
             (_) in
             
             self.saveSuccessful = true
-            self.performSegue(withIdentifier: "unwindToScheudle", sender: self)
+            self.performSegue(withIdentifier: IDs.SGE_TO_SCHEDULE, sender: self)
             
         }
 		
@@ -213,7 +213,7 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
                 (_) in
                 
                 self.saveSuccessful = false
-                self.performSegue(withIdentifier: "unwindToSchedule", sender: self)
+                self.performSegue(withIdentifier: IDs.SGE_TO_SCHEDULE, sender: self)
                 
             })
             

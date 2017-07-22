@@ -38,7 +38,7 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
         eventDate = Calendar.current.date(from: components)!
         
         // Define the date format and apply it to the event time display
-        dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+        dateFormatter.dateFormat = UIConstants.STD_DATETIME_FORMAT
         dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
         
     }
@@ -154,7 +154,7 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
     
     // MARK: - Core Data helper
     
-    func prepareForUpdateOnCoreData() {
+    func prepareForUpdate() {
         
         event.flightDate = self.eventDate
         
@@ -165,7 +165,7 @@ class EditEventTimeTableViewController: UITableViewController, CoreDataHelper {
 	
 	override func viewWillDisappear(_ animated: Bool) {
 
-        performUpdateOnCoreData()
+        CoreDataConnector.updateStore(from: self)
 
 	}
 

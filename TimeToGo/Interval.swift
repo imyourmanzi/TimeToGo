@@ -206,12 +206,12 @@ class Interval: NSObject, NSCoding {
 	}
 	
 	// Remove an interval's labels from their superview
-	func removeViewsFromSuperview() {
-		
-		entryLabel.removeFromSuperview()
-		dateLabel.removeFromSuperview()
-		
-	}
+    func removeViewsFromSuperview() {
+        
+        entryLabel.removeFromSuperview()
+        dateLabel.removeFromSuperview()
+        
+    }
     
     
     // MARK: - Formatting map address
@@ -280,7 +280,7 @@ class Interval: NSObject, NSCoding {
 		aCoder.encode(notesStr, forKey: "notesStr")
 		
 	}
-	
+    
 	
 	// MARK: - NSObject protocol
 	
@@ -292,30 +292,23 @@ class Interval: NSObject, NSCoding {
     
     override var description: String {
         
-        var notes = ""
-        if let theNotes = notesStr {
-            notes = theNotes
-        }
-        
-        return "\n------\nSchedule Label:\t\(self.scheduleLabel)\nTime:\t\(self.getTimeValueString())\nNotes:\t\(notes)\nMain Label:\t\(self.mainLabel ?? "No mainLabel")\n------\n"
+        return "Label:  \(self.scheduleLabel)\nTime:  \(self.getTimeValueString())\nNotes:  \(String(describing: notesStr))\nMain Label:  \(String(describing: mainLabel))\nUses Location:  \(String(describing: useLocation))"
         
     }
     
 	override func isEqual(_ object: Any?) -> Bool {
 		
 		guard let theObject = object as? Interval else {
-			
 			return false
-			
 		}
 			
 		return (self.scheduleLabel == theObject.scheduleLabel &&
-			self.timeValueHours == theObject.timeValueHours &&
-			self.timeValueMins == theObject.timeValueMins &&
-			self.useLocation == theObject.useLocation &&
-			self.startLocation == theObject.startLocation &&
-			self.endLocation == theObject.endLocation &&
-			self.notesStr == theObject.notesStr)
+                self.timeValueHours == theObject.timeValueHours &&
+                self.timeValueMins == theObject.timeValueMins &&
+                self.useLocation == theObject.useLocation &&
+                self.startLocation == theObject.startLocation &&
+                self.endLocation == theObject.endLocation &&
+                self.notesStr == theObject.notesStr)
 		
 	}
 	

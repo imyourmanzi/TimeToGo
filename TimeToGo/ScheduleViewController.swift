@@ -12,6 +12,10 @@ import EventKit
 
 class ScheduleViewController: UIViewController, CoreDataHelper {
 	
+    // Interface Builder variables
+    @IBOutlet var noEventsLabel: UILabel!
+    @IBOutlet var addToCalButton: UIButton!
+    
 	// EventKit variables
 	let eventStore = EKEventStore()
 	
@@ -23,6 +27,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	var scheduleScroll: UIScrollView!
 	let scrollSubview = UIView()
 	
+    var eventName: String = UIConstants.NOT_FOUND
 	var eventDate: Date!
     var eventTimeLabel: String!
 	var intervalDate: Date!
@@ -32,19 +37,32 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	
 	let dateFormatter = DateFormatter()
     
+    override func viewDidLoad() {
+        
+        retrieveCurrentEventName()
+        
+    }
+    
 	override func viewWillAppear(_ animated: Bool) {
-		
-        setupScrollView(for: view.frame.size)
+        
+        let showStatusBar = view.frame.size.width < view.frame.height || UIDevice.current.model == "iPad"
+        setupScrollView(for: view.frame.size, showingStatusBar: showStatusBar)
         getEventData()
         
 	}
     
-    private func setupScrollView(for size: CGSize) {
+    private func setupScrollView(for size: CGSize, showingStatusBar statusBarVisible: Bool) {
         
-        let lessHeight = self.tabBarController!.tabBar.frame.height + 64.0 + 44.0
-        scheduleScroll = UIScrollView(frame: CGRect(x: 0.0, y: 64.0, width: size.width, height: size.height - lessHeight))
+        let topHeight = navigationController!.navigationBar.frame.height + (statusBarVisible ? 20.0 : 0.0)
+        let bottomHeight = tabBarController!.tabBar.frame.height + addToCalButton.frame.height
+        
+        scheduleScroll = UIScrollView(frame: CGRect(x: 0.0,
+                                                    y: topHeight,
+                                                    width: size.width,
+                                                    height: size.height - topHeight - bottomHeight))
         view.addSubview(scheduleScroll)
-        scrollSubview.frame = CGRect(x: 0.0, y: 30.0, width: scheduleScroll.frame.width, height: scheduleScroll.frame.height)
+        
+        scrollSubview.frame = CGRect(x: 0.0, y: 25.0, width: scheduleScroll.frame.width, height: scheduleScroll.frame.height - 25.0)
         scheduleScroll.addSubview(scrollSubview)
         scheduleScroll.contentInset = UIEdgeInsets.zero
         
@@ -54,7 +72,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
         
         do {
             
-            event = try fetchCurrentEvent()
+            event = try CoreDataConnector.fetchCurrentEvent()
             guard let theEntries = event.entries as? [Interval] else {
                 
                 guard let parentVC = parent else {
@@ -63,7 +81,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
                 displayDataErrorAlert(on: parentVC, dismissHandler: {
                     (_) in
                     
-                    guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+                    guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: IDs.VC_TAB_MAIN) as? UITabBarController else {
                         return
                     }
                     
@@ -79,14 +97,15 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
             eventDate = event.flightDate
             eventTimeLabel = event.eventTimeLabel
             
-            //  Set the title display to the eventName
-            self.navigationItem.title = eventName
+            //  Set the title display to the eventName and date
+            dateFormatter.dateFormat = ScheduleConstants.STD_DATE_FORMAT
+            self.navigationItem.title = "\(eventName): \(dateFormatter.string(from: eventDate))"
             
             // Set up labels
             setupLabels()
             
             // Set up the dateFormatter for setting interval times
-            dateFormatter.dateFormat = "h:mm a"
+            dateFormatter.dateFormat = ScheduleConstants.STD_DURATION_FORMAT
             intervalDate = (eventDate as NSDate).copy() as! Date
             
             for entry in Array(entries.reversed()) {
@@ -99,6 +118,16 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
                 
             }
             
+            scheduleScroll.isHidden = false
+            noEventsLabel.isHidden = true
+            addToCalButton.isEnabled = true
+            
+        } catch CoreDataEventError.returnedNoEvents {
+            
+            scheduleScroll.isHidden = true
+            noEventsLabel.isHidden = false
+            addToCalButton.isEnabled = false
+        
         } catch {
             
             guard let parentVC = parent else {
@@ -108,7 +137,7 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
             displayDataErrorAlert(on: parentVC, dismissHandler: {
                 (_) in
                 
-                guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+                guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: IDs.VC_TAB_MAIN) as? UITabBarController else {
                     return
                 }
                 
@@ -135,8 +164,8 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 			
 		}
 		
-			// event interval
-		dateFormatter.dateFormat = "h:mm a"
+        // event interval
+		dateFormatter.dateFormat = ScheduleConstants.STD_DURATION_FORMAT
 		eventIntervalLabel.translatesAutoresizingMaskIntoConstraints = false
 		eventIntervalTimeLabel.translatesAutoresizingMaskIntoConstraints = false
 		eventIntervalLabel.text = eventTimeLabel
@@ -220,10 +249,17 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
     
     // Detect orientation change and adapt scheduleScroll accordingly
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         
-        clearViews()
-        setupScrollView(for: size)
-        getEventData()
+        let showStatusBar = (size.width < size.height) || UIDevice.current.model == "iPad"
+        
+        if scheduleScroll != nil {
+            
+            clearViews()
+            setupScrollView(for: size, showingStatusBar: showStatusBar)
+            getEventData()
+            
+        }
         
     }
 	
@@ -232,39 +268,53 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
     
     private func canAccessCalendar() -> Bool {
         
-        var canAccess = false
-        
         switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
             
         case .authorized:
-            canAccess = true
+            return true
             
         case .denied:
-            canAccess = false
-            displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars.", on: self, dismissHandler: nil)
+            //displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings > It's Time To Go and turn on Calendars.", on: self, dismissHandler: nil)
+            displayGoToSettingsCalendarAlert(on: self)
+            return false
             
         case .notDetermined:
             eventStore.requestAccess(to: EKEntityType.event, completion: {
                 (granted: Bool, error: Error?) in
                 
-                if granted {
-                    canAccess = true
+                if !granted {
+                    //self.displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings > It's Time To Go and turn on Calendars.", on: self, dismissHandler: nil)
+                    self.displayGoToSettingsCalendarAlert(on: self)
                 } else {
                     
-                    canAccess = false
-                    self.displayAlert(title: "Not Allowed", message: "Access to Calendars was denied. To enable, go to Settings>It's Time To Go and turn on Calendars.", on: self, dismissHandler: nil)
+                    DispatchQueue.main.async {
+                        self.performSegue(withIdentifier: IDs.SGE_TO_SHARE_CAL, sender: self)
+                    }
                     
                 }
                 
             })
             
+            return false
+            
         case .restricted:
-            canAccess = false
-            displayAlert(title: "Not Allowed", message: "Access to Calendars was restricted.", on: self, dismissHandler: nil)
+            displayAlert(title: "Not Allowed", message: "Access to Calendars was restricted. To check permissions, go to Settings > General > Restrictions > Calendars and verify It's Time To Go is on.", on: self, dismissHandler: nil)
+            return false
             
         }
         
-        return canAccess
+    }
+    
+    
+    // MARK: - Core Data helper
+    
+    func retrieveCurrentEventName() {
+        
+        guard let currentEventName = CoreDataConnector.getCurrentEventName() else {
+            return
+        }
+        
+        eventName = currentEventName
         
     }
     
@@ -276,13 +326,11 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
 	
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         
-        if identifier == "toShareToCal" && canAccessCalendar() {
-            return true
-        } else if identifier != "toShareToCal" {
-            return true
+        if identifier == IDs.SGE_TO_SHARE_CAL {
+            return canAccessCalendar()
         }
         
-        return false
+        return true
         
     }
     
@@ -294,10 +342,10 @@ class ScheduleViewController: UIViewController, CoreDataHelper {
         
     }
     
-	override func viewDidDisappear(_ animated: Bool) {
-		
-		clearViews()
-		
-	}
-	
+    override func viewDidDisappear(_ animated: Bool) {
+        
+        clearViews()
+        
+    }
+    
 }

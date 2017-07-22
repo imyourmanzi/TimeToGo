@@ -114,4 +114,35 @@ class Events {
         
     }
     
+    func getEventTimeLabel(for eventType: String) -> String {
+        
+        var label = HomeConstants.EVENT_TIME_LABEL_DEFAULT
+        var rawType = ""
+        
+        guard let data = file.rawData else {
+            return label
+        }
+        
+        var rows = data.components(separatedBy: CSVFile.ROW_DELIMIT)
+        if rows.last == "" {
+            rows.removeLast()
+        }
+        
+        for row in rows {
+            
+            rawType = row.components(separatedBy: CSVFile.COLUMN_DELIMIT)[1]
+            
+            if rawType.components(separatedBy: CSVFile.TITLE_DELIMIT)[1] == eventType &&
+                rawType.components(separatedBy: CSVFile.TITLE_DELIMIT)[2] != HomeConstants.EVENT_TIME_LABEL_DEFAULT_KEY {
+                
+                label = rawType.components(separatedBy: CSVFile.TITLE_DELIMIT)[2]
+                
+            }
+            
+        }
+        
+        return label
+        
+    }
+    
 }

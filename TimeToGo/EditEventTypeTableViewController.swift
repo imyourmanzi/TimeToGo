@@ -18,9 +18,11 @@ class EditEventTypeTableViewController: UITableViewController, UIPickerViewDataS
     var event: Trip!
     
     // Current VC variables
-    var pickerHidden = true
-    var eventType: String = "Event Type Not Found"
     var allTypes: [String] = []
+    var pickerHidden = true
+    var eventType: String = UIConstants.NOT_FOUND
+    let eventsDir = Events()
+    var eventTimeLabel: String = HomeConstants.EVENT_TIME_LABEL_DEFAULT
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,6 +84,7 @@ class EditEventTypeTableViewController: UITableViewController, UIPickerViewDataS
         
         eventType = allTypes[row]
         eventTypeCell.detailTextLabel?.text = eventType
+        eventTimeLabel = eventsDir.getEventTimeLabel(for: eventType)
         
     }
     
@@ -122,9 +125,10 @@ class EditEventTypeTableViewController: UITableViewController, UIPickerViewDataS
     
     // MARK: - Core Data helper
     
-    func prepareForUpdateOnCoreData() {
+    func prepareForUpdate() {
         
         event.eventType = self.eventType
+        event.eventTimeLabel = self.eventTimeLabel
         
     }
     
@@ -133,7 +137,7 @@ class EditEventTypeTableViewController: UITableViewController, UIPickerViewDataS
     
     override func viewWillDisappear(_ animated: Bool) {
         
-        performUpdateOnCoreData()
+        CoreDataConnector.updateStore(from: self)
         
     }
     

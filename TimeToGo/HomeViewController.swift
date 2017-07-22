@@ -13,8 +13,8 @@ private let reuseIdentifier = "categoryCell"
 
 class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CoreDataHelper {
     
-    // Value constants
-    let MOVE_MAIN_LABEL_KEY  = "movedMainLabel"
+    // Interface Builder variables
+    @IBOutlet var loadPreviousButton: UIButton!
     
     // CoreData variables
     var allEvents: [Trip] = []
@@ -22,7 +22,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     // Current VC variables
     var stockEvents: Events = Events()
-    var isViewVisible = false
     let titleImageView = UIImageView(image: UIImage(named: "title"))
     var categoriesFileData: String = ""
     var eventCategories: [String] = ["A","B","C"]
@@ -40,32 +39,33 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     override func viewWillAppear(_ animated: Bool) {
         
-        getEventData()
+//        if UserDefaults.standard.bool(forKey: WalkthroughConstants.NOT_FIRST_LAUNCH_KEY) {
+            getEventData()
+//        }
         
-        moveMainLabelIfNeeded()
-        
-        disableTabBarIfNeeded(events: allEvents, sender: self)
+        if !(UserDefaults.standard.bool(forKey: HomeConstants.MIGRATED_DATA_KEY)) {
+            migrateData()
+        }
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
-        isViewVisible = true
+        if !(UserDefaults.standard.bool(forKey: WalkthroughConstants.NOT_FIRST_LAUNCH_KEY)) {
+            showWalkthrough()
+        }
         
     }
     
     private func getEventData() {
         
         do {
-            allEvents = try fetchAllEvents()
+            
+            allEvents = try CoreDataConnector.fetchAllEvents()
+            loadPreviousButton.isEnabled = true
+            
         } catch CoreDataEventError.returnedNoEvents {
-            
-            guard let parentVC = parent else {
-                return
-            }
-            
-            displayNoEventsAlert(on: parentVC, dismissHandler: nil)
-            
+            loadPreviousButton.isEnabled = false
         } catch {
             
             guard let parentVC = parent else {
@@ -78,45 +78,56 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
     }
     
-    // If not done already, move all the main labels' contents into their respective notes and set them nil
-    private func moveMainLabelIfNeeded() {
+    // Move all the main labels' contents into their respective entries'
+    // notes and set them nil and set the event type and event time labels
+    private func migrateData() {
         
-        if !(UserDefaults.standard.bool(forKey: MOVE_MAIN_LABEL_KEY)) {
+        var i = 0
+        for event in allEvents {
             
-            var i = 0
-            for event in allEvents {
+            var j = 0
+            var entries = event.entries as! [Interval]
+            for entry in entries {
                 
-                self.entries = event.entries as! [Interval]
-                
-                var j = 0
-                for entry in self.entries {
+                if let mainLabel = entry.mainLabel {
                     
-                    if let mainLabel = entry.mainLabel {
-                        
-                        if let notes = entry.notesStr {
-                            entry.notesStr = "Main Label: \(mainLabel)\n\n\(notes)"
-                        } else {
-                            entry.notesStr = "Main Label: \(mainLabel)"
-                        }
-                        
-                        entry.mainLabel = nil
-                        
+                    if let notes = entry.notesStr {
+                        entry.notesStr = "Main Label: \(mainLabel)\n\n\(notes)"
+                    } else {
+                        entry.notesStr = "Main Label: \(mainLabel)"
                     }
                     
-                    self.entries[j] = entry
-                    j += 1
+                    entry.mainLabel = nil
                     
                 }
                 
-                allEvents[i].entries = self.entries as NSArray
-                i += 1
+                entries[j] = entry
+                j += 1
                 
             }
             
-            // Update the standards database
-            UserDefaults.standard.set(true, forKey: MOVE_MAIN_LABEL_KEY)
+            allEvents[i].entries = entries as NSArray
+            allEvents[i].eventType = "Plane"
+            allEvents[i].eventTimeLabel = "Takeoff"
+            i += 1
             
         }
+        
+        CoreDataConnector.updateStore(from: self)
+        
+        // Update the standards database
+        UserDefaults.standard.set(true, forKey: HomeConstants.MIGRATED_DATA_KEY)
+        
+    }
+    
+    private func showWalkthrough() {
+        
+        guard let walkthroughVC = storyboard?.instantiateViewController(withIdentifier: IDs.VC_PAGE_WALKTHROUGH) else {
+            return
+        }
+        
+        walkthroughVC.modalTransitionStyle = .coverVertical
+        present(walkthroughVC, animated: true, completion: nil)
         
     }
     
@@ -193,7 +204,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     override func viewWillDisappear(_ animated: Bool) {
         
-        performUpdateOnCoreData()
+        CoreDataConnector.updateStore(from: self)
         
     }
 

@@ -18,11 +18,11 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 	var event: Trip!
 	
 	// Current VC variables
-	var eventName: String = "Event Name Not Found"
-	
+	var eventName: String = UIConstants.NOT_FOUND
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-		
+        
 		// Set up the eventNameTextfield
 		eventNameTextfield.text = eventName
 		
@@ -49,7 +49,7 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 	
     // MARK: - Core Data helper
     
-    func prepareForUpdateOnCoreData() {
+    func prepareForUpdate() {
         
         event.tripName = self.eventName
         
@@ -69,10 +69,10 @@ class EditEventNameTableViewController: UITableViewController, UITextFieldDelega
 			
 		} else {
 			
-			performUpdateOnCoreData()
+            CoreDataConnector.updateStore(from: self)
 		
 			// Update the currentTripName so that other views will reference the updated eventName
-            setCurrentEventInDefaults(to: self.eventName)
+            CoreDataConnector.setCurrentEventName(to: eventName)
 			
 			eventNameTextfield.resignFirstResponder()
 			

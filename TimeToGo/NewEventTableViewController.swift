@@ -23,7 +23,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
     var allEvents: [Trip] = []
 	
 	// Current VC variables
-    var newEventName: String!
+    var newEventName: String = ""
     var eventDate = Date()
     var eventType: String = ""
     var eventTimeLabel: String = ""
@@ -48,7 +48,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
         // Set up dateFormatter and assign a default newEventName
         dateFormatter.dateStyle = .short
         dateFormatter.timeStyle = .medium
-        newEventName = eventType.replacingOccurrences(of: " ", with: "") + "EventOn_\(dateFormatter.string(from: eventDate))"
+        newEventName = eventType + " Event at \(dateFormatter.string(from: eventDate))"
         
         // Get current date but with seconds set to 0 and set date to current time zone
         var components = Calendar.current.dateComponents(in: TimeZone.current, from: eventDate)
@@ -56,7 +56,7 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
         eventDate = Calendar.current.date(from: components)!
         
         // Set up dateFormatter for use generating label for the eventDatePicker
-        dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
+        dateFormatter.dateFormat = UIConstants.STD_DATETIME_FORMAT
         dateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
         
     }
@@ -205,15 +205,15 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 	
     // MARK: - Core Data helper
     
-    func prepareForUpdateOnCoreData() {
+    func prepareForUpdate() {
         
         // Follow normal procedure to create the event and display the schedule
-        guard let theMoc = moc else {
+        guard let theMoc = CoreDataConnector.getMoc() else {
             displayAlert(title: "Not Saved", message: "Data could not be saved.", on: self, dismissHandler: nil)
             return
         }
         
-        let newEvent = NSEntityDescription.insertNewObject(forEntityName: "Trip", into: theMoc) as! Trip
+        let newEvent = NSEntityDescription.insertNewObject(forEntityName: CoreDataConstants.ENTITY_NAME, into: theMoc) as! Trip
         newEvent.tripName = newEventName
         newEvent.flightDate = eventDate
         newEvent.eventType = eventType
@@ -240,10 +240,10 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
 		
 		if nameIsUnique {
 			
-            performUpdateOnCoreData()
-            setCurrentEventInDefaults(to: newEventName)
+            CoreDataConnector.updateStore(from: self)
+            CoreDataConnector.setCurrentEventName(to: newEventName)
 			
-            guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: "mainTabVC") as? UITabBarController else {
+            guard let mainTabVC = self.storyboard?.instantiateViewController(withIdentifier: IDs.VC_TAB_MAIN) as? UITabBarController else {
                 return
             }
             
