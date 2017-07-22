@@ -1,0 +1,7 @@
+Pack Up and Get Ready,0,45
+Drive to Airport,0,30,true,Driving directions include current traffic conditions.
+Get Boarding Pass,0,15
+Check Luggage,0,15
+Go Through Security,1,0
+Bathroom Break,0,10
+Board Plane,0,20

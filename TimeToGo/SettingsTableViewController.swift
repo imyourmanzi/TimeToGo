@@ -2,174 +2,224 @@
 //  SettingsTableViewController.swift
 //  TimeToGo
 //
-//  Created by Matteo Manzi on 7/4/15.
-//  Copyright (c) 2015 VMM Software. All rights reserved.
+//  Created by Matt Manzi on 7/4/15.
+//  Copyright (c) 2017 MRM Software. All rights reserved.
 //
 
 import UIKit
 import CoreData
 import MessageUI
 
-class SettingsTableViewController: UITableViewController, MFMailComposeViewControllerDelegate {
-
-	@IBOutlet var flightDateCell: UITableViewCell!
-	@IBOutlet var tripNameCell: UITableViewCell!
+class SettingsTableViewController: UITableViewController, MFMailComposeViewControllerDelegate, CoreDataHelper {
+    
+    // Interface Builder variables
+	@IBOutlet var eventDateCell: UITableViewCell!
+	@IBOutlet var eventNameCell: UITableViewCell!
+    @IBOutlet var eventTypeCell: UITableViewCell!
+    @IBOutlet var resetButton: UIButton!
+    @IBOutlet var deleteButton: UIButton!
+    @IBOutlet var deleteAlertPopoverViewAnchor: UIView!
+    @IBOutlet var resetAlertPopoverViewAnchor: UIView!
 	
-	var moc: NSManagedObjectContext?
-	var currentTripName: String!
-	var currentTrip: Trip!
-	var currentTripIndex: Int!
-	var allTrips = [Trip]()
+    // Core Data variables
+	var event: Trip!
+    var allEvents: [Trip] = []
 	
-	var flightDate: Date!
-	var tripName: String!
-	
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-		// Assign the moc CoreData variable by referencing the AppDelegate's
-		moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
-		
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-
+    // Current VC variables
+    var eventName: String = UIConstants.NOT_FOUND
+	var eventDate: Date = Date()
+    var eventType: String = "Event Type"
+    var hasEvents: Bool = false
+    
 	override func viewWillAppear(_ animated: Bool) {
-		
-		// Fetch the current trip from the persistent store and assign the CoreData variables
-		currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
-		let fetchRequest = NSFetchRequest<Trip>(entityName: "Trip")
-		fetchRequest.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.fetch(fetchRequest))
-		currentTrip = trips[0]
-		
-		self.tripName = currentTrip.tripName
-		self.flightDate = currentTrip.flightDate as Date!
-		
-		tripNameCell.detailTextLabel?.text = self.tripName
-		
-		// Set up the dateFormatter for the flightDate title display
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "M/d/yy '@' h:mm a"
-		flightDateCell.detailTextLabel?.text = dateFormatter.string(from: self.flightDate)
-		
-		// Fetch all of the managed objects from the persistent store and update the table view
-//		currentTripName = NSUserDefaults.standardUserDefaults().objectForKey("currentTripName") as! String
-		let fetchAll = NSFetchRequest<Trip>(entityName: "Trip")
-		allTrips = (try! moc!.fetch(fetchAll))
-		
-		tableView.reloadData()
+        
+        retrieveCurrentEventName()
+		getEventData()
 		
 	}
+    
+    private func getEventData() {
+        
+        // Fetch the current event and all of the managed objects from the persistent store
+        do {
+            
+            event = try CoreDataConnector.fetchCurrentEvent()
+            allEvents = try CoreDataConnector.fetchAllEvents()
+            
+            hasEvents = true
+            
+        } catch CoreDataEventError.returnedNoEvents {
+            
+            hasEvents = false
+            return
+        
+        } catch {
+            
+            guard let parentVC = parent else {
+                return
+            }
+            
+            displayDataErrorAlert(on: parentVC, dismissHandler: nil)
+            return
+            
+        }
+        
+        // Assign the CoreData variables and update the table view
+        eventDate = event.flightDate
+        eventType = event.eventType
+        setupCellDetails()
+        
+    }
+    
+    private func setupCellDetails() {
+        
+        // Set up the dateFormatter for the eventDate title display
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = UIConstants.STD_DATETIME_FORMAT
+        
+        eventNameCell.detailTextLabel?.text = eventName
+        eventDateCell.detailTextLabel?.text = dateFormatter.string(from: eventDate)
+        eventTypeCell.detailTextLabel?.text = eventType
+        
+        tableView.reloadData()
+        
+    }
+    
+    @IBAction func clickedResetSchedule(_ sender: UIButton) {
+        
+        let resetAlertController = UIAlertController(title: nil, message: "Reset \(eventName) to the default schedule for \(eventType) event?", preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let resetAction = UIAlertAction(title: "Reset", style: .destructive) { (action: UIAlertAction) in
+            
+            let template = EventTemplate(filename: self.eventType)
+            self.event.entries = template.getEntries() as NSArray
+            
+            CoreDataConnector.updateStore(from: self)
+            
+        }
+        
+        resetAlertController.addAction(cancelAction)
+        resetAlertController.addAction(resetAction)
+        
+        resetAlertController.popoverPresentationController?.sourceView = resetAlertPopoverViewAnchor
+        resetAlertController.popoverPresentationController?.permittedArrowDirections = .up
+        
+        present(resetAlertController, animated: true, completion: nil)
+        
+    }
 	
-	@IBAction func clickedDeleteTrip(_ sender: UIButton) {
+	@IBAction func clickedDeleteEvent(_ sender: UIButton) {
 		
-		// Present an action sheet to confirm deletion of currentTrip and handle the situations that can follow
-		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(currentTripName!)?", preferredStyle: .actionSheet)
-		let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {(action: UIAlertAction) in
+		// Present an action sheet to confirm deletion of the event and handle the situations that can follow
+		let deleteAlertController = UIAlertController(title: nil, message: "Delete \(eventName)?", preferredStyle: .actionSheet)
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(action: UIAlertAction) in
 			deleteAlertController.dismiss(animated: true, completion: nil)
 		})
-		let deleteAction = UIAlertAction(title: "Delete Trip", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction) in
+		let deleteAction = UIAlertAction(title: "Delete Event", style: .destructive, handler: { (action: UIAlertAction) in
 			
-			var index = 0
-			for trip in self.allTrips {
-				
-				if trip.tripName == self.currentTripName {
-					
-					self.currentTripIndex = index
-					
-				}
-				
-				index += 1
-				
-			}
+            guard let eventIndex = self.allEvents.index(of: self.event) else {
+                return
+            }
+            
+            let eventRemoved = self.allEvents.remove(at: eventIndex)
+            guard let theMoc = CoreDataConnector.getMoc() else {
+                
+                self.allEvents.insert(eventRemoved, at: eventIndex)
+                return
+                
+            }
+			theMoc.delete(eventRemoved)
+            
+            CoreDataConnector.updateStore(from: self)
 			
-			self.moc!.delete(self.allTrips.remove(at: self.currentTripIndex))
-			
-			do {
-				try self.moc!.save()
-			} catch {
-			}
-			
-			if self.allTrips.count >= 1 {
+			if self.allEvents.count >= 1 {
 				
-				self.currentTripName = self.allTrips[self.allTrips.count - 1].tripName
-				UserDefaults.standard.set(self.currentTripName, forKey: "currentTripName")
+                if let newEventName = self.allEvents.last?.tripName {
+                    
+                    CoreDataConnector.setCurrentEventName(to: newEventName)
+                    self.retrieveCurrentEventName()
+                    self.getEventData()
+                    
+                }
 				
-				self.viewWillAppear(true)
-				
-			} else if self.allTrips.count <= 0 {
-				
-				let semiDestVC = self.storyboard?.instantiateViewController(withIdentifier: "newTripNavVC") as! UINavigationController
-				let destVC = semiDestVC.viewControllers[0] as! FlightTimeTableViewController
-				destVC.hidesBottomBarWhenPushed = true
-				destVC.navigationItem.hidesBackButton = true
-				self.show(destVC, sender: self)
-				
+			} else if self.allEvents.isEmpty {
+                
+                self.hasEvents = false
+                
+                self.setupCellDetails()
+                
 			}
 			
 		})
 		
 		deleteAlertController.addAction(cancelAction)
 		deleteAlertController.addAction(deleteAction)
-		
-		present(deleteAlertController, animated: true, completion: nil)
+        
+        deleteAlertController.popoverPresentationController?.sourceView = deleteAlertPopoverViewAnchor
+        deleteAlertController.popoverPresentationController?.permittedArrowDirections = .up
+        
+        present(deleteAlertController, animated: true, completion: nil)
 
-	}
-	
-	fileprivate func displayAlertWithTitle(_ title: String?, message: String?) {
-		
-		let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-		let dismiss = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-		alert.addAction(dismiss)
-		
-		self.present(alert, animated: true, completion: nil)
-		
 	}
 
 	
-	// MARK: - Table view data source
-	
-	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-		
-		if section == 1 {
-			
-			return "Saved Trips: \(allTrips.count)"
-			
-		}
-		
-		return nil
-		
-	}
-	
+	// MARK: - Table view delegate
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        if indexPath.section == 0 && !hasEvents {
+            
+            cell.selectionStyle = .none
+            eventDateCell.detailTextLabel?.text = "Event Time"
+            eventNameCell.detailTextLabel?.text = "Event Name"
+            eventTypeCell.detailTextLabel?.text = "Event Type"
+            
+        }
+        
+        eventDateCell.textLabel?.isEnabled = hasEvents
+        eventNameCell.textLabel?.isEnabled = hasEvents
+        eventTypeCell.textLabel?.isEnabled = hasEvents
+        
+        resetButton.isEnabled = hasEvents
+        deleteButton.isEnabled = hasEvents
+        
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        
+        if indexPath.section == 0 && !hasEvents {
+            return nil
+        }
+        
+        return indexPath
+        
+    }
+    
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		
-		if (indexPath as NSIndexPath).section == 2 {
+        
+		if indexPath.section == 1 {
 			
-			if (indexPath as NSIndexPath).row == 0 {
-				
-				newEmailToRecipients(["timetogosupport@narwhalsandcode.com"], subject: "Question/Comment/Concern with It's Time To Go")
-				
-			} else if (indexPath as NSIndexPath).row == 1 {
-			
-				if let homepage = URL(string: "https://www.narwhalsandcode.com/apps/#time-to-go") {
-					UIApplication.shared.openURL(homepage)
-				}
-				
-			}
-			
+            switch indexPath.row {
+                
+            case 0:
+                newEmail(to: [SettingConstants.SUPPORT_EMAIL], subject: SettingConstants.SUPPORT_SUBJECT)
+            case 1:
+                if let homepage = URL(string: SettingConstants.SUPPORT_SITE) { UIApplication.shared.openURL(homepage) }
+            default:
+                break
+                
+            }
+            
 		}
 		
 		tableView.deselectRow(at: indexPath, animated: true)
 		
 	}
-	
+    
 	
 	// MARK: - Mail composer delegate
 	
-	fileprivate func newEmailToRecipients(_ recipients: [String], subject: String) {
+	private func newEmail(to recipients: [String], subject: String) {
 		
 		if MFMailComposeViewController.canSendMail() {
 			
@@ -178,14 +228,23 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 			mailComposer.setToRecipients(recipients)
 			mailComposer.setSubject(subject)
 			
-			mailComposer.setMessageBody("<p><strong>Issue:</strong> </p><p><strong>Detail:</strong> </p><br /><p>Date and time: \(Date())<br />Device Model: [PLEASE ADD]<br />iOS Version: \(UIDevice.current.systemVersion)</p>", isHTML: true)
+            let gmtTime = Date()
+            let df = DateFormatter()
+            df.dateFormat = "yyyy-MM-dd HH:mm"
+            df.timeZone = TimeZone(identifier: "GMT")
+            
+			mailComposer.setMessageBody("<p><strong>Subject:</strong> </p>" +
+                                        "<p><strong>Detail:</strong> </p>" +
+                                        "<p><strong>Device (iPhone 7, iPad Air 2, etc):</strong> </p>" +
+                                        "<p>GMT Date and Time: \(df.string(from: gmtTime))<br/>" +
+                                        "iOS Version: \(UIDevice.current.systemVersion)<br/>" +
+                                        "App Version: \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] ?? "No Version Available")b\(Bundle.main.infoDictionary!["CFBundleVersion"] ?? "No Build Version Available")</p>",
+                                        isHTML: true)
 			
 			present(mailComposer, animated: true, completion: nil)
 			
 		} else {
-			
-			self.displayAlertWithTitle("Cannot Send Email", message: "Email is not set up on this device.")
-			
+            displayAlert(title: "Cannot Send Email", message: "Email is not set up on this device.", on: self, dismissHandler: nil)
 		}
 		
 	}
@@ -195,42 +254,47 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 		controller.dismiss(animated: true) { 
 			
 			if result == MFMailComposeResult.sent || result == MFMailComposeResult.saved {
-				
-				self.displayAlertWithTitle("Thank You!", message: "Your feedback is greatly appreciated! You should receive a reply within a week. Visit the website to find learn a bit more about It's Time To Go.")
-				
+                self.displayAlert(title: "Thank You!", message: "Your feedback is greatly appreciated! You should receive a reply within a week. Visit the website to find learn a bit more about It's Time To Go.", on: self, dismissHandler: nil)
 			}
 			
 		}
 		
 	}
 	
+    
+    // MARK: - Core Data helper
+    
+    func retrieveCurrentEventName() {
+        
+        guard let currentEventName = CoreDataConnector.getCurrentEventName() else {
+            return
+        }
+        
+        eventName = currentEventName
+        
+    }
+    
 	
 	// MARK: - Navigation
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		
-		// Prepare the possible views that may appear by pre-setting properties
-		if let timeVC = segue.destination as? EditFlightTimeTableViewController {
+		if let timeVC = segue.destination as? EditEventTimeTableViewController {
+            
+			timeVC.eventDate = eventDate
+			timeVC.event = event
 			
-			timeVC.currentTripName = self.currentTripName
-			timeVC.flightDate = self.flightDate
-			timeVC.currentTrip = self.currentTrip
+		} else if let nameVC = segue.destination as? EditEventNameTableViewController {
 			
-		} else if let nameVC = segue.destination as? EditTripNameTableViewController {
+            nameVC.eventName = eventName
+			nameVC.event = event
 			
-			nameVC.currentTripName = self.currentTripName
-			nameVC.tripName = self.tripName
-			nameVC.currentTrip = self.currentTrip
-			
-		} else if let newTripNavVC = segue.destination as? UINavigationController {
-			
-			guard let newTripVC = newTripNavVC.viewControllers[0] as? FlightTimeTableViewController else {
-				return
-			}
-			
-			newTripVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: newTripVC, action: #selector(newTripVC.cancelNewTripFromSettings))
-			
-		}
+        } else if let typeVC = segue.destination as? EditEventTypeTableViewController {
+            
+            typeVC.eventType = eventType
+            typeVC.event = event
+            
+        }
 		
 	}
 	

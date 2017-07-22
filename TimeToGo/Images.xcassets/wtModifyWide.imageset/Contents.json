@@ -1,0 +1,33 @@
+{
+  "images" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "ModifyWide@1x-1.jpg",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "iphone",
+      "filename" : "ModifyWide@2x-1.jpg",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "iphone",
+      "filename" : "ModifyWide@3x.jpg",
+      "scale" : "3x"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "ModifyWide@1x.jpg",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "ModifyWide@2x.jpg",
+      "scale" : "2x"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}

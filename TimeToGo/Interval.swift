@@ -2,17 +2,17 @@
 //  Interval.swift
 //  TimeToGo
 //
-//  Created by Matteo Manzi on 7/4/15.
-//  Copyright (c) 2015 VMM Software. All rights reserved.
+//  Created by Matt Manzi on 7/4/15.
+//  Copyright (c) 2017 MRM Software. All rights reserved.
 //
 
 import UIKit
 import MapKit
 
 class Interval: NSObject, NSCoding {
-	
+    
 	// Public variables
-	var mainLabel: String!
+    var mainLabel: String?
 	var scheduleLabel: String!
 	var timeValueHours: Int!
 	var timeValueMins: Int!
@@ -21,30 +21,21 @@ class Interval: NSObject, NSCoding {
 	var useLocation: Bool? = false
 	var startLocation: MKPlacemark? = nil
 	var endLocation: MKPlacemark? = nil
-	var notesStr: String? = nil
-	
-	// Private label variables for schedule
-	fileprivate let entryLabel = UILabel()
-	fileprivate let dateLabel = UILabel()
-	
+    var notesStr: String? = nil
+    
+	// Private label constants for schedule
+	private let entryLabel = UILabel()
+	private let dateLabel = UILabel()
+    
 	
 	// MARK: - Initializers
 	
-	init(mainLabel: String, scheduleLabel: String, timeValueHours: Int, timeValueMins: Int) {
+    init(scheduleLabel: String, timeValueHours: Int, timeValueMins: Int, notesStr: String?, usesLocation: Bool, startLoc: MKPlacemark?, endLoc: MKPlacemark?) {
 		
-		self.mainLabel = mainLabel
+        self.scheduleLabel = scheduleLabel
 		self.timeValueHours = timeValueHours
 		self.timeValueMins = timeValueMins
-		self.scheduleLabel = scheduleLabel
-		
-	}
-	
-	init(mainLabel: String, scheduleLabel: String, timeValueHours: Int, timeValueMins: Int, usesLocation: Bool, startLoc: MKPlacemark?, endLoc: MKPlacemark?) {
-		
-		self.mainLabel = mainLabel
-		self.timeValueHours = timeValueHours
-		self.timeValueMins = timeValueMins
-		self.scheduleLabel = scheduleLabel
+        self.notesStr = notesStr
 		self.useLocation = usesLocation
 		if usesLocation == true && startLoc != nil && endLoc != nil {
 			
@@ -54,26 +45,37 @@ class Interval: NSObject, NSCoding {
 		}
 		
 	}
-	
-	init(mainLabel: String, scheduleLabel: String, timeValueHours: Int, timeValueMins: Int, notesStr: String?, usesLocation: Bool, startLoc: MKPlacemark?, endLoc: MKPlacemark?) {
-		
-		self.mainLabel = mainLabel
-		self.timeValueHours = timeValueHours
-		self.timeValueMins = timeValueMins
-		self.scheduleLabel = scheduleLabel
-		self.notesStr = notesStr
-		self.useLocation = usesLocation
-		if usesLocation == true && startLoc != nil && endLoc != nil {
-			
-			self.startLocation = startLoc
-			self.endLocation = endLoc
-			
-		}
-		
-	}
+    
+    init(args: [String]) {
+            
+        self.scheduleLabel = args[0]
+        
+        if let hours = Int(args[1]) {
+            self.timeValueHours = hours
+        } else {
+            self.timeValueHours = 0
+        }
+        
+        if let mins = Int(args[2]) {
+            self.timeValueMins = mins
+        } else {
+            self.timeValueMins = 0
+        }
+        
+        if args.count == 5 {
+            
+            self.useLocation = Bool(args[3])
+            self.notesStr = args[4]
+            
+        }
+        
+    }
+    
+    
+    // MARK: - Formatting time values
 	
 	// Gets a custom built time interval string from a combination of hours and minutes
-	func stringFromTimeValue() -> String {
+	func getTimeValueString() -> String {
 		
 		var timeString: String!
 		
@@ -93,7 +95,7 @@ class Interval: NSObject, NSCoding {
 	}
 	
 	// Class level function for getting custom built time interval string from a combination of hours and minutes
-	static func stringFromTimeValue(_ timeValueHours: Int, timeValueMins: Int) -> String {
+	static func getStringFrom(hours timeValueHours: Int, mins timeValueMins: Int) -> String {
 		
 		var timeString: String!
 		
@@ -110,13 +112,12 @@ class Interval: NSObject, NSCoding {
 		return timeString
 		
 	}
+    
+    
+    // MARK: - Formatting schedule
 	
 	// Creates and adds label for scheduleLabel to a view
-	func createScheduleLabelFromTopSpace(_ topSpace: CGFloat, onView view: UIView) {
-		
-		if scheduleLabel == nil || scheduleLabel == "" {
-			scheduleLabel = mainLabel
-		}
+	func createScheduleLabel(withSpace topSpace: CGFloat, on view: UIView) {
 		
 		entryLabel.translatesAutoresizingMaskIntoConstraints = false
 		entryLabel.numberOfLines = 2
@@ -159,7 +160,7 @@ class Interval: NSObject, NSCoding {
 	}
 	
 	// Returns an NSTimeInterval by converting timeValueHours and timeValueMins
-	func timeIntervalByConvertingTimeValue() -> TimeInterval {
+	func getTimeInterval() -> TimeInterval {
 		
 		let timeIntervalHours = Double(timeValueHours) * 60.0 * 60.0
 		let timeIntervalMins = Double(timeValueMins) * 60.0
@@ -170,7 +171,7 @@ class Interval: NSObject, NSCoding {
 	}
 	
 	// Creates and adds label for timeValueHours and timeValueMins to a view
-	func createDateLabelOnView(_ view: UIView) {
+	func createDateLabel(on view: UIView) {
 		
 		dateLabel.translatesAutoresizingMaskIntoConstraints = false
 		dateLabel.numberOfLines = 1
@@ -198,22 +199,25 @@ class Interval: NSObject, NSCoding {
 	}
 
 	// Updates text on above dateLabel
-	func updateDateTextWithString(_ dateString: String) {
+	func updateDateText(to dateString: String) {
 		
 		dateLabel.text = dateString
 		
 	}
 	
 	// Remove an interval's labels from their superview
-	func removeViewsFromSuperview() {
-		
-		entryLabel.removeFromSuperview()
-		dateLabel.removeFromSuperview()
-		
-	}
+    func removeViewsFromSuperview() {
+        
+        entryLabel.removeFromSuperview()
+        dateLabel.removeFromSuperview()
+        
+    }
+    
+    
+    // MARK: - Formatting map address
 	
 	// Static function that composes an address label for any MKMapItem
-	static func getAddressFromMapItem(_ mapItem: MKMapItem) -> String {
+	static func getAddress(from mapItem: MKMapItem) -> String {
 		
 		var streetAddress = ""
 		
@@ -253,10 +257,10 @@ class Interval: NSObject, NSCoding {
 	
 	required init?(coder aDecoder: NSCoder) {
 		
-		self.mainLabel = aDecoder.decodeObject(forKey: "mainLabel") as! String
-		self.scheduleLabel = aDecoder.decodeObject(forKey: "scheduleLabel") as! String
-		self.timeValueHours = aDecoder.decodeObject(forKey: "timeValueHours") as! Int
-		self.timeValueMins = aDecoder.decodeObject(forKey: "timeValueMins") as! Int
+        self.mainLabel = aDecoder.decodeObject(forKey: "mainLabel") as? String
+		self.scheduleLabel = aDecoder.decodeObject(forKey: "scheduleLabel") as! String!
+		self.timeValueHours = aDecoder.decodeObject(forKey: "timeValueHours") as! Int!
+		self.timeValueMins = aDecoder.decodeObject(forKey: "timeValueMins") as! Int!
 		self.useLocation = aDecoder.decodeObject(forKey: "useLocation") as! Bool?
 		self.startLocation = aDecoder.decodeObject(forKey: "startLocation") as! MKPlacemark?
 		self.endLocation = aDecoder.decodeObject(forKey: "endLocation") as! MKPlacemark?
@@ -266,7 +270,7 @@ class Interval: NSObject, NSCoding {
 	
 	func encode(with aCoder: NSCoder) {
 		
-		aCoder.encode(mainLabel, forKey: "mainLabel")
+        aCoder.encode(mainLabel, forKey: "mainLabel")
 		aCoder.encode(scheduleLabel, forKey: "scheduleLabel")
 		aCoder.encode(timeValueHours, forKey: "timeValueHours")
 		aCoder.encode(timeValueMins, forKey: "timeValueMins")
@@ -276,34 +280,36 @@ class Interval: NSObject, NSCoding {
 		aCoder.encode(notesStr, forKey: "notesStr")
 		
 	}
+    
 	
+	// MARK: - NSObject protocol
 	
-	// MARK: - NSObject
-	
+    override var hash: Int {
+        
+        return scheduleLabel.hashValue
+        
+    }
+    
+    override var description: String {
+        
+        return "Label:  \(self.scheduleLabel)\nTime:  \(self.getTimeValueString())\nNotes:  \(String(describing: notesStr))\nMain Label:  \(String(describing: mainLabel))\nUses Location:  \(String(describing: useLocation))"
+        
+    }
+    
 	override func isEqual(_ object: Any?) -> Bool {
 		
 		guard let theObject = object as? Interval else {
-			
 			return false
-			
 		}
 			
-		return (self.mainLabel == theObject.mainLabel &&
-			self.scheduleLabel == theObject.scheduleLabel &&
-			self.timeValueHours == theObject.timeValueHours &&
-			self.timeValueMins == theObject.timeValueMins &&
-			self.useLocation == theObject.useLocation &&
-			self.startLocation == theObject.startLocation &&
-			self.endLocation == theObject.endLocation &&
-			self.notesStr == theObject.notesStr)
-		
-	}
-	
-	override var hash: Int {
-		
-		return mainLabel.hashValue
+		return (self.scheduleLabel == theObject.scheduleLabel &&
+                self.timeValueHours == theObject.timeValueHours &&
+                self.timeValueMins == theObject.timeValueMins &&
+                self.useLocation == theObject.useLocation &&
+                self.startLocation == theObject.startLocation &&
+                self.endLocation == theObject.endLocation &&
+                self.notesStr == theObject.notesStr)
 		
 	}
 	
 }
-

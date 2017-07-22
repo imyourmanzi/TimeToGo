@@ -7,6 +7,57 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8A0B21F11F0C4763000AC2A4 /* WalkthroughPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0B21F01F0C4763000AC2A4 /* WalkthroughPageViewController.swift */; };
+		8A0B21F31F0C4A0B000AC2A4 /* WalkthroughViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0B21F21F0C4A0B000AC2A4 /* WalkthroughViewController.swift */; };
+		8A0B22151F12F370000AC2A4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0B22141F12F370000AC2A4 /* Constants.swift */; };
+		8A0B22191F16E416000AC2A4 /* Riding.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A0B22181F16E416000AC2A4 /* Riding.csv */; };
+		8A41E4EA1E99B33900F63C3C /* Interview.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A41E4E91E99B33900F63C3C /* Interview.csv */; };
+		8A44A83B1E36811200B1CB09 /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */; };
+		8A44A83F1E36964500B1CB09 /* EventTypeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */; };
+		8A44A8411E369AAA00B1CB09 /* TypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A8401E369AAA00B1CB09 /* TypeCollectionViewCell.swift */; };
+		8A44A8481E37E6B100B1CB09 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44A8471E37E6B100B1CB09 /* CoreDataHelper.swift */; };
+		8A5D1D041E3911C500D0CD95 /* EventTypeData.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */; };
+		8A5D1D061E3911D100D0CD95 /* Plane.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D051E3911D100D0CD95 /* Plane.csv */; };
+		8A5D1D081E3913B400D0CD95 /* Train.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A5D1D071E3913B400D0CD95 /* Train.csv */; };
+		8A78951C1E86211700C32E92 /* CSVFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A78951B1E86211700C32E92 /* CSVFile.swift */; };
+		8A7895221E862DC300C32E92 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A7895211E862DC300C32E92 /* Events.swift */; };
+		8A7895241E86379000C32E92 /* EventTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A7895231E86379000C32E92 /* EventTemplate.swift */; };
+		8A8F8D4C1E32D837006C30F0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */; };
+		8A9C81261E3A52A100A83043 /* Car.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81251E3A52A100A83043 /* Car.csv */; };
+		8A9C81281E3A52B100A83043 /* Bus.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81271E3A52B100A83043 /* Bus.csv */; };
+		8A9C812A1E3A52C000A83043 /* Boat.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81291E3A52C000A83043 /* Boat.csv */; };
+		8A9C812D1E3A52FF00A83043 /* Hockey.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C812C1E3A52FF00A83043 /* Hockey.csv */; };
+		8A9C813D1E3A552800A83043 /* Baseball.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C812E1E3A552800A83043 /* Baseball.csv */; };
+		8A9C813E1E3A552800A83043 /* Basketball.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C812F1E3A552800A83043 /* Basketball.csv */; };
+		8A9C813F1E3A552800A83043 /* Cheer.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81301E3A552800A83043 /* Cheer.csv */; };
+		8A9C81401E3A552800A83043 /* Dance.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81311E3A552800A83043 /* Dance.csv */; };
+		8A9C81411E3A552800A83043 /* Field Hockey.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81321E3A552800A83043 /* Field Hockey.csv */; };
+		8A9C81421E3A552800A83043 /* Football.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81331E3A552800A83043 /* Football.csv */; };
+		8A9C81431E3A552800A83043 /* Golf.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81341E3A552800A83043 /* Golf.csv */; };
+		8A9C81441E3A552800A83043 /* Gymnastics.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81351E3A552800A83043 /* Gymnastics.csv */; };
+		8A9C81451E3A552800A83043 /* Lacrosse.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81361E3A552800A83043 /* Lacrosse.csv */; };
+		8A9C81461E3A552800A83043 /* Martial Arts.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81371E3A552800A83043 /* Martial Arts.csv */; };
+		8A9C81471E3A552800A83043 /* Soccer.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81381E3A552800A83043 /* Soccer.csv */; };
+		8A9C81481E3A552800A83043 /* Swimming.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81391E3A552800A83043 /* Swimming.csv */; };
+		8A9C81491E3A552800A83043 /* Tennis.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C813A1E3A552800A83043 /* Tennis.csv */; };
+		8A9C814A1E3A552800A83043 /* Track & Field.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C813B1E3A552800A83043 /* Track & Field.csv */; };
+		8A9C814B1E3A552800A83043 /* Volleyball.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C813C1E3A552800A83043 /* Volleyball.csv */; };
+		8A9C81511E3A55A200A83043 /* Date.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C814D1E3A55A200A83043 /* Date.csv */; };
+		8A9C81521E3A55A200A83043 /* Party.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C814E1E3A55A200A83043 /* Party.csv */; };
+		8A9C81531E3A55A200A83043 /* School Dance.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C814F1E3A55A200A83043 /* School Dance.csv */; };
+		8A9C81541E3A55A200A83043 /* Wedding.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81501E3A55A200A83043 /* Wedding.csv */; };
+		8A9C81591E3A55EF00A83043 /* Club Meeting.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81561E3A55EF00A83043 /* Club Meeting.csv */; };
+		8A9C815A1E3A55EF00A83043 /* Music.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81571E3A55EF00A83043 /* Music.csv */; };
+		8A9C815B1E3A55EF00A83043 /* Theater.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81581E3A55EF00A83043 /* Theater.csv */; };
+		8A9C81601E3A564700A83043 /* School.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815D1E3A564700A83043 /* School.csv */; };
+		8A9C81611E3A564700A83043 /* Work.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815E1E3A564700A83043 /* Work.csv */; };
+		8A9C81621E3A564700A83043 /* Worship.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C815F1E3A564700A83043 /* Worship.csv */; };
+		8A9C81641E3A569600A83043 /* Custom.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8A9C81631E3A569600A83043 /* Custom.csv */; };
+		8AA3B07B1EC39BC900AF064C /* Fishing.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8AA3B07A1EC39BC900AF064C /* Fishing.csv */; };
+		8AB073911EB24A680003DF53 /* Crew.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8AB073901EB24A680003DF53 /* Crew.csv */; };
+		8AB073931EB24D2E0003DF53 /* Cruise.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8AB073921EB24D2E0003DF53 /* Cruise.csv */; };
+		8AB3ED671E86E87E0090ED43 /* EditEventTypeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */; };
+		8ACDE10F1E3FB45700FD8F01 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */; };
 		98418DAC1B4847AA00ADC2D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */; };
 		98418DAF1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 98418DAD1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld */; };
 		98418DB41B4847AB00ADC2D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98418DB21B4847AB00ADC2D8 /* Main.storyboard */; };
@@ -14,14 +65,14 @@
 		98418DB91B4847AB00ADC2D8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98418DB71B4847AB00ADC2D8 /* LaunchScreen.xib */; };
 		98418DC51B4847AB00ADC2D8 /* TimeToGoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DC41B4847AB00ADC2D8 /* TimeToGoTests.swift */; };
 		98418DDC1B48487A00ADC2D8 /* AddEntryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DCE1B48487A00ADC2D8 /* AddEntryTableViewController.swift */; };
-		98418DDD1B48487A00ADC2D8 /* AllTripsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DCF1B48487A00ADC2D8 /* AllTripsTableViewController.swift */; };
-		98418DDE1B48487A00ADC2D8 /* EditFlightTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD01B48487A00ADC2D8 /* EditFlightTimeTableViewController.swift */; };
-		98418DDF1B48487A00ADC2D8 /* EditTripNameTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD11B48487A00ADC2D8 /* EditTripNameTableViewController.swift */; };
-		98418DE01B48487A00ADC2D8 /* EntriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD21B48487A00ADC2D8 /* EntriesViewController.swift */; };
-		98418DE11B48487A00ADC2D8 /* FlightTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD31B48487A00ADC2D8 /* FlightTimeTableViewController.swift */; };
+		98418DDD1B48487A00ADC2D8 /* AllEventsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DCF1B48487A00ADC2D8 /* AllEventsTableViewController.swift */; };
+		98418DDE1B48487A00ADC2D8 /* EditEventTimeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD01B48487A00ADC2D8 /* EditEventTimeTableViewController.swift */; };
+		98418DDF1B48487A00ADC2D8 /* EditEventNameTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD11B48487A00ADC2D8 /* EditEventNameTableViewController.swift */; };
+		98418DE01B48487A00ADC2D8 /* EntriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD21B48487A00ADC2D8 /* EntriesTableViewController.swift */; };
+		98418DE11B48487A00ADC2D8 /* NewEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD31B48487A00ADC2D8 /* NewEventTableViewController.swift */; };
 		98418DE21B48487A00ADC2D8 /* Interval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD41B48487A00ADC2D8 /* Interval.swift */; };
 		98418DE31B48487A00ADC2D8 /* IntervalTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD51B48487A00ADC2D8 /* IntervalTransformer.swift */; };
-		98418DE41B48487A00ADC2D8 /* SavedTripViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD61B48487A00ADC2D8 /* SavedTripViewController.swift */; };
+		98418DE41B48487A00ADC2D8 /* SavedEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD61B48487A00ADC2D8 /* SavedEventViewController.swift */; };
 		98418DE51B48487A00ADC2D8 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD71B48487A00ADC2D8 /* ScheduleViewController.swift */; };
 		98418DE61B48487A00ADC2D8 /* SelectedEntryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD81B48487A00ADC2D8 /* SelectedEntryTableViewController.swift */; };
 		98418DE71B48487A00ADC2D8 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98418DD91B48487A00ADC2D8 /* SettingsTableViewController.swift */; };
@@ -42,6 +93,58 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8A0B21F01F0C4763000AC2A4 /* WalkthroughPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkthroughPageViewController.swift; sourceTree = "<group>"; };
+		8A0B21F21F0C4A0B000AC2A4 /* WalkthroughViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkthroughViewController.swift; sourceTree = "<group>"; };
+		8A0B22141F12F370000AC2A4 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		8A0B22181F16E416000AC2A4 /* Riding.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Riding.csv; path = csv_data/Riding.csv; sourceTree = "<group>"; };
+		8A41E4E91E99B33900F63C3C /* Interview.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Interview.csv; path = csv_data/Interview.csv; sourceTree = "<group>"; };
+		8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
+		8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTypeCollectionViewController.swift; sourceTree = "<group>"; };
+		8A44A8401E369AAA00B1CB09 /* TypeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeCollectionViewCell.swift; sourceTree = "<group>"; };
+		8A44A8441E37BC8900B1CB09 /* TimeToGo2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TimeToGo2.xcdatamodel; sourceTree = "<group>"; };
+		8A44A8471E37E6B100B1CB09 /* CoreDataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
+		8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = EventTypeData.csv; path = csv_data/EventTypeData.csv; sourceTree = "<group>"; };
+		8A5D1D051E3911D100D0CD95 /* Plane.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Plane.csv; path = csv_data/Plane.csv; sourceTree = "<group>"; };
+		8A5D1D071E3913B400D0CD95 /* Train.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Train.csv; path = csv_data/Train.csv; sourceTree = "<group>"; };
+		8A78951B1E86211700C32E92 /* CSVFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSVFile.swift; sourceTree = "<group>"; };
+		8A7895211E862DC300C32E92 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
+		8A7895231E86379000C32E92 /* EventTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTemplate.swift; sourceTree = "<group>"; };
+		8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		8A9C81251E3A52A100A83043 /* Car.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Car.csv; path = csv_data/Car.csv; sourceTree = "<group>"; };
+		8A9C81271E3A52B100A83043 /* Bus.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Bus.csv; path = csv_data/Bus.csv; sourceTree = "<group>"; };
+		8A9C81291E3A52C000A83043 /* Boat.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Boat.csv; path = csv_data/Boat.csv; sourceTree = "<group>"; };
+		8A9C812C1E3A52FF00A83043 /* Hockey.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Hockey.csv; path = csv_data/Hockey.csv; sourceTree = "<group>"; };
+		8A9C812E1E3A552800A83043 /* Baseball.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Baseball.csv; path = csv_data/Baseball.csv; sourceTree = "<group>"; };
+		8A9C812F1E3A552800A83043 /* Basketball.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Basketball.csv; path = csv_data/Basketball.csv; sourceTree = "<group>"; };
+		8A9C81301E3A552800A83043 /* Cheer.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Cheer.csv; path = csv_data/Cheer.csv; sourceTree = "<group>"; };
+		8A9C81311E3A552800A83043 /* Dance.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Dance.csv; path = csv_data/Dance.csv; sourceTree = "<group>"; };
+		8A9C81321E3A552800A83043 /* Field Hockey.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "Field Hockey.csv"; path = "csv_data/Field Hockey.csv"; sourceTree = "<group>"; };
+		8A9C81331E3A552800A83043 /* Football.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Football.csv; path = csv_data/Football.csv; sourceTree = "<group>"; };
+		8A9C81341E3A552800A83043 /* Golf.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Golf.csv; path = csv_data/Golf.csv; sourceTree = "<group>"; };
+		8A9C81351E3A552800A83043 /* Gymnastics.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Gymnastics.csv; path = csv_data/Gymnastics.csv; sourceTree = "<group>"; };
+		8A9C81361E3A552800A83043 /* Lacrosse.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Lacrosse.csv; path = csv_data/Lacrosse.csv; sourceTree = "<group>"; };
+		8A9C81371E3A552800A83043 /* Martial Arts.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "Martial Arts.csv"; path = "csv_data/Martial Arts.csv"; sourceTree = "<group>"; };
+		8A9C81381E3A552800A83043 /* Soccer.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Soccer.csv; path = csv_data/Soccer.csv; sourceTree = "<group>"; };
+		8A9C81391E3A552800A83043 /* Swimming.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Swimming.csv; path = csv_data/Swimming.csv; sourceTree = "<group>"; };
+		8A9C813A1E3A552800A83043 /* Tennis.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Tennis.csv; path = csv_data/Tennis.csv; sourceTree = "<group>"; };
+		8A9C813B1E3A552800A83043 /* Track & Field.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "Track & Field.csv"; path = "csv_data/Track & Field.csv"; sourceTree = "<group>"; };
+		8A9C813C1E3A552800A83043 /* Volleyball.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Volleyball.csv; path = csv_data/Volleyball.csv; sourceTree = "<group>"; };
+		8A9C814D1E3A55A200A83043 /* Date.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Date.csv; path = csv_data/Date.csv; sourceTree = "<group>"; };
+		8A9C814E1E3A55A200A83043 /* Party.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Party.csv; path = csv_data/Party.csv; sourceTree = "<group>"; };
+		8A9C814F1E3A55A200A83043 /* School Dance.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "School Dance.csv"; path = "csv_data/School Dance.csv"; sourceTree = "<group>"; };
+		8A9C81501E3A55A200A83043 /* Wedding.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wedding.csv; path = csv_data/Wedding.csv; sourceTree = "<group>"; };
+		8A9C81561E3A55EF00A83043 /* Club Meeting.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "Club Meeting.csv"; path = "csv_data/Club Meeting.csv"; sourceTree = "<group>"; };
+		8A9C81571E3A55EF00A83043 /* Music.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Music.csv; path = csv_data/Music.csv; sourceTree = "<group>"; };
+		8A9C81581E3A55EF00A83043 /* Theater.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Theater.csv; path = csv_data/Theater.csv; sourceTree = "<group>"; };
+		8A9C815D1E3A564700A83043 /* School.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = School.csv; path = csv_data/School.csv; sourceTree = "<group>"; };
+		8A9C815E1E3A564700A83043 /* Work.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Work.csv; path = csv_data/Work.csv; sourceTree = "<group>"; };
+		8A9C815F1E3A564700A83043 /* Worship.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Worship.csv; path = csv_data/Worship.csv; sourceTree = "<group>"; };
+		8A9C81631E3A569600A83043 /* Custom.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Custom.csv; path = csv_data/Custom.csv; sourceTree = "<group>"; };
+		8AA3B07A1EC39BC900AF064C /* Fishing.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Fishing.csv; path = csv_data/Fishing.csv; sourceTree = "<group>"; };
+		8AB073901EB24A680003DF53 /* Crew.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Crew.csv; path = csv_data/Crew.csv; sourceTree = "<group>"; };
+		8AB073921EB24D2E0003DF53 /* Cruise.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Cruise.csv; path = csv_data/Cruise.csv; sourceTree = "<group>"; };
+		8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEventTypeTableViewController.swift; sourceTree = "<group>"; };
+		8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 		98418DA61B4847AA00ADC2D8 /* TimeToGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeToGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98418DAA1B4847AA00ADC2D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -53,14 +156,14 @@
 		98418DC31B4847AB00ADC2D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98418DC41B4847AB00ADC2D8 /* TimeToGoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeToGoTests.swift; sourceTree = "<group>"; };
 		98418DCE1B48487A00ADC2D8 /* AddEntryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddEntryTableViewController.swift; sourceTree = "<group>"; };
-		98418DCF1B48487A00ADC2D8 /* AllTripsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllTripsTableViewController.swift; sourceTree = "<group>"; };
-		98418DD01B48487A00ADC2D8 /* EditFlightTimeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditFlightTimeTableViewController.swift; sourceTree = "<group>"; };
-		98418DD11B48487A00ADC2D8 /* EditTripNameTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditTripNameTableViewController.swift; sourceTree = "<group>"; };
-		98418DD21B48487A00ADC2D8 /* EntriesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntriesViewController.swift; sourceTree = "<group>"; };
-		98418DD31B48487A00ADC2D8 /* FlightTimeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightTimeTableViewController.swift; sourceTree = "<group>"; };
+		98418DCF1B48487A00ADC2D8 /* AllEventsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllEventsTableViewController.swift; sourceTree = "<group>"; };
+		98418DD01B48487A00ADC2D8 /* EditEventTimeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEventTimeTableViewController.swift; sourceTree = "<group>"; };
+		98418DD11B48487A00ADC2D8 /* EditEventNameTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditEventNameTableViewController.swift; sourceTree = "<group>"; };
+		98418DD21B48487A00ADC2D8 /* EntriesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntriesTableViewController.swift; sourceTree = "<group>"; };
+		98418DD31B48487A00ADC2D8 /* NewEventTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewEventTableViewController.swift; sourceTree = "<group>"; };
 		98418DD41B48487A00ADC2D8 /* Interval.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Interval.swift; sourceTree = "<group>"; };
 		98418DD51B48487A00ADC2D8 /* IntervalTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntervalTransformer.swift; sourceTree = "<group>"; };
-		98418DD61B48487A00ADC2D8 /* SavedTripViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedTripViewController.swift; sourceTree = "<group>"; };
+		98418DD61B48487A00ADC2D8 /* SavedEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedEventViewController.swift; sourceTree = "<group>"; };
 		98418DD71B48487A00ADC2D8 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		98418DD81B48487A00ADC2D8 /* SelectedEntryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedEntryTableViewController.swift; sourceTree = "<group>"; };
 		98418DD91B48487A00ADC2D8 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -88,6 +191,169 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8A0B21EF1F0C4718000AC2A4 /* Walkthrough */ = {
+			isa = PBXGroup;
+			children = (
+				8A0B21F01F0C4763000AC2A4 /* WalkthroughPageViewController.swift */,
+				8A0B21F21F0C4A0B000AC2A4 /* WalkthroughViewController.swift */,
+			);
+			name = Walkthrough;
+			sourceTree = "<group>";
+		};
+		8A44A8421E37AD8700B1CB09 /* Event Categories and Types */ = {
+			isa = PBXGroup;
+			children = (
+				8A5D1D031E3911C500D0CD95 /* EventTypeData.csv */,
+				8A44A8431E37B38500B1CB09 /* Travel Types Defaults */,
+				8A9C812B1E3A52C800A83043 /* Sports Types Defaults */,
+				8A9C814C1E3A555B00A83043 /* Social Activities Types Defaults */,
+				8A9C81551E3A55B300A83043 /* Extracurriculars Types Defaults */,
+				8A9C815C1E3A55FF00A83043 /* Responsibilities Types Defaults */,
+				8A9C81631E3A569600A83043 /* Custom.csv */,
+			);
+			name = "Event Categories and Types";
+			sourceTree = "<group>";
+		};
+		8A44A8431E37B38500B1CB09 /* Travel Types Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				8A9C81291E3A52C000A83043 /* Boat.csv */,
+				8A9C81271E3A52B100A83043 /* Bus.csv */,
+				8A9C81251E3A52A100A83043 /* Car.csv */,
+				8AB073921EB24D2E0003DF53 /* Cruise.csv */,
+				8A5D1D051E3911D100D0CD95 /* Plane.csv */,
+				8A5D1D071E3913B400D0CD95 /* Train.csv */,
+			);
+			name = "Travel Types Defaults";
+			sourceTree = "<group>";
+		};
+		8A9C812B1E3A52C800A83043 /* Sports Types Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				8A9C812E1E3A552800A83043 /* Baseball.csv */,
+				8A9C812F1E3A552800A83043 /* Basketball.csv */,
+				8A9C81301E3A552800A83043 /* Cheer.csv */,
+				8AB073901EB24A680003DF53 /* Crew.csv */,
+				8A9C81311E3A552800A83043 /* Dance.csv */,
+				8A9C81321E3A552800A83043 /* Field Hockey.csv */,
+				8AA3B07A1EC39BC900AF064C /* Fishing.csv */,
+				8A9C81331E3A552800A83043 /* Football.csv */,
+				8A9C81341E3A552800A83043 /* Golf.csv */,
+				8A9C81351E3A552800A83043 /* Gymnastics.csv */,
+				8A9C812C1E3A52FF00A83043 /* Hockey.csv */,
+				8A0B22181F16E416000AC2A4 /* Riding.csv */,
+				8A9C81361E3A552800A83043 /* Lacrosse.csv */,
+				8A9C81371E3A552800A83043 /* Martial Arts.csv */,
+				8A9C81381E3A552800A83043 /* Soccer.csv */,
+				8A9C81391E3A552800A83043 /* Swimming.csv */,
+				8A9C813A1E3A552800A83043 /* Tennis.csv */,
+				8A9C813B1E3A552800A83043 /* Track & Field.csv */,
+				8A9C813C1E3A552800A83043 /* Volleyball.csv */,
+			);
+			name = "Sports Types Defaults";
+			sourceTree = "<group>";
+		};
+		8A9C814C1E3A555B00A83043 /* Social Activities Types Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				8A9C814D1E3A55A200A83043 /* Date.csv */,
+				8A9C814E1E3A55A200A83043 /* Party.csv */,
+				8A9C814F1E3A55A200A83043 /* School Dance.csv */,
+				8A9C81501E3A55A200A83043 /* Wedding.csv */,
+			);
+			name = "Social Activities Types Defaults";
+			sourceTree = "<group>";
+		};
+		8A9C81551E3A55B300A83043 /* Extracurriculars Types Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				8A9C81561E3A55EF00A83043 /* Club Meeting.csv */,
+				8A9C81571E3A55EF00A83043 /* Music.csv */,
+				8A9C81581E3A55EF00A83043 /* Theater.csv */,
+			);
+			name = "Extracurriculars Types Defaults";
+			sourceTree = "<group>";
+		};
+		8A9C815C1E3A55FF00A83043 /* Responsibilities Types Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				8A41E4E91E99B33900F63C3C /* Interview.csv */,
+				8A9C815D1E3A564700A83043 /* School.csv */,
+				8A9C815E1E3A564700A83043 /* Work.csv */,
+				8A9C815F1E3A564700A83043 /* Worship.csv */,
+			);
+			name = "Responsibilities Types Defaults";
+			sourceTree = "<group>";
+		};
+		8AEACD5F1E468FDA004F3137 /* Helper Files */ = {
+			isa = PBXGroup;
+			children = (
+				8A0B22141F12F370000AC2A4 /* Constants.swift */,
+				8A44A8471E37E6B100B1CB09 /* CoreDataHelper.swift */,
+				8ACDE10E1E3FB45700FD8F01 /* UIViewControllerExtension.swift */,
+			);
+			name = "Helper Files";
+			sourceTree = "<group>";
+		};
+		8AEACD601E469035004F3137 /* Custom Objects */ = {
+			isa = PBXGroup;
+			children = (
+				8A44A83A1E36811200B1CB09 /* CategoryCollectionViewCell.swift */,
+				8A78951B1E86211700C32E92 /* CSVFile.swift */,
+				8A7895211E862DC300C32E92 /* Events.swift */,
+				8A7895231E86379000C32E92 /* EventTemplate.swift */,
+				98418DD41B48487A00ADC2D8 /* Interval.swift */,
+				98418DD51B48487A00ADC2D8 /* IntervalTransformer.swift */,
+				98FC89DA1B8161EC00ED9844 /* LocationAnnotation.swift */,
+				98418DDB1B48487A00ADC2D8 /* Trip.swift */,
+				8A44A8401E369AAA00B1CB09 /* TypeCollectionViewCell.swift */,
+			);
+			name = "Custom Objects";
+			sourceTree = "<group>";
+		};
+		8AEACD611E469088004F3137 /* Modify Tab */ = {
+			isa = PBXGroup;
+			children = (
+				98418DD21B48487A00ADC2D8 /* EntriesTableViewController.swift */,
+				98418DD81B48487A00ADC2D8 /* SelectedEntryTableViewController.swift */,
+				98418DCE1B48487A00ADC2D8 /* AddEntryTableViewController.swift */,
+				98FC89DC1B8165AE00ED9844 /* SearchViewController.swift */,
+			);
+			name = "Modify Tab";
+			sourceTree = "<group>";
+		};
+		8AEACD621E4690AC004F3137 /* Home Tab */ = {
+			isa = PBXGroup;
+			children = (
+				8A8F8D4B1E32D837006C30F0 /* HomeViewController.swift */,
+				8A44A83E1E36964500B1CB09 /* EventTypeCollectionViewController.swift */,
+				98418DD31B48487A00ADC2D8 /* NewEventTableViewController.swift */,
+				98418DCF1B48487A00ADC2D8 /* AllEventsTableViewController.swift */,
+				98418DD61B48487A00ADC2D8 /* SavedEventViewController.swift */,
+			);
+			name = "Home Tab";
+			sourceTree = "<group>";
+		};
+		8AEACD631E4690BA004F3137 /* Schedule Tab */ = {
+			isa = PBXGroup;
+			children = (
+				98418DD71B48487A00ADC2D8 /* ScheduleViewController.swift */,
+				98418DDA1B48487A00ADC2D8 /* ShareToCalTableViewController.swift */,
+			);
+			name = "Schedule Tab";
+			sourceTree = "<group>";
+		};
+		8AEACD641E4690CB004F3137 /* Settings Tab */ = {
+			isa = PBXGroup;
+			children = (
+				98418DD91B48487A00ADC2D8 /* SettingsTableViewController.swift */,
+				98418DD01B48487A00ADC2D8 /* EditEventTimeTableViewController.swift */,
+				98418DD11B48487A00ADC2D8 /* EditEventNameTableViewController.swift */,
+				8AB3ED661E86E87E0090ED43 /* EditEventTypeTableViewController.swift */,
+			);
+			name = "Settings Tab";
+			sourceTree = "<group>";
+		};
 		98418D9D1B4847AA00ADC2D8 = {
 			isa = PBXGroup;
 			children = (
@@ -110,26 +376,18 @@
 			isa = PBXGroup;
 			children = (
 				98418DAB1B4847AA00ADC2D8 /* AppDelegate.swift */,
-				98418DCE1B48487A00ADC2D8 /* AddEntryTableViewController.swift */,
-				98418DCF1B48487A00ADC2D8 /* AllTripsTableViewController.swift */,
-				98418DD01B48487A00ADC2D8 /* EditFlightTimeTableViewController.swift */,
-				98418DD11B48487A00ADC2D8 /* EditTripNameTableViewController.swift */,
-				98418DD21B48487A00ADC2D8 /* EntriesViewController.swift */,
-				98418DD31B48487A00ADC2D8 /* FlightTimeTableViewController.swift */,
-				98418DD41B48487A00ADC2D8 /* Interval.swift */,
-				98418DD51B48487A00ADC2D8 /* IntervalTransformer.swift */,
-				98FC89DA1B8161EC00ED9844 /* LocationAnnotation.swift */,
-				98418DD61B48487A00ADC2D8 /* SavedTripViewController.swift */,
-				98418DD71B48487A00ADC2D8 /* ScheduleViewController.swift */,
-				98FC89DC1B8165AE00ED9844 /* SearchViewController.swift */,
-				98418DD81B48487A00ADC2D8 /* SelectedEntryTableViewController.swift */,
-				98418DD91B48487A00ADC2D8 /* SettingsTableViewController.swift */,
-				98418DDA1B48487A00ADC2D8 /* ShareToCalTableViewController.swift */,
-				98418DDB1B48487A00ADC2D8 /* Trip.swift */,
+				8AEACD5F1E468FDA004F3137 /* Helper Files */,
+				8AEACD601E469035004F3137 /* Custom Objects */,
+				8A0B21EF1F0C4718000AC2A4 /* Walkthrough */,
+				8AEACD621E4690AC004F3137 /* Home Tab */,
+				8AEACD631E4690BA004F3137 /* Schedule Tab */,
+				8AEACD611E469088004F3137 /* Modify Tab */,
+				8AEACD641E4690CB004F3137 /* Settings Tab */,
 				98418DB21B4847AB00ADC2D8 /* Main.storyboard */,
 				98418DB51B4847AB00ADC2D8 /* Images.xcassets */,
 				98418DB71B4847AB00ADC2D8 /* LaunchScreen.xib */,
 				98418DAD1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld */,
+				8A44A8421E37AD8700B1CB09 /* Event Categories and Types */,
 				98418DA91B4847AA00ADC2D8 /* Supporting Files */,
 			);
 			path = TimeToGo;
@@ -247,7 +505,45 @@
 			buildActionMask = 2147483647;
 			files = (
 				98418DB41B4847AB00ADC2D8 /* Main.storyboard in Resources */,
+				8A9C81481E3A552800A83043 /* Swimming.csv in Resources */,
+				8A9C81621E3A564700A83043 /* Worship.csv in Resources */,
+				8A9C81641E3A569600A83043 /* Custom.csv in Resources */,
+				8A9C81261E3A52A100A83043 /* Car.csv in Resources */,
+				8A0B22191F16E416000AC2A4 /* Riding.csv in Resources */,
+				8A9C814B1E3A552800A83043 /* Volleyball.csv in Resources */,
+				8A9C81511E3A55A200A83043 /* Date.csv in Resources */,
+				8AB073931EB24D2E0003DF53 /* Cruise.csv in Resources */,
+				8A9C81531E3A55A200A83043 /* School Dance.csv in Resources */,
+				8A9C81461E3A552800A83043 /* Martial Arts.csv in Resources */,
+				8A9C813D1E3A552800A83043 /* Baseball.csv in Resources */,
+				8A5D1D041E3911C500D0CD95 /* EventTypeData.csv in Resources */,
+				8A9C81281E3A52B100A83043 /* Bus.csv in Resources */,
+				8A9C81471E3A552800A83043 /* Soccer.csv in Resources */,
+				8A9C813E1E3A552800A83043 /* Basketball.csv in Resources */,
+				8A41E4EA1E99B33900F63C3C /* Interview.csv in Resources */,
+				8A9C81441E3A552800A83043 /* Gymnastics.csv in Resources */,
+				8A9C81521E3A55A200A83043 /* Party.csv in Resources */,
+				8A9C814A1E3A552800A83043 /* Track & Field.csv in Resources */,
+				8A9C81401E3A552800A83043 /* Dance.csv in Resources */,
+				8A9C81541E3A55A200A83043 /* Wedding.csv in Resources */,
+				8A9C81601E3A564700A83043 /* School.csv in Resources */,
 				98418DB91B4847AB00ADC2D8 /* LaunchScreen.xib in Resources */,
+				8A9C815B1E3A55EF00A83043 /* Theater.csv in Resources */,
+				8A9C81591E3A55EF00A83043 /* Club Meeting.csv in Resources */,
+				8A5D1D081E3913B400D0CD95 /* Train.csv in Resources */,
+				8A9C81491E3A552800A83043 /* Tennis.csv in Resources */,
+				8A9C81421E3A552800A83043 /* Football.csv in Resources */,
+				8A9C81431E3A552800A83043 /* Golf.csv in Resources */,
+				8A9C81611E3A564700A83043 /* Work.csv in Resources */,
+				8AB073911EB24A680003DF53 /* Crew.csv in Resources */,
+				8A9C81411E3A552800A83043 /* Field Hockey.csv in Resources */,
+				8A9C812A1E3A52C000A83043 /* Boat.csv in Resources */,
+				8A9C81451E3A552800A83043 /* Lacrosse.csv in Resources */,
+				8A9C813F1E3A552800A83043 /* Cheer.csv in Resources */,
+				8A9C812D1E3A52FF00A83043 /* Hockey.csv in Resources */,
+				8A9C815A1E3A55EF00A83043 /* Music.csv in Resources */,
+				8AA3B07B1EC39BC900AF064C /* Fishing.csv in Resources */,
+				8A5D1D061E3911D100D0CD95 /* Plane.csv in Resources */,
 				98418DB61B4847AB00ADC2D8 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -285,20 +581,33 @@
 			files = (
 				98418DDC1B48487A00ADC2D8 /* AddEntryTableViewController.swift in Sources */,
 				98418DAC1B4847AA00ADC2D8 /* AppDelegate.swift in Sources */,
-				98418DE11B48487A00ADC2D8 /* FlightTimeTableViewController.swift in Sources */,
+				8AB3ED671E86E87E0090ED43 /* EditEventTypeTableViewController.swift in Sources */,
+				8A8F8D4C1E32D837006C30F0 /* HomeViewController.swift in Sources */,
+				98418DE11B48487A00ADC2D8 /* NewEventTableViewController.swift in Sources */,
+				8A7895221E862DC300C32E92 /* Events.swift in Sources */,
 				98418DE51B48487A00ADC2D8 /* ScheduleViewController.swift in Sources */,
+				8A78951C1E86211700C32E92 /* CSVFile.swift in Sources */,
 				98418DE91B48487A00ADC2D8 /* Trip.swift in Sources */,
-				98418DE41B48487A00ADC2D8 /* SavedTripViewController.swift in Sources */,
-				98418DDD1B48487A00ADC2D8 /* AllTripsTableViewController.swift in Sources */,
+				8A0B22151F12F370000AC2A4 /* Constants.swift in Sources */,
+				8A0B21F31F0C4A0B000AC2A4 /* WalkthroughViewController.swift in Sources */,
+				8A44A8411E369AAA00B1CB09 /* TypeCollectionViewCell.swift in Sources */,
+				8A44A83B1E36811200B1CB09 /* CategoryCollectionViewCell.swift in Sources */,
+				98418DE41B48487A00ADC2D8 /* SavedEventViewController.swift in Sources */,
+				98418DDD1B48487A00ADC2D8 /* AllEventsTableViewController.swift in Sources */,
+				8A44A8481E37E6B100B1CB09 /* CoreDataHelper.swift in Sources */,
 				98418DE71B48487A00ADC2D8 /* SettingsTableViewController.swift in Sources */,
-				98418DDF1B48487A00ADC2D8 /* EditTripNameTableViewController.swift in Sources */,
+				8A44A83F1E36964500B1CB09 /* EventTypeCollectionViewController.swift in Sources */,
+				8A7895241E86379000C32E92 /* EventTemplate.swift in Sources */,
+				98418DDF1B48487A00ADC2D8 /* EditEventNameTableViewController.swift in Sources */,
 				98418DE81B48487A00ADC2D8 /* ShareToCalTableViewController.swift in Sources */,
 				98418DE21B48487A00ADC2D8 /* Interval.swift in Sources */,
 				98418DE61B48487A00ADC2D8 /* SelectedEntryTableViewController.swift in Sources */,
 				98FC89DD1B8165AE00ED9844 /* SearchViewController.swift in Sources */,
 				98FC89DB1B8161EC00ED9844 /* LocationAnnotation.swift in Sources */,
-				98418DDE1B48487A00ADC2D8 /* EditFlightTimeTableViewController.swift in Sources */,
-				98418DE01B48487A00ADC2D8 /* EntriesViewController.swift in Sources */,
+				8A0B21F11F0C4763000AC2A4 /* WalkthroughPageViewController.swift in Sources */,
+				98418DDE1B48487A00ADC2D8 /* EditEventTimeTableViewController.swift in Sources */,
+				8ACDE10F1E3FB45700FD8F01 /* UIViewControllerExtension.swift in Sources */,
+				98418DE01B48487A00ADC2D8 /* EntriesTableViewController.swift in Sources */,
 				98418DE31B48487A00ADC2D8 /* IntervalTransformer.swift in Sources */,
 				98418DAF1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld in Sources */,
 			);
@@ -440,6 +749,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.VMM.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -454,6 +764,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.VMM.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -523,9 +834,10 @@
 		98418DAD1B4847AA00ADC2D8 /* TimeToGo.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				8A44A8441E37BC8900B1CB09 /* TimeToGo2.xcdatamodel */,
 				98418DAE1B4847AA00ADC2D8 /* TimeToGo.xcdatamodel */,
 			);
-			currentVersion = 98418DAE1B4847AA00ADC2D8 /* TimeToGo.xcdatamodel */;
+			currentVersion = 8A44A8441E37BC8900B1CB09 /* TimeToGo2.xcdatamodel */;
 			path = TimeToGo.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

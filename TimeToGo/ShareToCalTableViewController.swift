@@ -2,8 +2,8 @@
 //  ShareToCalTableViewController.swift
 //  TimeToGo
 //
-//  Created by Matteo Manzi on 7/4/15.
-//  Copyright (c) 2015 VMM Software. All rights reserved.
+//  Created by Matt Manzi on 7/4/15.
+//  Copyright (c) 2017 MRM Software. All rights reserved.
 //
 
 import UIKit
@@ -11,67 +11,57 @@ import EventKit
 import CoreData
 import MapKit
 
-class ShareToCalTableViewController: UITableViewController {
+private let reuseIdentifier = "calendarCell"
+
+class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 	
 	// EventKit variables
 	let eventStore = EKEventStore()
 	var calendarsToList = [EKCalendar]()
 	var calendarToUse: EKCalendar!
-	var calendarToUseIndex: IndexPath?
+	var calendarToUseIndexPath = IndexPath()
+    var saveSuccessful = false
 	
 	// CoreData vairables
-	var currentTrip: Trip!
+	var event: Trip!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		// Check for authorization to use calendars
-		switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
-			
-		case .authorized:
-			extractEventEntityCalendarsOutOfSotre(eventStore)
-		
-		case .notDetermined:
-			eventStore.requestAccess(to: EKEntityType.event, completion: {
-				(granted: Bool, error: NSError?) -> Void in
-				if granted {
-					
-					self.extractEventEntityCalendarsOutOfSotre(self.eventStore)
-					self.tableView.reloadData()
-					
-				}
-			} as! EKEventStoreRequestAccessCompletionHandler)
-			
-		default:
-			let alertViewController = UIAlertController(title: "No Access", message: "Access to Calendars is not allowed.", preferredStyle: UIAlertControllerStyle.alert)
-			let dismissAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: {(alert: UIAlertAction) in
-				alertViewController.dismiss(animated: true, completion: nil)
-				self.dismiss(animated: true, completion: nil)
-			})
-			alertViewController.addAction(dismissAction)
-			
-			present(alertViewController, animated: true, completion: nil)
-			
-			
-		}
-		
-		// Fetch the current trip from the persistent store and assign the CoreData variables
-		let moc = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
-		let currentTripName = UserDefaults.standard.object(forKey: "currentTripName") as! String
-		let fetch = NSFetchRequest<Trip>()
-		fetch.entity = NSEntityDescription.entity(forEntityName: "Trip", in: moc!)
-		fetch.predicate = NSPredicate(format: "tripName == %@", currentTripName)
-		let trips = (try! moc!.fetch(fetch))
-		currentTrip = trips[0]
+		checkForCalendarAccess()
 		
     }
-	
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    
+    // Check for authorization to use calendars
+    private func checkForCalendarAccess() {
+        
+        switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
+            
+        case .authorized:
+            extractEventEntityCalendars(from: eventStore)
+            
+        case .notDetermined:
+            eventStore.requestAccess(to: EKEntityType.event, completion: {
+                (granted: Bool, error: Error?) in
+                
+                if granted {
+                    
+                    self.extractEventEntityCalendars(from: self.eventStore)
+                    self.tableView.reloadData()
+                    
+                }
+                
+            })
+            
+        default:
+            displayAlert(title: "No Access", message: "Access to Calendars is not allowed.", on: self, dismissHandler: nil)
+            
+        }
+        
     }
 	
 	// Get all calendars that allow modifications
-	fileprivate func extractEventEntityCalendarsOutOfSotre(_ eventStore: EKEventStore) {
+	private func extractEventEntityCalendars(from eventStore: EKEventStore) {
 		
 		let calendars = eventStore.calendars(for: EKEntityType.event) 
 		
@@ -93,7 +83,7 @@ class ShareToCalTableViewController: UITableViewController {
 			
 			if calendar.title == calendarToUse.title && calendar.source == calendarToUse.source {
 				
-				calendarToUseIndex = IndexPath(row: index, section: 0)
+				calendarToUseIndexPath = IndexPath(row: index, section: 0)
 				
 			}
 			
@@ -114,11 +104,12 @@ class ShareToCalTableViewController: UITableViewController {
 
 	
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "calendarCell", for: indexPath) 
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
 		
-		cell.textLabel?.text = calendarsToList[(indexPath as NSIndexPath).row].title
+		cell.textLabel?.text = calendarsToList[indexPath.row].title
 		
-		if calendarToUseIndex == indexPath {
+		if calendarToUseIndexPath == indexPath {
 			
 			cell.accessoryType = UITableViewCellAccessoryType.checkmark
 			
@@ -130,10 +121,13 @@ class ShareToCalTableViewController: UITableViewController {
 		
         return cell
     }
+    
+    
+    // MARK: - Table view delegate
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
-		calendarToUseIndex = indexPath
+		calendarToUseIndexPath = indexPath
 		
 		tableView.reloadData()
 		
@@ -142,51 +136,63 @@ class ShareToCalTableViewController: UITableViewController {
 	
 	// MARK: - Navigation
 	
-	@IBAction func cancelAddToCal(_ sender: UIBarButtonItem) {
+	@IBAction func saveEventToCal(_ sender: UIBarButtonItem) {
 		
-		dismiss(animated: true, completion: nil)
-		
-	}
-	
-	@IBAction func saveTripToCal(_ sender: UIBarButtonItem) {
-		
-		guard let calendarIndex = (calendarToUseIndex as NSIndexPath?)?.row else {
-			return
-		}
-		
-		calendarToUse = calendarsToList[calendarIndex]
-		
-		for entry in currentTrip.entries as! [Interval] {
+		calendarToUse = calendarsToList[calendarToUseIndexPath.row]
+        
+        guard let theEntries = event.entries as? [Interval] else {
+            
+            displayDataErrorAlert(on: self, dismissHandler: {
+                (_) in
+                
+                self.saveSuccessful = false
+                self.performSegue(withIdentifier: IDs.SGE_TO_SCHEDULE, sender: self)
+                
+            })
+            return
+            
+        }
+        
+		for entry in theEntries {
 			
-			addInterval(entry, toCalendar: calendarToUse)
+            save(entry: entry, to: calendarToUse)
 			
 		}
-		dismiss(animated: true, completion: nil)
+        
+        displayAlert(title: "Save Successful!", message: nil, on: self) {
+            (_) in
+            
+            self.saveSuccessful = true
+            self.performSegue(withIdentifier: IDs.SGE_TO_SCHEDULE, sender: self)
+            
+        }
 		
 	}
 	
 	
 	// MARK: - Interval to calendar event
 	
-	fileprivate func addInterval(_ entry: Interval, toCalendar calendar: EKCalendar) {
+	private func save(entry: Interval, to calendar: EKCalendar) {
 		
-		let durationOfInterval = entry.timeIntervalByConvertingTimeValue()
+		let durationOfInterval = entry.getTimeInterval()
 		let endDate = entry.startDate.addingTimeInterval(durationOfInterval)
 		var endLocStr: String?
-		var notes = ""
+        
+        var notes = ""
 		if entry.notesStr != nil && entry.notesStr != "" {
 			notes = entry.notesStr!
 		}
-		notes += "\n\(entry.mainLabel!)\nFor \(currentTrip.tripName)\n\nOrganized and Automatically Added by It's Time To Go"
-		if entry.endLocation != nil {
-			let endLoc = MKMapItem(placemark: entry.endLocation!)
-			endLocStr = "\(endLoc.name!) \(Interval.getAddressFromMapItem(endLoc))"
+		notes += "\nFor \(event.tripName)\n\nOrganized and Automatically Added by It's Time To Go"
+        
+        if let endLoc = entry.endLocation {
+            endLocStr = "\(endLoc.name!) \(Interval.getAddress(from: MKMapItem(placemark: endLoc)))"
 		}
-		createEventWithTitle(entry.scheduleLabel, startDate: entry.startDate, endDate: endDate, location: endLocStr, inCalendar: calendar, inEventStore: eventStore, withNotes: notes)
+        
+        createEventWith(title: entry.scheduleLabel, startDate: entry.startDate, endDate: endDate, location: endLocStr, notes: notes, on: calendar, in: eventStore)
 		
 	}
 	
-	fileprivate func createEventWithTitle(_ title: String, startDate: Date, endDate: Date, location: String?, inCalendar calendar: EKCalendar, inEventStore eventStore: EKEventStore, withNotes notes: String) {
+	private func createEventWith(title: String, startDate: Date, endDate: Date, location: String?, notes: String?, on calendar: EKCalendar, in eventStore: EKEventStore) {
 		
 		let event = EKEvent(eventStore: eventStore)
 		event.calendar = calendar
@@ -202,6 +208,15 @@ class ShareToCalTableViewController: UITableViewController {
 		do {
 			try eventStore.save(event, span: EKSpan.thisEvent)
         } catch {
+            
+            displayAlert(title: "Save Event Failed", message: "The entry \"\(event.title)\" could not be saved to the calendar. You may want to check your \(event.calendar) calendar to see if there are other entries that were saved.", on: self, dismissHandler: {
+                (_) in
+                
+                self.saveSuccessful = false
+                self.performSegue(withIdentifier: IDs.SGE_TO_SCHEDULE, sender: self)
+                
+            })
+            
 		}
 		
 	}

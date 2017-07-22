@@ -1,0 +1,33 @@
+{
+  "images" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "Schedule@1x-1.jpg",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "iphone",
+      "filename" : "Schedule@2x-1.jpg",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "iphone",
+      "filename" : "Schedule@3x.jpg",
+      "scale" : "3x"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "Schedule@1x.jpg",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "Schedule@2x.jpg",
+      "scale" : "2x"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}
