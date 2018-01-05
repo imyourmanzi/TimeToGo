@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // to a light orange
 		UINavigationBar.appearance().barTintColor = UIColor(red: 46/255, green: 172/255, blue: 240/255, alpha: 1.0)
 		UINavigationBar.appearance().tintColor = UIColor.white
-        UIPageControl.appearance().tintColor = UIColor(red: 255/255, green: 169/255, blue: 59/255, alpha: 1.0)
+        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor(red: 255/255, green: 169/255, blue: 59/255, alpha: 1.0)
 		
         // Register a default for:
         // - the currentTripName
