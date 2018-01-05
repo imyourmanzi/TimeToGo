@@ -339,20 +339,23 @@
                                     <action selector="next:" destination="gGz-z0-fB2" eventType="touchUpInside" id="nd8-zX-P7J"/>
                                 </connections>
                             </button>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="uGH-Lm-0Dt">
+                                <rect key="frame" x="168" y="630" width="39" height="37"/>
+                            </pageControl>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hu5-ZD-5Nx">
-                                <rect key="frame" x="0.0" y="473" width="375" height="194"/>
+                                <rect key="frame" x="0.0" y="467" width="375" height="233.5"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="lbB-FN-2XB">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="194"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="233.5"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="gDX-Ub-oFS">
-                                            <rect key="frame" x="15" y="8" width="345" height="98"/>
+                                            <rect key="frame" x="15" y="8" width="345" height="104"/>
                                             <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zSs-qC-oTx">
-                                            <rect key="frame" x="298" y="158" width="69" height="28"/>
+                                            <rect key="frame" x="298" y="164" width="69" height="28"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <state key="normal" title="Skip to End">
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -362,7 +365,7 @@
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jcj-Tl-5vk">
-                                            <rect key="frame" x="79" y="106" width="218" height="44"/>
+                                            <rect key="frame" x="79" y="112" width="218" height="44"/>
                                             <color key="backgroundColor" red="0.45053923070000002" green="0.6849786028" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="44" id="grN-lU-jbQ">
@@ -387,20 +390,19 @@
                                 </view>
                                 <blurEffect style="extraLight"/>
                             </visualEffectView>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="uGH-Lm-0Dt">
-                                <rect key="frame" x="168" y="630" width="39" height="37"/>
-                            </pageControl>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.38023906946182251" green="0.70907849073410034" blue="0.95581227540969849" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="hu5-ZD-5Nx" secondAttribute="trailing" id="0m7-Hg-aTw"/>
-                            <constraint firstItem="KON-bm-VSt" firstAttribute="top" secondItem="hu5-ZD-5Nx" secondAttribute="bottom" id="8Pq-11-GUp"/>
+                            <constraint firstItem="KON-bm-VSt" firstAttribute="top" secondItem="hu5-ZD-5Nx" secondAttribute="bottom" id="8Pq-11-GUp">
+                                <variation key="heightClass=regular" constant="-33.666666666666742"/>
+                            </constraint>
                             <constraint firstItem="uGH-Lm-0Dt" firstAttribute="centerX" secondItem="bfu-Zq-eqi" secondAttribute="centerX" id="9bn-bn-1IA"/>
                             <constraint firstItem="Jcj-Tl-5vk" firstAttribute="centerX" secondItem="bfu-Zq-eqi" secondAttribute="centerX" id="Eju-1O-soU"/>
                             <constraint firstItem="KON-bm-VSt" firstAttribute="top" secondItem="zSs-qC-oTx" secondAttribute="bottom" constant="8" id="K5Q-vS-Hac"/>
                             <constraint firstAttribute="trailing" secondItem="CgU-Vi-nsD" secondAttribute="trailing" id="OWG-0D-Svc"/>
                             <constraint firstAttribute="trailingMargin" secondItem="1wU-sE-5mq" secondAttribute="trailing" constant="8" id="RAu-vh-A0f"/>
-                            <constraint firstItem="hu5-ZD-5Nx" firstAttribute="height" secondItem="bfu-Zq-eqi" secondAttribute="height" multiplier="0.29" id="ZM8-EY-HpQ"/>
+                            <constraint firstItem="hu5-ZD-5Nx" firstAttribute="height" secondItem="bfu-Zq-eqi" secondAttribute="height" multiplier="0.35" id="ZM8-EY-HpQ"/>
                             <constraint firstItem="1wU-sE-5mq" firstAttribute="top" secondItem="GeL-oR-txb" secondAttribute="bottom" constant="-2" id="bSV-4m-64e"/>
                             <constraint firstItem="Jcj-Tl-5vk" firstAttribute="width" secondItem="bfu-Zq-eqi" secondAttribute="width" multiplier="0.58" id="bUP-Du-P8k">
                                 <variation key="heightClass=compact-widthClass=compact" constant="-100"/>
