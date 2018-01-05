@@ -70,8 +70,8 @@ struct ScheduleConstants {
 
 struct SettingConstants {
     
-    static let SUPPORT_EMAIL: String   = "timetogosupport@narwhalsandcode.com"
+    static let SUPPORT_EMAIL: String   = "timetogosupport@mattmanzi.com"
     static let SUPPORT_SUBJECT: String = "Question/Comment/Concern with It's Time To Go"
-    static let SUPPORT_SITE: String    = "https://www.narwhalsandcode.com/apps#time-to-go"
+    static let SUPPORT_SITE: String    = "https://mattmanzi.com/#/tech"
     
 }
