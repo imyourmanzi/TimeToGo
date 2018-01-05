@@ -7,7 +7,6 @@
 //
 //	CoreData entity class
 
-import Foundation
 import CoreData
 
 @objc(Trip) class Trip: NSManagedObject {

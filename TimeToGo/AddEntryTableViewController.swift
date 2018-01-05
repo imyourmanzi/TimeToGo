@@ -52,7 +52,10 @@ class AddEntryTableViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-        NotificationCenter.default.addObserver(self, selector: #selector(viewWillEnterForeground), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: nil) {
+            (notification) in
+            self.checkLocationAccessOnApplicationResume()
+        }
         
         getEventData()
 		
@@ -137,6 +140,19 @@ class AddEntryTableViewController: UITableViewController {
 		
 	}
 	
+}
+
+
+// MARK: - Checking location access after resume application activity
+
+extension AddEntryTableViewController: LocationHelper {
+    
+    func checkLocationAccessOnApplicationResume() {
+        
+        checkLocationAccess()
+        
+    }
+    
 }
 
 
@@ -244,12 +260,6 @@ extension AddEntryTableViewController {
 // MARK: - Private helper functions
 
 extension AddEntryTableViewController {
-    
-    @objc fileprivate func viewWillEnterForeground() {
-        
-        viewWillAppear(false)
-        
-    }
     
     // Fetch the current event from the persistent store and assign the CoreData variables
     fileprivate func getEventData() {

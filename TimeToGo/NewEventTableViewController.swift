@@ -118,8 +118,8 @@ class NewEventTableViewController: UITableViewController, UITextFieldDelegate, C
         // - get the time from event's date
         // - Put the date and time together
         let endDateIndex = dateString.index(dateString.startIndex, offsetBy: 10)
-        dateString = dateString.substring(to: endDateIndex)
-        timeString = timeString.substring(from: endDateIndex)
+        dateString = String(dateString[..<endDateIndex])
+        timeString = String(timeString[endDateIndex...])
         let todayString = dateString + timeString
         
         // Parse out the concatenated date and time

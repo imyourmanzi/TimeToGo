@@ -55,7 +55,10 @@ class SelectedEntryTableViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-        NotificationCenter.default.addObserver(self, selector: #selector(viewWillEnterForeground), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: nil) {
+            (notification) in
+            self.checkLocationAccessOnApplicationResume()
+        }
         
 		// Setting the row heights for the table view
 		self.tableView.rowHeight = UITableViewAutomaticDimension
@@ -77,7 +80,7 @@ class SelectedEntryTableViewController: UITableViewController {
         useLocation = currentEntry.useLocation ?? false
         useLocationPrev = !useLocation
         useLocationSwitch.setOn(useLocation, animated: false)
-		
+        
 	}
 		
     override func viewWillAppear(_ animated: Bool) {
@@ -133,6 +136,23 @@ class SelectedEntryTableViewController: UITableViewController {
 		
 	}
 	
+}
+
+
+// MARK: - Checking location access after resume application activity
+
+extension SelectedEntryTableViewController: LocationHelper {
+    
+    func checkLocationAccessOnApplicationResume() {
+        
+        checkLocationAccess()
+        
+        if useLocation {
+            setupLocationElements()
+        }
+        
+    }
+    
 }
 
 
@@ -209,12 +229,6 @@ extension SelectedEntryTableViewController {
 // MARK: - Private helper functions
 
 extension SelectedEntryTableViewController {
-    
-    @objc fileprivate func viewWillEnterForeground() {
-        
-        viewWillAppear(false)
-        
-    }
     
     fileprivate func setupLocationElements() {
         
@@ -395,12 +409,14 @@ extension SelectedEntryTableViewController {
         
         self.tableView.beginUpdates()
         
+        // turned on location-based
         if useLocation == true && useLocationPrev == false {
             
             self.tableView.insertRows(at: rowsToChange, with: UITableViewRowAnimation.fade)
             schedLabelTextfield.resignFirstResponder()
             notesTextview.resignFirstResponder()
-            
+        
+        // turned off location-based
         } else if useLocation == false && useLocationPrev == true {
             self.tableView.deleteRows(at: rowsToChange, with: UITableViewRowAnimation.fade)
         }
