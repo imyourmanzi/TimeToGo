@@ -49,7 +49,7 @@ struct WalkthroughConstants {
                                                "...and then choose your Event Type.",
                                                "Edit the default schedule in the Modify tab.",
                                                "When you're finished, view your schedule and add it to your Calendar.",
-                                               "You're all set! If you have problems, questions, or suggestions, feel free to email Support from the Settings tab.\nHappy Planning!"]
+                                               "You're all set! If you have problems, questions, or suggestions, feel free to email Support from the Settings tab. Happy Planning!"]
     
 }
 

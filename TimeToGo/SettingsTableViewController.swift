@@ -197,11 +197,17 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
     
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        tableView.deselectRow(at: indexPath, animated: true)
+        
 		if indexPath.section == 1 {
 			
             switch indexPath.row {
                 
             case 0:
+                guard MFMailComposeViewController.canSendMail() else {
+                    displayAlert(title: "Cannot Send Email", message: "Mail services are not available on this device.", on: self, dismissHandler: nil)
+                    return
+                }
                 newEmail(to: [SettingConstants.SUPPORT_EMAIL], subject: SettingConstants.SUPPORT_SUBJECT)
             case 1:
                 if let homepage = URL(string: SettingConstants.SUPPORT_SITE) { UIApplication.shared.openURL(homepage) }
@@ -212,8 +218,6 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
             
 		}
 		
-		tableView.deselectRow(at: indexPath, animated: true)
-		
 	}
     
 	
@@ -221,31 +225,27 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
 	
 	private func newEmail(to recipients: [String], subject: String) {
 		
-		if MFMailComposeViewController.canSendMail() {
-			
-			let mailComposer = MFMailComposeViewController()
-			mailComposer.mailComposeDelegate = self
-			mailComposer.setToRecipients(recipients)
-			mailComposer.setSubject(subject)
-			
-            let gmtTime = Date()
-            let df = DateFormatter()
-            df.dateFormat = "yyyy-MM-dd HH:mm"
-            df.timeZone = TimeZone(identifier: "GMT")
-            
-			mailComposer.setMessageBody("<p><strong>Subject:</strong> </p>" +
-                                        "<p><strong>Detail:</strong> </p>" +
-                                        "<p><strong>Device (iPhone 7, iPad Air 2, etc):</strong> </p>" +
-                                        "<p>GMT Date and Time: \(df.string(from: gmtTime))<br/>" +
-                                        "iOS Version: \(UIDevice.current.systemVersion)<br/>" +
-                                        "App Version: \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] ?? "No Version Available")b\(Bundle.main.infoDictionary!["CFBundleVersion"] ?? "No Build Version Available")</p>",
-                                        isHTML: true)
-			
-			present(mailComposer, animated: true, completion: nil)
-			
-		} else {
-            displayAlert(title: "Cannot Send Email", message: "Email is not set up on this device.", on: self, dismissHandler: nil)
-		}
+        let mailComposer = MFMailComposeViewController()
+        mailComposer.mailComposeDelegate = self
+        mailComposer.setToRecipients(recipients)
+        mailComposer.setSubject(subject)
+        
+        let gmtTime = Date()
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm"
+        df.timeZone = TimeZone(identifier: "GMT")
+        
+        mailComposer.setMessageBody("""
+                                    <p><strong>Subject:</strong> </p>
+                                    <p><strong>Detail:</strong> </p>
+                                    <p><strong>Device (iPhone 8, iPad Pro 10 inch, etc):</strong> </p>
+                                    <p>GMT Date and Time: \(df.string(from: gmtTime))<br/>
+                                    iOS Version: \(UIDevice.current.systemVersion)<br/>
+                                    App Version: \(Bundle.main.infoDictionary!["CFBundleShortVersionString"] ?? "no_version")b\(Bundle.main.infoDictionary!["CFBundleVersion"] ?? "no_build")</p>
+                                    """,
+                                    isHTML: true)
+        
+        present(mailComposer, animated: true, completion: nil)
 		
 	}
 	
