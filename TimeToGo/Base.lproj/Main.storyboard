@@ -327,7 +327,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CgU-Vi-nsD">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1wU-sE-5mq">
                                 <rect key="frame" x="306" y="18" width="45" height="40"/>
@@ -340,19 +340,19 @@
                                 </connections>
                             </button>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hu5-ZD-5Nx">
-                                <rect key="frame" x="0.0" y="473.5" width="375" height="193.5"/>
+                                <rect key="frame" x="0.0" y="473" width="375" height="194"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="lbB-FN-2XB">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="193.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="194"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="gDX-Ub-oFS">
-                                            <rect key="frame" x="15" y="8" width="345" height="97.5"/>
+                                            <rect key="frame" x="15" y="8" width="345" height="98"/>
                                             <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zSs-qC-oTx">
-                                            <rect key="frame" x="298" y="157.5" width="69" height="28"/>
+                                            <rect key="frame" x="298" y="158" width="69" height="28"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <state key="normal" title="Skip to End">
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -362,7 +362,7 @@
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jcj-Tl-5vk">
-                                            <rect key="frame" x="79" y="105.5" width="217.5" height="44"/>
+                                            <rect key="frame" x="79" y="106" width="218" height="44"/>
                                             <color key="backgroundColor" red="0.45053923070000002" green="0.6849786028" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="44" id="grN-lU-jbQ">
@@ -408,7 +408,7 @@
                             <constraint firstItem="KON-bm-VSt" firstAttribute="top" secondItem="Jcj-Tl-5vk" secondAttribute="bottom" constant="44" id="e5C-30-lB9">
                                 <variation key="heightClass=compact-widthClass=compact" constant="34"/>
                             </constraint>
-                            <constraint firstAttribute="topMargin" secondItem="CgU-Vi-nsD" secondAttribute="top" id="g9m-Y6-OGD"/>
+                            <constraint firstAttribute="topMargin" secondItem="CgU-Vi-nsD" secondAttribute="top" constant="20" id="g9m-Y6-OGD"/>
                             <constraint firstAttribute="bottomMargin" secondItem="CgU-Vi-nsD" secondAttribute="bottom" id="hkn-l5-1y2"/>
                             <constraint firstItem="hu5-ZD-5Nx" firstAttribute="leading" secondItem="bfu-Zq-eqi" secondAttribute="leading" id="mQV-k8-Oxh"/>
                             <constraint firstItem="CgU-Vi-nsD" firstAttribute="leading" secondItem="bfu-Zq-eqi" secondAttribute="leading" id="rBG-if-Sb4"/>
