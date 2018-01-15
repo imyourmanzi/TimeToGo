@@ -176,7 +176,7 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 		
 		let durationOfInterval = entry.getTimeInterval()
 		let endDate = entry.startDate.addingTimeInterval(durationOfInterval)
-		var endLocStr: String?
+		var endLocStr = ""
         
         var notes = ""
 		if entry.notesStr != nil && entry.notesStr != "" {
@@ -185,7 +185,7 @@ class ShareToCalTableViewController: UITableViewController, CoreDataHelper {
 		notes += "\nFor \(event.tripName)\n\nOrganized and Automatically Added by It's Time To Go"
         
         if let endLoc = entry.endLocation {
-            endLocStr = "\(endLoc.name!) \(Interval.getAddress(from: MKMapItem(placemark: endLoc)))"
+            endLocStr += Interval.getAddress(from: MKMapItem(placemark: endLoc))
 		}
         
         createEventWith(title: entry.scheduleLabel, startDate: entry.startDate, endDate: endDate, location: endLocStr, notes: notes, on: calendar, in: eventStore)

@@ -224,15 +224,16 @@ class Interval: NSObject, NSCoding {
 		if let thoroughfare = mapItem.placemark.thoroughfare {
 			
 			if let subThoroughfare = mapItem.placemark.subThoroughfare {
-				streetAddress += subThoroughfare
-			}
+				streetAddress += subThoroughfare + " "
+            }
 			
-			streetAddress += " \(thoroughfare), "
-			
+			streetAddress += "\(thoroughfare), "
 		}
+        
 		if let locality = mapItem.placemark.locality {
 			streetAddress += "\(locality), "
 		}
+        
 		if let adminArea = mapItem.placemark.administrativeArea {
 			
 			streetAddress += adminArea
@@ -242,8 +243,8 @@ class Interval: NSObject, NSCoding {
 			}
 			
 			streetAddress += ", "
-			
 		}
+        
 		if let country = mapItem.placemark.country {
 			streetAddress += country
 		}

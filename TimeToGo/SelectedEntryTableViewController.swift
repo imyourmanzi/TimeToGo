@@ -792,11 +792,13 @@ extension SelectedEntryTableViewController: MKMapViewDelegate {
         var zoomRect = MKMapRectNull
         
         for annotation in mapView.annotations {
-            
-            let annotationPoint = MKMapPointForCoordinate(annotation.coordinate)
-            let pointRect = MKMapRect(origin: MKMapPoint(x: annotationPoint.x - 50.0, y: annotationPoint.y - 50.0), size: MKMapSize(width: 100.0, height: 100.0))
-            
-            zoomRect = MKMapRectUnion(zoomRect, pointRect)
+        
+            if (annotation.coordinate.latitude != mapView.userLocation.coordinate.latitude &&
+                annotation.coordinate.longitude != mapView.userLocation.coordinate.longitude) {
+                let annotationPoint = MKMapPointForCoordinate(annotation.coordinate)
+                let pointRect = MKMapRect(origin: MKMapPoint(x: annotationPoint.x - 50.0, y: annotationPoint.y - 50.0), size: MKMapSize(width: 100.0, height: 100.0))
+                zoomRect = MKMapRectUnion(zoomRect, pointRect)
+            }
             
         }
         
