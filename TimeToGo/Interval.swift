@@ -259,9 +259,9 @@ class Interval: NSObject, NSCoding {
 	required init?(coder aDecoder: NSCoder) {
 		
         self.mainLabel = aDecoder.decodeObject(forKey: "mainLabel") as? String
-		self.scheduleLabel = aDecoder.decodeObject(forKey: "scheduleLabel") as! String!
-		self.timeValueHours = aDecoder.decodeObject(forKey: "timeValueHours") as! Int!
-		self.timeValueMins = aDecoder.decodeObject(forKey: "timeValueMins") as! Int!
+		self.scheduleLabel = aDecoder.decodeObject(forKey: "scheduleLabel") as! String?
+		self.timeValueHours = aDecoder.decodeObject(forKey: "timeValueHours") as! Int?
+		self.timeValueMins = aDecoder.decodeObject(forKey: "timeValueMins") as! Int?
 		self.useLocation = aDecoder.decodeObject(forKey: "useLocation") as! Bool?
 		self.startLocation = aDecoder.decodeObject(forKey: "startLocation") as! MKPlacemark?
 		self.endLocation = aDecoder.decodeObject(forKey: "endLocation") as! MKPlacemark?
